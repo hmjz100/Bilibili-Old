@@ -1,3 +1,71 @@
+---
+### 本次修改
+1.修复原脚本删除的设置（如[toastr](https://github.com/CodeSeven/toastr)设置）</br>
+2.全部修改包含：
+  - 增加
+    - Toastr浮动通知选项
+    - “下载”设置项上的视频封面
+  - 修改
+    - 优先载入的视频编码类型改为AV1
+    - 浮动通知时长为8秒（最小0秒，可自行修改代码来达到想要的要求）
+    - 浮动通知延时为300毫秒（最小0毫秒，最大10000毫秒，可自行修改代码来达到想要的要求）
+  - 显示隐藏下载设置
+  - 默认设置项目
+    - 打开选项
+      - 开发者模式
+      - 经典设置入口
+      - 日志拦截
+      - 评论区优先展示按时间排序
+      - 还原评论中的超链接
+      - 丰富顶栏动图
+      - 统一换回旧版顶栏
+      - UP主列表
+      - 自动切换到弹幕列表
+      - 移除未登录弹窗
+      - 显示番剧分集数据
+      - 只显示视频历史
+      - 过滤主页广告
+      - 修复播放器消息
+        - 番剧推荐
+        - 首页推荐
+        - 实时热搜
+      - 修复视频心跳
+      - 恢复对于番剧出差和DM組的访问
+      - 还原个人空间相簿链接
+      - 显示账号注册时间
+      - 修复失效视频信息
+      - 分段进度条
+      - 解除区域/平台限制
+        - 解除限制
+        - 泰区代理
+      - 添加点赞功能
+      - 跳过充电鸣谢
+      - 保留番剧回目列表
+      - av/BV
+      - bangumi
+      - 稍后再看
+      - 嵌入
+      - 主页
+      - 排行榜
+      - 番剧主页
+      - 专栏
+      - medialist
+      - 搜索
+      - 分区主页
+      - 启用新版弹幕
+      - 反查弹幕发送者
+      - 添加互动弹幕
+      - 禁止P2P上传
+      - 禁止挂机检测
+    - 关闭选项
+      - 托管原生脚本
+      - 禁用主页个性化推荐
+      - 去除历史记录页面搜索框
+      - flash播放器
+      - 自动化操作
+      - 合集
+---
+### 以下为原作者的README文档（[原Github链接](https://github.com/MotooriKashin/Bilibili-Old)/[原脚本链接](https://greasyfork.org/zh-CN/scripts/394296))
 ![Windows 11](https://img.shields.io/badge/Microsoft_Windows_11-pass-green.svg?longCache=true) ![Chrome 94](https://img.shields.io/badge/Google_Chrome_96-pass-green.svg?longCache=true) ![Firefox 89](https://img.shields.io/badge/Mozilla_Firefox_89-pass-green.svg?longCache=true) ![Tampermonkey 4.13](https://img.shields.io/badge/Tampermonkey_4.14-pass-green.svg?longCache=true)
 
 [Tampermonkey](https://www.tampermonkey.net/)（chrome）脚本，恢复旧版B站网页样式，尤其是那个小电视播放器。  
