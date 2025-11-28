@@ -143,94 +143,66 @@ export class PageBangumi extends Page {
             const url = new URL(args[1], location.origin);
             const mediaId = url.searchParams.get('media_id');
 
-            const info_f = await fetch(`https://api.bilibili.com/pgc/review/user?media_id=${mediaId}`, { credentials: `include` });
-            const info = await info_f.json();
+            const fetchJson = (u: string) => fetch(u, { credentials: "include" }).then(r => r.json());
+            const info = await fetchJson(`https://api.bilibili.com/pgc/review/user?media_id=${mediaId}`);
+            const short = await fetchJson(`https://api.bilibili.com/pgc/review/short/list?media_id=${mediaId}&ps=3&sort=0`);
+            const long = await fetchJson(`https://api.bilibili.com/pgc/review/long/list?media_id=${mediaId}&ps=3&sort=0`);
+            const feed = await fetchJson(`https://api.bilibili.com/pgc/review/long/feed/pull?ps=5`);
 
-            const short_f = await fetch(`https://api.bilibili.com/pgc/review/short/list?media_id=${mediaId}&ps=3&sort=0`, { credentials: `include` });
-            const short = await short_f.json();
+            // 通用字段抽取函数
+            const mapVip = (v: any = {}) => ({
+                themeType: v.themeType ?? 0,
+                vipStatus: v.vipStatus ?? 0,
+                vipType: v.vipType ?? 0,
+            });
 
-            const long_f = await fetch(`https://api.bilibili.com/pgc/review/long/list?media_id=${mediaId}&ps=3&sort=0`, { credentials: `include` });
-            const long = await long_f.json();
+            const mapAuthor = (a: any) => ({
+                avatar: a.avatar,
+                mid: a.mid,
+                uname: a.uname,
+                vip: mapVip(a.vip)
+            });
 
-            const feed_f = await fetch(`https://api.bilibili.com/pgc/review/long/feed/pull?ps=5`, { credentials: `include` });
-            const feed = await feed_f.json();
+            // Feed
+            const feedList = (feed.data?.list ?? []).slice(0, 3).map((item: any) => ({
+                article_id: item.article_id,
+                author: mapAuthor(item.author),
+                content: item.content,
+                media: {
+                    cover: item.media?.cover ?? '',
+                    media_id: item.media?.media_id,
+                    title: item.media?.title
+                },
+                review_id: item.review_id,
+                title: item.title,
+                user_rating: { score: item.score ?? 0 }
+            }));
 
-            const feedList = (feed.data?.list ?? [])
-                .slice(0, 3)
-                .map((item: any) => ({
-                    article_id: item.article_id,
-                    author: {
-                        avatar: item.author.avatar,
-                        mid: item.author.mid,
-                        uname: item.author.uname,
-                        vip: {
-                            themeType: item.author.vip?.themeType ?? 0,
-                            vipStatus: item.author.vip?.vipStatus ?? 0,
-                            vipType: item.author.vip?.vipType ?? 0
-                        }
-                    },
-                    content: item.content,
-                    media: {
-                        cover: item.media?.cover ?? '',
-                        media_id: item.media?.media_id,
-                        title: item.media?.title
-                    },
-                    review_id: item.review_id,
-                    title: item.title,
-                    user_rating: {
-                        score: item.score ?? 0
-                    }
-                }));
+            // Long Review
+            const longList = (long.data?.list ?? []).slice(0, 3).map((item: any) => ({
+                article_id: item.article_id,
+                author: mapAuthor(item.author),
+                content: item.content,
+                ctime: item.ctime,
+                mtime: item.mtime,
+                review_id: item.review_id,
+                title: item.title,
+                user_rating: { score: item.score ?? 0 }
+            }));
 
-            const longList = (long.data?.list ?? [])
-                .slice(0, 3)
-                .map((item: any) => ({
-                    article_id: item.article_id,
-                    author: {
-                        avatar: item.author.avatar,
-                        mid: item.author.mid,
-                        uname: item.author.uname,
-                        vip: {
-                            themeType: item.author.vip?.themeType ?? 0,
-                            vipStatus: item.author.vip?.vipStatus ?? 0,
-                            vipType: item.author.vip?.vipType ?? 0
-                        }
-                    },
-                    content: item.content,
-                    ctime: item.ctime,
-                    mtime: item.mtime,
-                    review_id: item.review_id,
-                    title: item.title,
-                    user_rating: {
-                        score: item.score ?? 0
-                    }
-                }));
-
-            const shortList = (short.data?.list ?? [])
-                .slice(0, 3)
-                .map((item: any) => ({
-                    author: {
-                        avatar: item.author.avatar,
-                        mid: item.author.mid,
-                        uname: item.author.uname,
-                        vip: {
-                            themeType: item.author.vip?.themeType ?? 0,
-                            vipStatus: item.author.vip?.vipStatus ?? 0,
-                            vipType: item.author.vip?.vipType ?? 0
-                        }
-                    },
-                    content: item.content,
-                    ctime: item.ctime,
-                    mtime: item.mtime,
-                    review_id: item.review_id,
-                    user_rating: {
-                        score: item.score ?? item.score
-                    }
-                }));
+            // Short Review
+            const shortList = (short.data?.list ?? []).slice(0, 3).map((item: any) => ({
+                author: mapAuthor(item.author),
+                content: item.content,
+                ctime: item.ctime,
+                mtime: item.mtime,
+                review_id: item.review_id,
+                user_rating: { score: item.score ?? 0 }
+            }));
 
             const response = {
                 code: 0,
-                message: 'success',
+                message: "success",
                 result: {
                     feed: feedList,
                     long_review: {
@@ -249,8 +221,8 @@ export class PageBangumi extends Page {
             };
 
             let res = JSON.stringify(response);
-            return { response: res, responseText: res, responseType: 'json' }
-        }, false)
+            return { response: res, responseText: res, responseType: "json" };
+        }, false);
     }
     /** 解除区域限制（重定向模式） */
     protected videoLimit() {
