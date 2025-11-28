@@ -7,7 +7,8 @@ export enum FNVAL {
     DOLBYAUDIO = 256,
     DOLBYVIDEO = 512,
     DASH_8K = 1024,
-    DASH_AV1 = 2048
+    DASH_AV1 = 2048,
+    DASH_AUTOFIX = 12240
 }
 /** 画质（8k） */
 export const qn = 127;
@@ -21,4 +22,5 @@ export const fnval = FNVAL.FLV
     + FNVAL.DOLBYAUDIO
     + FNVAL.DOLBYVIDEO
     + FNVAL.DASH_8K
-    + FNVAL.DASH_AV1;
+    + FNVAL.DASH_AV1
+    + FNVAL.DASH_AUTOFIX;
