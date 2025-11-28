@@ -75,6 +75,8 @@ export const PlayurlCodecs = {
     112: 'avc1.640028', // 1080P+
     30102: 'hev1.1.6.L120.90', // HEVC 1080P+
     102: 'hev1.1.6.L120.90', // HEVC 1080P+
+    30100: "avc1.640028", // 智能修复
+    100: "avc1.640028", // 智能修复
     30080: 'avc1.640028', // 1080P
     80: 'avc1.640028', // 1080P
     30077: 'hev1.1.6.L120.90', // HEVC 1080P
@@ -125,6 +127,8 @@ export const PlayurlFrameRate = {
     112: '16000/672',
     30102: '16000/672',
     102: '16000/672',
+    30100: "16000/672",
+    100: "16000/672",
     30080: '16000/672',
     80: '16000/672',
     30077: '16000/656',
@@ -156,6 +160,8 @@ export const PlayurlResolution = {
     112: [1920, 1080], // 1080P+
     30102: [1920, 1080], // HEVC 1080P+
     102: [1920, 1080], // HEVC 1080P+
+    30100: [1920, 1080], // 智能修复
+    100: [1920, 1080], // 智能修复
     30080: [1920, 1080], // 1080P
     80: [1920, 1080], // 1080P
     30077: [1920, 1080], // HEVC 1080P
@@ -281,11 +287,11 @@ export class ApiAppPgcPlayurl extends ApiSign {
 
 export type IPlayurlFormat = 'mp4' | 'flv480' | 'flv720' | 'flv720_p60' | 'flv' | 'flv_p60' | 'hdflv2';
 
-export type IPlayurlDescription = '流畅 144P' | '流畅 240P' | '流畅 360P' | '清晰 480P' | '高清 720P' | '高清 720P60' | '高清 1080P' | '高清 1080P+' | '高清 1080P60' | '超清 4K' | 'HDR' | '杜比视界' | '超高清 8K';
+export type IPlayurlDescription = '流畅 144P' | '流畅 240P' | '流畅 360P' | '清晰 480P' | '高清 720P' | '高清 720P60' | '智能修复' | '高清 1080P' | '高清 1080P+' | '高清 1080P60' | '超清 4K' | 'HDR' | '杜比视界' | '超高清 8K';
 
-export type IPlayurlQuality = '144P' | '240P' | '360P' | '480P' | '720P' | '720P60' | '1080P' | '1080P+' | '1080P60' | '4K' | 'HDR' | 'Dolby' | '8K';
+export type IPlayurlQuality = '144P' | '240P' | '360P' | '480P' | '720P' | '720P60' | 'AutoFix' | '1080P' | '1080P+' | '1080P60' | '4K' | 'HDR' | 'Dolby' | '8K';
 
-export type IPlayurlQualityNumber = 127 | 126 | 125 | 121 | 120 | 116 | 112 | 80 | 74 | 64 | 48 | 32 | 16 | 15 | 6 | 5;
+export type IPlayurlQualityNumber = 127 | 126 | 125 | 121 | 120 | 116 | 112 | 100 | 80 | 74 | 64 | 48 | 32 | 16 | 15 | 6 | 5;
 
 interface IDash {
     SegmentBase: { Initialization: string; indexRange: string; };
