@@ -1,14 +1,15 @@
 {
-    "name": "Bilibili 翻页评论区",
-    "namespace": "MotooriKashin",
-    "version": "2.2.9",
-    "description": "恢复评论区翻页功能。",
-    "author": "MotooriKashin",
-    "homepage": "https://github.com/MotooriKashin/Bilibili-Old",
-    "supportURL": "https://github.com/MotooriKashin/Bilibili-Old/issues",
+    "name": "哔哩哔哩翻页评论区",
+    "namespace": "github.com/hmjz100",
+    "version": "2.3.0",
+    "description": "恢复评论区翻页功能。并带上一些新特性。",
+    "author": "hmjz100, MotooriKashin",
+    "homepage": "https://github.com/hmjz100/Bilibili-Old-Build",
+    "supportURL": "https://github.com/hmjz100/Bilibili-Old-Build/issues",
     "icon": "https://www.bilibili.com/favicon.ico",
     "match": "*://*.bilibili.com/*",
     "grant": "none",
     "run-at": "document-start",
+    "early-start": "",
     "license": "MIT"
 }

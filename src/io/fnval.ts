@@ -1,3 +1,4 @@
+import { BLOD } from "../core/bilibili-old";
 export enum FNVAL {
     FLV = 0,
     MP4 = 1,
@@ -14,7 +15,7 @@ export enum FNVAL {
 export const qn = 127;
 /** 取流标记 */
 export const fnver = 0;
-/** 取流类型（av1） */
+/** 取流类型 */
 export const fnval = FNVAL.FLV
     + FNVAL.DASH_H265
     + FNVAL.HDR
@@ -23,4 +24,4 @@ export const fnval = FNVAL.FLV
     + FNVAL.DOLBYVIDEO
     + FNVAL.DASH_8K
     + FNVAL.DASH_AV1
-    + FNVAL.DASH_AUTOFIX;
+    + (BLOD.pgc ? FNVAL.DASH_AUTOFIX : 0);
