@@ -1,7 +1,7 @@
 import { jsonCheck } from "./api";
 import { IPlayurlDash, IPlayurlDurl } from "./api-playurl";
 import { ApiSign } from "./api-sign";
-import { fnval, fnver, qn } from "./fnval";
+import { fnval, fnval_pgc, fnver, qn } from "./fnval";
 import { URLS } from "./urls";
 
 export class ApiPlayurlTv extends ApiSign {
@@ -14,7 +14,7 @@ export class ApiPlayurlTv extends ApiSign {
             platform: "android",
             mobi_app: "android_tv_yst",
             build: 102801
-        }, data, dash ? { fnval, fnver } : {});
+        }, data, dash ? { fnval: pgc ? fnval_pgc : fnval, fnver } : {});
     }
     async getData() {
         const response = await fetch(this.sign().toJSON());

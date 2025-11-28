@@ -22,5 +22,13 @@ export const fnval = FNVAL.FLV
     + FNVAL.DOLBYAUDIO
     + FNVAL.DOLBYVIDEO
     + FNVAL.DASH_8K
+    + FNVAL.DASH_AV1;
+export const fnval_pgc = FNVAL.FLV
+    + FNVAL.DASH_H265
+    + FNVAL.HDR
+    + FNVAL.DASH_4K
+    + FNVAL.DOLBYAUDIO
+    + FNVAL.DOLBYVIDEO
+    + FNVAL.DASH_8K
     + FNVAL.DASH_AV1
     + FNVAL.DASH_AUTOFIX;

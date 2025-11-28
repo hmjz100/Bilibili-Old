@@ -17,14 +17,14 @@
 			"script": "tampermonkey",
 			"problemMatcher": [],
 			"label": "npm: tampermonkey",
-			"detail": "编译用户脚本：Bilibili 旧播放页"
+			"detail": "编译用户脚本：哔哩哔哩旧播放页"
 		},
 		{
 			"type": "npm",
 			"script": "comment",
 			"problemMatcher": [],
 			"label": "npm: comment",
-			"detail": "编译用户脚本：Bilibili 翻页评论区"
+			"detail": "编译用户脚本：哔哩哔哩翻页评论区"
 		}
 	]
 }

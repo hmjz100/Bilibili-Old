@@ -1,7 +1,7 @@
 import { objUrl } from "../utils/format/url";
 import { jsonCheck } from "./api";
 import { ApiSign } from "./api-sign";
-import { fnval, fnver, qn } from "./fnval";
+import { fnval, fnval_pgc, fnver, qn } from "./fnval";
 import { URLS } from "./urls";
 
 export const PlayurlDescriptionMap: Record<IPlayurlQualityNumber, IPlayurlDescription> = {
@@ -259,7 +259,7 @@ export async function apiPlayurl(data: IApiPlayurl, dash = true, pgc = false, se
         qn,
         otype: 'json',
         fourk: 1
-    }, data, dash ? { fnver, fnval } : {});
+    }, data, dash ? { fnver, fnval: pgc ? fnval_pgc : fnval } : {});
     const response = await fetch(objUrl(pgc ? URLS.PGC_PLAYURL.replace('api.bilibili.com', server) : URLS.PLAYURL, <any>data), { credentials: 'include' });
     const json = await response.json();
     if (pgc) {

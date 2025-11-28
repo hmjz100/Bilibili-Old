@@ -1,7 +1,7 @@
 import { apiBiliplusPlayurl } from "../io/api-biliplus-playurl";
 import { ApiGlobalOgvPlayurl } from "../io/api-global-ogv-playurl";
 import { apiPlayurl, IPlayurlDash } from "../io/api-playurl";
-import { fnval } from "../io/fnval";
+import { fnval, fnval_pgc } from "../io/fnval";
 import { uid } from "../utils/conf/uid";
 import { objUrl, urlObj } from "../utils/format/url";
 import { xhrHook, XMLHttpRequestOpenParams } from "../utils/hook/xhr";
@@ -54,7 +54,10 @@ class VideoLimit {
                 param.appkey = "27eb53fc9058f8c3";
                 param.access_key = user.userStatus!.accessKey.token; // 不登录高画质
             }
-            param.fnval && (param.fnval = fnval); // 画质提升
+            if (param.fnval) {
+                param.fnval = fnval;
+                BLOD.pgc && (param.fnval = fnval_pgc);
+            }; // 画质提升
             args[1] = objUrl(args[1], param);
             return !(BLOD.limit || BLOD.th)
         }, res => {

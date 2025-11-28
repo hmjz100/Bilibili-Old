@@ -79,6 +79,7 @@ export class PageBangumi extends Page {
         this.recommend();
         this.seasonCount();
         this.season();
+        this.review();
         user.userStatus!.videoLimit?.status && this.videoLimit();
         this.related();
         this.initialState();
@@ -134,6 +135,17 @@ export class PageBangumi extends Page {
                 e.index = e.title;
             });
             return r.responseType === "json" ? r.response = bangumiResult : r.response = r.responseText = JSON.stringify(bangumiResult);
+        }, false);
+    }
+    /** 修复点评数据 */
+    protected review() {
+        xhrHook("bangumi.bilibili.com/review/web_api/media/play", args => {
+            args[1] = args[1].replace("bangumi.bilibili.com/review/web_api/media/play", "api.bilibili.com/pgc/review/user");
+        }, res => {
+            try {
+                const data = res.responseType === "json" ? res.response : JSON.parse(res.response);
+                res.responseType === "json" || (res.response = res.responseText = JSON.stringify(data));
+            } catch (e) { }
         }, false);
     }
     /** 解除区域限制（重定向模式） */

@@ -11,13 +11,13 @@ Manifest V3扩展和Tampermonkey用户脚本，恢复B站旧版网页，包括�
 
 #### 浏览器扩展
 扩展暂时未上架任何扩展商店，请使用【加载已解压的扩展程序】安装。
-1. 到[Actions](https://github.com/MotooriKashin/Bilibili-Old/actions)页面**最新**工作流里下载名为`bilibili-old`的压缩包。
+1. 到[Actions](https://github.com/hmjz100/Bilibili-Old-Build/actions)页面**最新**工作流里下载名为`bilibili-old`的压缩包。
 2. 使用解压缩软件解压该压缩包到任意目录。
 3. 在chrome浏览器【拓展程序】页面打开右上角的【开发者模式】。
 4. 点击【加载已解压的扩展程序】选择步骤2中解压的目录。
 5. 点击扩展图标选择【设置选项】调整扩展设置。
 
-*拓展版不会自动更新，请自行到[Actions](https://github.com/MotooriKashin/Bilibili-Old/actions)下载最新构建解压覆盖之前版本的文件，然后重启chrome浏览器即可。*
+*拓展版不会自动更新，请自行到[Actions](https://github.com/hmjz100/Bilibili-Old-Build/actions)下载最新构建解压覆盖之前版本的文件，然后重启chrome浏览器即可。*
 
 ---
 ### 功能实现
@@ -124,7 +124,7 @@ Manifest V3扩展和Tampermonkey用户脚本，恢复B站旧版网页，包括�
 > 编译器          Node.js v19.1.0  
 >
 
-参见[开发者文档](https://github.com/MotooriKashin/Bilibili-Old/blob/master/.github/contributing.md)。
+参见[开发者文档](https://github.com/hmjz100/Bilibili-Old-Build/blob/master/.github/contributing.md)。
 
 ---
 ### 参考致谢

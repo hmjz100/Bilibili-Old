@@ -1,6 +1,6 @@
 import { IPlayurlDurl } from "./api-playurl";
 import { ApiSign } from "./api-sign";
-import { fnval, fnver } from "./fnval";
+import { fnval, fnval_pgc, fnver } from "./fnval";
 import { URLS } from "./urls";
 
 export class ApiPlayurlInterface extends ApiSign {
@@ -11,7 +11,7 @@ export class ApiPlayurlInterface extends ApiSign {
             qn: data.quality,
             type: '',
             fnver,
-            fnval
+            fnval: pgc ? fnval_pgc : fnval
         }, data, pgc ? { module: "bangumi", season_type: 1 } : {});
     }
     async getData() {
