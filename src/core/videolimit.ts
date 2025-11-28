@@ -173,7 +173,7 @@ class VideoLimit {
     /** 访问泰区代理 */
     protected async th(obj: Record<string, string | number>) {
         const d = await new ApiGlobalOgvPlayurl(<any>obj, user.userStatus!.videoLimit.th).toPlayurl();
-        toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", `CDN：${user.userStatus!.uposReplace.th}`, `UPOS：${UPOS[<'[阿里] ali'>user.userStatus!.uposReplace.th]}`);
+        toast.warning("已替换 UPOS 服务器，卡加载时请到设置中更换服务器或者禁用！", `CDN：${user.userStatus!.uposReplace.th}`, `UPOS：${UPOS[<'[阿里] ali'>user.userStatus!.uposReplace.th]}`);
         return JSON.parse(this.uposReplace(JSON.stringify(d), <'[阿里] ali'>user.userStatus!.uposReplace.th));
     }
     /** 代理服务器序号 */
