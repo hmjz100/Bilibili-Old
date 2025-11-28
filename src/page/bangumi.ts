@@ -124,7 +124,7 @@ export class PageBangumi extends Page {
             } catch (e) { }
         }, true);
     }
-    /** 修复换季时请求 502 */ 
+    /** 修复换季时请求 502 */
     protected season() {
         xhrHook("bangumi.bilibili.com/view/web_api/season", args => {
             args[1] = args[1].replace("bangumi.bilibili.com/view/web_api/season", "api.bilibili.com/pgc/view/web/season");
@@ -147,6 +147,119 @@ export class PageBangumi extends Page {
                 res.responseType === "json" || (res.response = res.responseText = JSON.stringify(data));
             } catch (e) { }
         }, false);
+
+        xhrHook.async('bangumi.bilibili.com/review/web_api/media/play?media_id', undefined, async (args) => {
+            const url = new URL(args[1], location.origin);
+            const mediaId = url.searchParams.get('media_id');
+
+            const info_f = await fetch(`https://api.bilibili.com/pgc/review/user?media_id=${mediaId}`, { credentials: `include` });
+            const info = await info_f.json();
+
+            const short_f = await fetch(`https://api.bilibili.com/pgc/review/short/list?media_id=${mediaId}&ps=3&sort=0`, { credentials: `include` });
+            const short = await short_f.json();
+
+            const long_f = await fetch(`https://api.bilibili.com/pgc/review/long/list?media_id=${mediaId}&ps=3&sort=0`, { credentials: `include` });
+            const long = await long_f.json();
+
+            const feed_f = await fetch(`https://api.bilibili.com/pgc/review/long/feed/pull?ps=5`, { credentials: `include` });
+            const feed = await feed_f.json();
+
+            const feedList = (feed.data?.list ?? [])
+                .slice(0, 3)
+                .map((item: any) => ({
+                    article_id: item.article_id,
+                    author: {
+                        avatar: item.author.avatar,
+                        mid: item.author.mid,
+                        uname: item.author.uname,
+                        vip: {
+                            themeType: item.author.vip?.themeType ?? 0,
+                            vipStatus: item.author.vip?.vipStatus ?? 0,
+                            vipType: item.author.vip?.vipType ?? 0
+                        }
+                    },
+                    content: item.content,
+                    media: {
+                        cover: item.media?.cover ?? '',
+                        media_id: item.media?.media_id,
+                        title: item.media?.title
+                    },
+                    review_id: item.review_id,
+                    title: item.title,
+                    user_rating: {
+                        score: item.score ?? 0
+                    }
+                }));
+
+            const longList = (long.data?.list ?? [])
+                .slice(0, 3)
+                .map((item: any) => ({
+                    article_id: item.article_id,
+                    author: {
+                        avatar: item.author.avatar,
+                        mid: item.author.mid,
+                        uname: item.author.uname,
+                        vip: {
+                            themeType: item.author.vip?.themeType ?? 0,
+                            vipStatus: item.author.vip?.vipStatus ?? 0,
+                            vipType: item.author.vip?.vipType ?? 0
+                        }
+                    },
+                    content: item.content,
+                    ctime: item.ctime,
+                    mtime: item.mtime,
+                    review_id: item.review_id,
+                    title: item.title,
+                    user_rating: {
+                        score: item.score ?? 0
+                    }
+                }));
+
+            const shortList = (short.data?.list ?? [])
+                .slice(0, 3)
+                .map((item: any) => ({
+                    author: {
+                        avatar: item.author.avatar,
+                        mid: item.author.mid,
+                        uname: item.author.uname,
+                        vip: {
+                            themeType: item.author.vip?.themeType ?? 0,
+                            vipStatus: item.author.vip?.vipStatus ?? 0,
+                            vipType: item.author.vip?.vipType ?? 0
+                        }
+                    },
+                    content: item.content,
+                    ctime: item.ctime,
+                    mtime: item.mtime,
+                    review_id: item.review_id,
+                    user_rating: {
+                        score: item.score ?? item.score
+                    }
+                }));
+
+            const response = {
+                code: 0,
+                message: 'success',
+                result: {
+                    feed: feedList,
+                    long_review: {
+                        list: longList,
+                        total: long.data?.count ?? 0
+                    },
+                    rating: {
+                        count: info.result?.media?.rating?.count ?? 0,
+                        score: info.result?.media?.rating?.score ?? 0
+                    },
+                    short_review: {
+                        list: shortList,
+                        total: short.data?.total ?? 0
+                    }
+                }
+            };
+
+            let res = JSON.stringify(response);
+            return { response: res, responseText: res, responseType: 'json' }
+        }, false)
     }
     /** 解除区域限制（重定向模式） */
     protected videoLimit() {
