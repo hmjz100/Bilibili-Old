@@ -275,7 +275,7 @@ export class UI {
             }, '播放速率调整拓展', undefined, '调节当前HTML5播放器速率，拥有比播放器自带的更宽的调整范围。注意：未调整前的当前速率默认为1。'),
             this.switch('webRTC', 'WebRTC', '<strong>关闭</strong>以禁用p2p共享带宽', undefined, undefined, 'B站使用【WebRTC】实现p2p共享，等同于将您的设备变成了B站的一个视频服务器节点，别人观看相同的视频或直播便可以从您的设备取流而不必访问B站固有的服务器。脚本默认<strong>关闭</strong>了此功能，以减轻小水管的带宽压力，如果您的带宽允许，还是推荐开启，人人为我，我为人人。bilibili~乾杯 - ( ゜-゜)つロ！'),
             this.switch('elecShow', '充电鸣谢', '允许视频结尾的充电鸣谢'),
-            this.switch('videoDisableAA', '禁用视频渲染抗锯齿', '详见<a href="https://github.com/hmjz100/Bilibili-Old-Build/issues/292" target="_blank">#292</a>说明'),
+            this.switch('videoDisableAA', '禁用视频渲染抗锯齿', '详见<a href="https://github.com/MotooriKashin/Bilibili-Old/issues/292" target="_blank">#292</a>说明'),
             this.switch('ugcSection', '视频合集', '以播单形式呈现', undefined, undefined, '视频合集在旧版页面时代本不存在，但其实质类似于上古的播单，所以直接使用播单页面进行模拟。值得一提的是真正的播单页面相关接口已完全被404，如果有幸访问到脚本会直接替换为缓存的播单号769——因为只缓存了这一项数据。另外播单详情页面还是404状态，以后可能也会用缓存数据修复，让后人能一窥范例。'),
             this.switch('heartbeatBlock', '无痕模式', '禁用视频心跳', undefined, undefined, '禁用视频心跳便不会产生播放器历史记录。鉴于B站网页端开始严重限制未登录用户的权限，比如弹幕减少，评论只能看第一页等。可以启用本功能模拟【无痕模式】来使用，享受已登录用户的权限但B站不会知道你看了什么视频。<br/>※ 刷新页面生效')
         ]);

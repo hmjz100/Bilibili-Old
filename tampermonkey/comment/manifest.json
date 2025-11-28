@@ -5,7 +5,7 @@
     "description": "恢复评论区翻页功能。并带上一些新特性。",
     "author": "hmjz100, MotooriKashin",
     "homepage": "https://github.com/hmjz100/Bilibili-Old-Build",
-    "supportURL": "https://github.com/hmjz100/Bilibili-Old-Build/issues",
+    "supportURL": "https://github.com/MotooriKashin/Bilibili-Old/issues",
     "icon": "https://www.bilibili.com/favicon.ico",
     "match": "*://*.bilibili.com/*",
     "grant": "none",
