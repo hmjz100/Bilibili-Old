@@ -1,4 +1,3 @@
-import { BLOD } from "../core/bilibili-old";
 export enum FNVAL {
     FLV = 0,
     MP4 = 1,
@@ -24,4 +23,4 @@ export const fnval = FNVAL.FLV
     + FNVAL.DOLBYVIDEO
     + FNVAL.DASH_8K
     + FNVAL.DASH_AV1
-    + (BLOD.pgc ? FNVAL.DASH_AUTOFIX : 0);
+    + FNVAL.DASH_AUTOFIX;
