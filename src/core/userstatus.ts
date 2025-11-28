@@ -43,7 +43,7 @@ export const userStatus = {
     /** UPOS替换 */
     uposReplace: {
         /** 东南亚（泰区） */
-        th: 'ks3（金山）',
+        th: '[阿里] ali',
         /** 港澳台 */
         gat: '不替换',
         /** 一般视频 */
