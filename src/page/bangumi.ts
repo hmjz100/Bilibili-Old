@@ -139,15 +139,6 @@ export class PageBangumi extends Page {
     }
     /** 修复点评数据 */
     protected review() {
-        xhrHook("bangumi.bilibili.com/review/web_api/media/play", args => {
-            args[1] = args[1].replace("bangumi.bilibili.com/review/web_api/media/play", "api.bilibili.com/pgc/review/user");
-        }, res => {
-            try {
-                const data = res.responseType === "json" ? res.response : JSON.parse(res.response);
-                res.responseType === "json" || (res.response = res.responseText = JSON.stringify(data));
-            } catch (e) { }
-        }, false);
-
         xhrHook.async('bangumi.bilibili.com/review/web_api/media/play?media_id', undefined, async (args) => {
             const url = new URL(args[1], location.origin);
             const mediaId = url.searchParams.get('media_id');
