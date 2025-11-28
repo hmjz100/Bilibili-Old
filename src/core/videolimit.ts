@@ -11,23 +11,26 @@ import { toast, Toast } from "./toast";
 import { user } from "./user";
 
 export const UPOS = {
-    "ks3（金山）": "upos-sz-mirrorks3.bilivideo.com",
-    "ks3b（金山）": "upos-sz-mirrorks3b.bilivideo.com",
-    "ks3c（金山）": "upos-sz-mirrorks3c.bilivideo.com",
-    "ks32（金山）": "upos-sz-mirrorks32.bilivideo.com",
-    "kodo（七牛）": "upos-sz-mirrorkodo.bilivideo.com",
-    "kodob（七牛）": "upos-sz-mirrorkodob.bilivideo.com",
-    "cos（腾讯）": "upos-sz-mirrorcos.bilivideo.com",
-    "cosb（腾讯）": "upos-sz-mirrorcosb.bilivideo.com",
-    "coso1（腾讯）": "upos-sz-mirrorcoso1.bilivideo.com",
-    "coso2（腾讯）": "upos-sz-mirrorcoso2.bilivideo.com",
-    "bos（腾讯）": "upos-sz-mirrorbos.bilivideo.com",
-    "hw（华为）": "upos-sz-mirrorhw.bilivideo.com",
-    "hwb（华为）": "upos-sz-mirrorhwb.bilivideo.com",
-    "uphw（华为）": "upos-sz-upcdnhw.bilivideo.com",
-    "js（华为）": "upos-tf-all-js.bilivideo.com",
-    "hk（香港）": "cn-hk-eq-bcache-01.bilivideo.com",
-    "akamai（海外）": "upos-hz-mirrorakam.akamaized.net",
+    "[阿里] ali": "upos-sz-mirrorali.bilivideo.com",
+    "[阿里] alib": "upos-sz-mirroralib.bilivideo.com",
+    "[阿里] alio1": "upos-sz-mirroralio1.bilivideo.com",
+    "[腾讯] cos": "upos-sz-mirrorcos.bilivideo.com",
+    "[腾讯] cosb": "upos-sz-mirrorcosb.bilivideo.com",
+    "[腾讯] coso1": "upos-sz-mirrorcoso1.bilivideo.com",
+    "[腾讯] bos": "upos-sz-mirrorbos.bilivideo.com",
+    "[华为] hw": "upos-sz-mirrorhw.bilivideo.com",
+    "[华为] hwb": "upos-sz-mirrorhwb.bilivideo.com",
+    "[华为] hwo1": "upos-sz-mirrorhwo1.bilivideo.com",
+    "[华为] 08c": "upos-sz-mirror08c.bilivideo.com",
+    "[华为] 08h": "upos-sz-mirror08h.bilivideo.com",
+    "[华为] 08ct": "upos-sz-mirror08ct.bilivideo.com",
+    "[华为] tf_hw": "upos-tf-all-hw.bilivideo.com",
+    "[腾讯] tf_tx": "upos-tf-all-tx.bilivideo.com",
+    "[海外] akamai": "upos-hz-mirrorakam.akamaized.net",
+    "[海外] hk_bcache": "cn-hk-eq-bcache-01.bilivideo.com",
+    "[海外][阿里] aliov": "upos-sz-mirroraliov.bilivideo.com",
+    "[海外][腾讯] cosov": "upos-sz-mirrorcosov.bilivideo.com",
+    "[海外][华为] hwov": "upos-sz-mirrorhwov.bilivideo.com",
 };
 enum AREA {
     tw,
@@ -58,8 +61,8 @@ class VideoLimit {
             try {
                 const result = res.responseType === 'json' ? JSON.stringify(res.response) : res.responseText!;
                 if (user.userStatus!.uposReplace.nor !== '不替换') {
-                    const nstr = this.uposReplace(result, <'ks3（金山）'>user.userStatus!.uposReplace.nor);
-                    toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", `CDN：${user.userStatus!.uposReplace.nor}`, `UPOS：${UPOS[<'ks3（金山）'>user.userStatus!.uposReplace.nor]}`);
+                    const nstr = this.uposReplace(result, <'[阿里] ali'>user.userStatus!.uposReplace.nor);
+                    toast.warning("已替换 UPOS 服务器，卡加载时请到设置中更换服务器或者禁用！", `CDN：${user.userStatus!.uposReplace.nor}`, `UPOS：${UPOS[<'[阿里] ali'>user.userStatus!.uposReplace.nor]}`);
                     if (res.responseType === 'json') {
                         res.response = JSON.parse(nstr);
                     } else {
@@ -137,8 +140,8 @@ class VideoLimit {
                     this.Backup[args[1]] = { code: 0, message: "success", result: res };
                 }
                 if (user.userStatus!.uposReplace.gat !== "不替换") {
-                    this.Backup[args[1]] = JSON.parse(this.uposReplace(JSON.stringify(this.Backup[args[1]]), <'ks3（金山）'>user.userStatus!.uposReplace.gat));
-                    toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", `CDN：${user.userStatus!.uposReplace.gat}`, `UPOS：${UPOS[<'ks3（金山）'>user.userStatus!.uposReplace.gat]}`);
+                    this.Backup[args[1]] = JSON.parse(this.uposReplace(JSON.stringify(this.Backup[args[1]]), <'[阿里] ali'>user.userStatus!.uposReplace.gat));
+                    toast.warning("已替换 UPOS 服务器，卡加载时请到设置中更换服务器或者禁用！", `CDN：${user.userStatus!.uposReplace.gat}`, `UPOS：${UPOS[<'[阿里] ali'>user.userStatus!.uposReplace.gat]}`);
                 };
                 this.toast.push('> 获取代理数据成功！');
                 this.toast.type = 'success';
@@ -170,8 +173,8 @@ class VideoLimit {
     /** 访问泰区代理 */
     protected async th(obj: Record<string, string | number>) {
         const d = await new ApiGlobalOgvPlayurl(<any>obj, user.userStatus!.videoLimit.th).toPlayurl();
-        toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", `CDN：${user.userStatus!.uposReplace.th}`, `UPOS：${UPOS[<'ks3（金山）'>user.userStatus!.uposReplace.th]}`);
-        return JSON.parse(this.uposReplace(JSON.stringify(d), <'ks3（金山）'>user.userStatus!.uposReplace.th));
+        toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", `CDN：${user.userStatus!.uposReplace.th}`, `UPOS：${UPOS[<'[阿里] ali'>user.userStatus!.uposReplace.th]}`);
+        return JSON.parse(this.uposReplace(JSON.stringify(d), <'[阿里] ali'>user.userStatus!.uposReplace.th));
     }
     /** 代理服务器序号 */
     protected area = 0;
