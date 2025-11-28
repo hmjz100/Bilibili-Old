@@ -1,23 +1,15 @@
 ![Windows 11](https://img.shields.io/badge/Microsoft_Windows_11-pass-green.svg?longCache=true) ![Chrome 108](https://img.shields.io/badge/Google_Chrome_108-pass-green.svg?longCache=true) ![Tampermonkey 4.18](https://img.shields.io/badge/Tampermonkey_4.18-pass-green.svg?longCache=true)  ![Manifest V3](https://img.shields.io/badge/Manifest_V3-pass-green.svg?longCache=true)  
 
-Manifest V3扩展和Tampermonkey用户脚本，恢复B站旧版网页，包括小电视播放器。
+Tampermonkey 用户脚本 / Manifest V3 扩展，恢复 B 站旧版网页，包括小电视播放器。
 
 ### 安装使用
 以下两种方式二选一即可。
+
 #### 用户脚本
-1. 安装[Tampermonkey](https://www.tampermonkey.net/)脚本管理工具。
-2. 到[GreasyFork](https://greasyfork.org/scripts/394296)安装脚本。
-3. 打开任意B站页面点击页面右下角浮动的齿轮图标调整脚本设置。 *齿轮自动隐藏后，鼠标移动到对应位置会重新浮现*
+进入 [Actions](https://github.com/hmjz100/Bilibili-Old-Build/actions) 查找
 
 #### 浏览器扩展
-扩展暂时未上架任何扩展商店，请使用【加载已解压的扩展程序】安装。
-1. 到[Actions](https://github.com/hmjz100/Bilibili-Old-Build/actions)页面**最新**工作流里下载名为`bilibili-old`的压缩包。
-2. 使用解压缩软件解压该压缩包到任意目录。
-3. 在chrome浏览器【拓展程序】页面打开右上角的【开发者模式】。
-4. 点击【加载已解压的扩展程序】选择步骤2中解压的目录。
-5. 点击扩展图标选择【设置选项】调整扩展设置。
-
-*拓展版不会自动更新，请自行到[Actions](https://github.com/hmjz100/Bilibili-Old-Build/actions)下载最新构建解压覆盖之前版本的文件，然后重启chrome浏览器即可。*
+进入 [Actions](https://github.com/hmjz100/Bilibili-Old-Build/actions) 查找
 
 ---
 ### 功能实现
