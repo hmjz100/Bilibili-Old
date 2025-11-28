@@ -25089,9 +25089,9 @@ const MODULES = `
     encode(path, hash = this.hash) {
       switch (this.host) {
         case "jsdelivr":
-          return \`\${this.protocol}://fastly.jsdelivr.net/gh/followmypeach/Bilibili-Old\${hash ? \`@\${hash}\` : ""}\${path}\`;
+          return \`\${this.protocol}://testingcf.jsdelivr.net/gh/hmjz100/Bilibili-Old-Build\${hash ? \`@\${hash}\` : ""}\${path}\`;
         default:
-          return \`\${this.protocol}://github.com/followmypeach/Bilibili-Old/raw/\${hash || "master"}\${path}\`;
+          return \`\${this.protocol}://github.com/hmjz100/Bilibili-Old-Build/raw/\${hash || "master"}\${path}\`;
       }
     }
     /** 更新默认值 */
