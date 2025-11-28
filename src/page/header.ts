@@ -159,7 +159,7 @@ export class Header {
         jsonpHook.async("api.bilibili.com/x/web-interface/index/icon", undefined, async () => {
             return {
                 code: 0,
-                data: subArray(indexIcon.fix),
+                data: subArray(indexIcon),
                 message: "0",
                 ttl: 1
             }
