@@ -6,6 +6,6 @@
   "author": "MotooriKashin",
   "license": "MIT",
   "devDependencies": {
-    "@types/extension": "*"
+    "@types/chrome": "*"
   }
 }
