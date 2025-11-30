@@ -68,4 +68,4 @@ body:
     id: script-version
     attributes:
       label: 脚本版本
-      description: 扩展请自行到[Actions](https://github.com/hmjz100/Bilibili-Old-Build/actions)检查是不是最新
+      description: 扩展请自行到[Actions](https://github.com/hmjz100/Bilibili-Old/actions)检查是不是最新

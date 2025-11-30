@@ -6,10 +6,10 @@ Tampermonkey 用户脚本 / Manifest V3 扩展，恢复 B 站旧版网页，包�
 以下两种方式二选一即可。
 
 #### 用户脚本
-进入 [Actions](https://github.com/hmjz100/Bilibili-Old-Build/actions) 查找
+进入 [Actions](https://github.com/hmjz100/Bilibili-Old/actions) 查找
 
 #### 浏览器扩展
-进入 [Actions](https://github.com/hmjz100/Bilibili-Old-Build/actions) 查找
+进入 [Actions](https://github.com/hmjz100/Bilibili-Old/actions) 查找
 
 ---
 ### 功能实现
@@ -116,7 +116,7 @@ Tampermonkey 用户脚本 / Manifest V3 扩展，恢复 B 站旧版网页，包�
 > 编译器          Node.js v19.1.0  
 >
 
-参见[开发者文档](https://github.com/hmjz100/Bilibili-Old-Build/blob/master/.github/contributing.md)。
+参见[开发者文档](https://github.com/hmjz100/Bilibili-Old/blob/master/.github/contributing.md)。
 
 ---
 ### 参考致谢

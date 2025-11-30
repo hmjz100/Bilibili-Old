@@ -223,7 +223,7 @@ export class UI {
             this.button(<'dmContact'>'localDm', '本地弹幕', () => {
                 user.userStatus!.dmExtension === 'json' ? danmaku.localDmJson() : danmaku.localDmXml();
             }, '加载本地磁盘上的弹幕', '打开', undefined, '从本地磁盘上加载弹幕文件，来源可以是下载功能下载的弹幕，拓展名.xml或.json，编码utf-8。【合并弹幕】项能选择是否与播放器内已有弹幕合并。'),
-            this.switch('danmakuProtect', '弹幕保护计划', '<a href="https://github.com/hmjz100/Bilibili-Old-Build/blob/master/danmaku/README.md" target="_blank">查看目录</a>', undefined, undefined, '上古弹幕作品很多高级弹幕都丢失了，幸好本项目备份了一些。启用本功能将自动识别对应作品并使用【在线弹幕】功能加载备份的弹幕，找回曾经的感动。<br>※部分4:3视频请以播放器原始形态观看获取最佳体验，不推荐全屏。')
+            this.switch('danmakuProtect', '弹幕保护计划', '<a href="https://github.com/hmjz100/Bilibili-Old/blob/master/danmaku/README.md" target="_blank">查看目录</a>', undefined, undefined, '上古弹幕作品很多高级弹幕都丢失了，幸好本项目备份了一些。启用本功能将自动识别对应作品并使用【在线弹幕】功能加载备份的弹幕，找回曾经的感动。<br>※部分4:3视频请以播放器原始形态观看获取最佳体验，不推荐全屏。')
         ])
     }
     /** 样式设置 */
