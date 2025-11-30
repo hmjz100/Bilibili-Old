@@ -56,7 +56,7 @@
         "declarativeNetRequestWithHostAccess",
         "declarativeNetRequestFeedback"
     ],
-    "version": "1.0",
+    "version": "10.8.9",
     "web_accessible_resources": [
         {
             "resources": [
