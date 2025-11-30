@@ -6,17 +6,17 @@ const _MUTEX_ = Math.random().toString(36).substring(2);
 
 // 清空输出目录并复制资源
 await fs.emptyDir('./dist');
-fs.copy("./chrome/_locales", "./dist/_locales");
-fs.copy("./chrome/images", "./dist/images");
-fs.copy("./chrome/player", "./dist/player");
-fs.copy("./chrome/rules", "./dist/rules");
-fs.copy("./chrome/manifest.json", "./dist/manifest.json");
+fs.copy("./extension/_locales", "./dist/_locales");
+fs.copy("./extension/images", "./dist/images");
+fs.copy("./extension/player", "./dist/player");
+fs.copy("./extension/rules", "./dist/rules");
+fs.copy("./extension/manifest.json", "./dist/manifest.json");
 
 // 打包后台脚本和内容脚本
 esbuild.build({
     entryPoints: [
-        'chrome/background.ts',
-        'chrome/content.ts',
+        'extension/background.ts',
+        'extension/content.ts',
     ],
     target: "chrome76",
     bundle: true,
@@ -54,5 +54,5 @@ esbuild.build({
         _MUTEX_: `'${_MUTEX_}'`,
         _UserScript_: 'false', // 用户脚本标记
     },
-    inject: ['@jsc/chrome'], // 替换化境变量
+    inject: ['@jsc/extension'], // 替换化境变量
 });

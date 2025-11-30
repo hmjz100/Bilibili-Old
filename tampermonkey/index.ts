@@ -1,4 +1,4 @@
-import { GM as _ } from "@jsc/chrome/utils/gm";
+import { GM as _ } from "@jsc/extension/utils/gm";
 import './gm';
 import './polyfill/polyfill';
 

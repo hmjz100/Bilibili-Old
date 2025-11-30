@@ -1,4 +1,4 @@
-import { GM as _ } from '@jsc/chrome';
+import { GM as _ } from '@jsc/extension';
 import { BLOD } from './core/bilibili-old';
 import { user } from './core/user';
 import { localStorage } from "./core/storage";

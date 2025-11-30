@@ -3,13 +3,13 @@
 	"tasks": [
 		{
 			"type": "npm",
-			"script": "chrome",
+			"script": "extension",
 			"group": {
 				"kind": "build",
 				"isDefault": true
 			},
 			"problemMatcher": [],
-			"label": "npm: chrome",
+			"label": "npm: extension",
 			"detail": "编译浏览器扩展"
 		},
 		{

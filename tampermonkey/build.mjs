@@ -18,7 +18,7 @@ function getHash(path) {
 }
 
 // 获取播放器脚本版本哈希
-const hash = await getHash('./chrome/player/video.js');
+const hash = await getHash('./extension/player/video.js');
 // 写入版本号
 manifest.version += `-${hash}`;
 // 生成文件页眉

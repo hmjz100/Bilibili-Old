@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@jsc/chrome": "file:chrome",
+    "@jsc/extension": "file:extension",
     "@jsc/tampermonkey": "file:tampermonkey",
     "fflate": "*",
     "md5": "*",
@@ -16,7 +16,7 @@
   },
   "scripts": {
     "tsc": "tsc --noEmit -p ./src/tsconfig.json",
-    "chrome": "node chrome/build.mjs",
+    "extension": "node extension/build.mjs",
     "tampermonkey": "node tampermonkey/build.mjs",
     "comment": "node tampermonkey/comment/build.mjs"
   }

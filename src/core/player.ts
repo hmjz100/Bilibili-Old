@@ -402,7 +402,7 @@ class Player {
                             '> 如果多次更新失败，请禁用【重构播放器】功能！');
                         let i = 1;
                         await Promise.all([
-                            GM.fetch(cdn.encode('/chrome/player/video.js'))
+                            GM.fetch(cdn.encode('/extension/player/video.js'))
                                 .then(d => d.text())
                                 .then(d => {
                                     data[0] = d;
@@ -412,7 +412,7 @@ class Player {
                                     msg.push(`> 获取播放器组件出错！${i++}/2`, e);
                                     msg.type = 'error';
                                 }),
-                            GM.fetch(cdn.encode('/chrome/player/video.css'))
+                            GM.fetch(cdn.encode('/extension/player/video.css'))
                                 .then(d => d.text())
                                 .then(d => {
                                     data[1] = d;

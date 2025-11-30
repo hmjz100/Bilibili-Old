@@ -7,7 +7,7 @@
 ### 开发环境
 - [Visual Studio Code](https://code.visualstudio.com/).
 - [Node.js](https://nodejs.org/).
-- [Google Chrome](https://www.google.com/chrome/).
+- [Google Chrome](https://www.google.com/extension/).
 
 ---
 ### TypeScript
