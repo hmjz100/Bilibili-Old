@@ -14,9 +14,9 @@
 		},
 		{
 			"type": "npm",
-			"script": "tampermonkey",
+			"script": "userjs",
 			"problemMatcher": [],
-			"label": "npm: tampermonkey",
+			"label": "npm: userjs",
 			"detail": "编译用户脚本：哔哩哔哩旧播放页"
 		},
 		{

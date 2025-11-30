@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'tampermonkey/manifest.json'
+      - 'userjs/manifest.json'
 
 jobs:
   build:
@@ -24,11 +24,11 @@ jobs:
       run: npm install
       
     - name: 创建脚本
-      run: npm run tampermonkey
+      run: npm run userjs
       
     - name: 上传文件
       uses: actions/upload-artifact@v4
       with:
         name: Bilibili-Old-UserJS
-        path: tampermonkey/main.user.js
+        path: userjs/main.user.js
         retention-days: 30

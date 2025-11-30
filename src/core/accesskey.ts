@@ -69,7 +69,7 @@ export class AccessKey {
 
     /**
      * 新版方法  
-     * @see https://github.com/lzghzr/TampermonkeyJS/blob/master/libBilibiliToken/libBilibiliToken.ts
+     * @see https://github.com/lzghzr/userjsJS/blob/master/libBilibiliToken/libBilibiliToken.ts
      */
     poll() {
         if (uid) {

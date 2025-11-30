@@ -1,5 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.bilibili.com</chatserver><chatid>4335759</chatid><mission>0</mission><maxlimit>1000</maxlimit><source>k-v</source>
-<d p="0.20000000298023,8,25,16777215,1440123557,2,0823e18c,1132361397">//0.2
+<?xml version="1.0" encoding="UTF-8"?><i>
+	<chatserver>chat.bilibili.com</chatserver>
+	<chatid>4335759</chatid>
+	<mission>0</mission>
+	<maxlimit>1000</maxlimit>
+	<source>k-v</source>
+	<d p="0.20000000298023,8,25,16777215,1440123557,2,0823e18c,1132361397">//0.2
 var TTTlife = 8.3;
 var totalLife = 7.6;
 var main_basic = $.createCanvas({x:$.width/2, y:$.height/2, lifeTime:TTTlife});
@@ -12,7 +17,6 @@ var originWidth = 480;
 var originHeight = 360;
 var lastWidth = 0;
 var lastHeight = 0;
-
 	$.root.addEventListener('enterFrame', function(){
 	if ($.width != lastWidth || $.height != lastHeight){
 		var size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -24,7 +28,6 @@ var lastHeight = 0;
 		lastHeight = $.height;
 		}
 	});
-
 function crtMask(delay){
 	timer(function(){
 		var basic_mask = $.createShape({parent:edge, lifeTime:totalLife-delay});
@@ -34,7 +37,6 @@ function crtMask(delay){
 			basic_mask.graphics.endFill;
 			}, delay*1000);
 		}
-
 	var bas = $.createShape({parent:basic, lifeTime:TTTlife});
 		bas.graphics.beginFill(0);
 		bas.graphics.drawRect(-300, -200, 600, 400);
@@ -51,7 +53,6 @@ function crtMask(delay){
 		msk2.graphics.beginFill(0);
 		msk2.graphics.drawRect(-300, -200, 600, 480);
 		msk2.graphics.endFill;
-
 	var exitsign = $.createCanvas({x:0, y:0, alpha:0, lifeTime:totalLife, parent:basic, motionGroup:[{alpha:{fromValue:0,toValue:1,lifeTime:1}}, {alpha:{fromValue:1,toValue:0,lifeTime:1}}, {alpha:{fromValue:0,toValue:1,lifeTime:1}}, {alpha:{fromValue:1,toValue:0,lifeTime:1}}, {alpha:{fromValue:0,toValue:1,lifeTime:1}}, {alpha:{fromValue:1,toValue:0,lifeTime:1}}, {alpha:{fromValue:0,toValue:1,lifeTime:1}}, {alpha:{fromValue:1,toValue:0,lifeTime:1}}]});
 	var bas = $.createShape({x:0, y:0, lifeTime:totalLife, parent:exitsign});//绿底
 		bas.graphics.beginFill(0x00CC00);
@@ -98,7 +99,6 @@ function crtMask(delay){
 		row.graphics.lineTo(-12, -12);
 		row.graphics.endFill;
 	
-
 	var door = $.createCanvas({x:-100, y:0, parent:basic, alpha:0, lifeTime:totalLife, motionGroup:[{alpha:{fromValue:0,toValue:1,lifeTime:2,startDelay:3000}, rotationY:{fromValue:90,toValue:90,lifeTime:2,startDelay:3000}}, {rotationY:{fromValue:90,toValue:0,lifeTime:totalLife-5}}]});
 	var door_bas = $.createShape({x:0, y:0, lifeTime:totalLife, parent:door});
 		door_bas.graphics.beginFill(0xFFFFFF);
@@ -109,18 +109,14 @@ function crtMask(delay){
 		handle.graphics.beginFill(0x7777777);
 		handle.graphics.drawRect(148, -8, 16, 16);
 		handle.graphics.endFill;
-
 	var msk = $.createShape({x:0, y:0, lifeTime:totalLife, parent:basic});
 		msk.graphics.beginFill(0);
 		msk.graphics.drawRect(-300, -200, 600, 480);
 		msk.graphics.drawEllipse(-180, -120, 360, 240);
 		msk.graphics.endFill;
 	msk.filters=[$.createGlowFilter(0x000000, 0.5, 64, 32, 2, 6, false, false), $.createBlurFilter(128, 64)];
-
-
 crtMask(0);</d>
-<d p="8.3000001907349,8,25,16777215,1440123572,2,0823e18c,1132362251">//8.3
-
+	<d p="8.3000001907349,8,25,16777215,1440123572,2,0823e18c,1132362251">//8.3
 var totalLife = 17.2;
 var main_basic = $.createCanvas({x:$.width/2, y:$.height/2, lifeTime:totalLife});
 var main_size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -132,7 +128,6 @@ var originWidth = 480;
 var originHeight = 360;
 var lastWidth = 0;
 var lastHeight = 0;
-
 	$.root.addEventListener('enterFrame', function(){
 	if ($.width != lastWidth || $.height != lastHeight){
 		var size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -144,7 +139,6 @@ var lastHeight = 0;
 		lastHeight = $.height;
 		}
 	});
-
 function crtMask(delay){
 	timer(function(){
 		var basic_mask = $.createShape({parent:edge, lifeTime:totalLife-delay});
@@ -169,7 +163,6 @@ var b0 = -88;
 var b1 = 88;
 var a0 = -284;
 var a3 = 284;
-
 function crtTrapezium(x0, y0, x1, y1, x2, y2, x3, y3, delay, last, cl, al, par){
 	timer(function(){
 	var shp = $.createShape({lifeTime:last, parent:par});
@@ -451,51 +444,40 @@ function crtPTitlt(txt, x_in, delay, life, par){
 		}, 10, life*100);
 		}, delay);
 	}
-
 crtMask(0);
-
 crtRoom(0, 17.3, basic);
 crtImask(0, 1.4, basic);
 allChessboard(0, 0.35, 0, 0.6, 4, basic);
-
 crtOmask(1400, 1.4, basic);
 crtPhone(-93, 0, 1400, 0.525, basic, 0.68, -1);
 crtPhone(93, 0, 1400, 0.525, basic, 0.68, 1);
 crtHeart(1925, 0.35, basic);
 crtBrokenHeart(2275, 0.525, basic);
-
 crtImask(2800, 1.4, basic);
 allChessboard(2800, 0.35, 0, 0.6, 4, basic);
-
 crtOmask(4200, 1.4, basic);
 crtTalk(-90, 13, 4200, 0.525, 0.5, 0, basic);
 crtTalk(90, 13, 4200, 0.525, 0.5, 1, basic);
 crtHeart(4725, 0.35, basic);
 crtBrokenHeart(5075, 0.525, basic);
-
 crtImask(5600, 1.4, basic);
 allChessboard(5600, 0.35, 0, 0.6, 4, basic);
-
 crtOmask(7000, 1.4, basic);
 crtGlass(-90, 5, 7000, 0.525, basic);
 crtGlass(90, 5, 7000, 0.525, basic);
 crtHeart(7525, 0.35, basic);
 crtBrokenHeart(7875, 0.525, basic);
-
 crtImask(8400, 1.4, basic);
 allChessboard(8400, 0.35, 0, 0.6, 4, basic);
-
 crtOmask(9800, 1.4, basic);
 crtPeople(-96, 0, 9800, 0.5, 0.45, 0, 1, basic);
 crtPeople(96, 0, 9800, 0.5, 0.45, 0, -1, basic);
 crtPeople(-91, 0, 10400, 0.7, 0.45, 0xFF0000, -1, basic);
 crtPeople(91, 0, 10400, 0.7, 0.45, 0x00FF00, 1, basic);
-
 crtPTitlt("WORLD'S", -105, 0, 1.4, basic);
 crtPTitlt("E N D", -59, 2800, 1.4, basic);
 crtPTitlt("DANCE", -81, 5600, 1.4, basic);
 crtPTitlt("HALL", -62, 8400, 1.4, basic);
-
 function crtRow(x_in, y_in, delay, life, thick, width, length, cl, rad, par){
 	timer(function(){
 		var row = $.createShape({x:x_in, y:y_in, parent:par, lifeTime:life, motion:{rotationZ:{fromValue:rad}}});
@@ -509,7 +491,6 @@ function crtRow(x_in, y_in, delay, life, thick, width, length, cl, rad, par){
 			row.graphics.endFill;
 		}, delay);
 	}
-
 function crtSRow12(delay, life, dir, par){
 	timer(function(){
 		for(i=0 ;i &lt; 12; i++){
@@ -523,7 +504,6 @@ function crtSRow12(delay, life, dir, par){
 			}
 		}, delay);
 	}
-
 function crtTitle(x_in, y_in, delay, life, par){
 	timer(function(){
 		var title = $.createCanvas({x:x_in, y:y_in, parent:par, lifeTime:life});
@@ -541,7 +521,6 @@ function crtTitle(x_in, y_in, delay, life, par){
 		}, 10, 600);
 		},delay);
 	}
-
 timer(function(){
 	var bas = $.createShape({parent:basic, lifeTime:6.1});
 		bas.graphics.beginFill(0, 0.3);
@@ -551,9 +530,8 @@ timer(function(){
 allChessboard(11200, 0.35, 0, 0.6, 18, basic);
 crtSRow12(11200, 6.1, 1, basic);
 crtTitle(0, 0, 11200, 6.1, basic);
-</d>
-<d p="24.799999237061,8,25,16777215,1440123583,2,0823e18c,1132362777">//24.8
-
+	</d>
+	<d p="24.799999237061,8,25,16777215,1440123583,2,0823e18c,1132362777">//24.8
 var totalLife = 6.05;
 var main_basic = $.createCanvas({x:$.width/2, y:$.height/2, lifeTime:totalLife});
 var main_size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -565,7 +543,6 @@ var originWidth = 480;
 var originHeight = 360;
 var lastWidth = 0;
 var lastHeight = 0;
-
 	$.root.addEventListener('enterFrame', function(){
 	if ($.width != lastWidth || $.height != lastHeight){
 		var size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -577,7 +554,6 @@ var lastHeight = 0;
 		lastHeight = $.height;
 		}
 	});
-
 function crtMask(delay){
 	timer(function(){
 		var basic_mask = $.createShape({parent:edge, lifeTime:totalLife-delay});
@@ -587,7 +563,6 @@ function crtMask(delay){
 			basic_mask.graphics.endFill;
 			}, delay*1000);
 		}
-
 function crtBackgroud(cl, delay, life, par){
 	timer(function(){
 		var bas = $.createShape({parent:par, lifeTime:life});
@@ -596,7 +571,6 @@ function crtBackgroud(cl, delay, life, par){
 			bas.graphics.endFill;
 		},delay);
 	}
-
 function crtWall(x_in, y_in, delay, life, type, size, par){
 	//186*176
 	timer(function(){
@@ -615,7 +589,6 @@ function crtWall(x_in, y_in, delay, life, type, size, par){
 			wall.scaleY = size;
 		}, delay);
 	}
-
 function crtDoor(x_in, y_in, delay, life, type, size, par){
 	//98*108描点在轴中央
 	timer(function(){
@@ -643,7 +616,6 @@ function crtDoor(x_in, y_in, delay, life, type, size, par){
 		door.scaleY = size;
 		}, delay);
 	}
-
 function crtRow(x_in, y_in, delay, life, thick, width, length, cl, rad, par, mot){
 	timer(function(){
 		var row = $.createShape({x:x_in, y:y_in, parent:par, lifeTime:life, motionGroup:mot});
@@ -658,7 +630,6 @@ function crtRow(x_in, y_in, delay, life, thick, width, length, cl, rad, par, mot
 		row.rotationZ = rad;
 		}, delay);
 	}
-
 function infor2(txt, x_in, y_in, delay, life, par){
 	timer(function(){
 	var infor = $.createCanvas({x:x_in, y:y_in-30, lifeTime:life, parent:par});
@@ -670,7 +641,6 @@ function infor2(txt, x_in, y_in, delay, life, par){
 		tl2.filters = null;
 	},delay);
 	}
-
 function crtMiku(x_in, y_in, delay, life, size, type, par){
 	//120*(-50~60)
 	timer(function(){
@@ -750,7 +720,6 @@ function crtMiku(x_in, y_in, delay, life, size, type, par){
 			}
 		}, delay);
 	}
-
 function crtLuka(x_in, y_in, delay, life, size, type, par){
 	//100*(-50~70)
 	timer(function(){
@@ -840,10 +809,8 @@ function crtLuka(x_in, y_in, delay, life, size, type, par){
 			}
 		}, delay);
 	}
-
 crtBackgroud(0xFFFFFF, 500, 6, basic);
 crtMask(0);
-
 timer(function(){
 	var basS = $.createCanvas({x:-240, y:500, lifeTime:1.7, parent:basic, motionGroup:[{rotationZ:{fromValue:0,toValue:-55,lifeTime:0.2}}, {rotationZ:{fromValue:-55,toValue:-60,lifeTime:0.3}}, {x:{fromValue:-240,toValue:0,lifeTime:0.2}}]});
 	var s = $.createShape({x:480, y:0, parent:basS, lifeTime:0.7, motion:{y:{fromValue:0,toValue:-300, lifeTime:0.1, startDelay:300}}});
@@ -975,9 +942,8 @@ timer(function(){
 		i4.font = "微软雅黑";
 		i4.filters = null;
 		}, 4200);
-</d>
-<d p="30.5,8,25,16777215,1440123594,2,0823e18c,1132363495">//30.5
-
+	</d>
+	<d p="30.5,8,25,16777215,1440123594,2,0823e18c,1132363495">//30.5
 var totalLife = 11.6;
 var main_basic = $.createCanvas({x:$.width/2, y:$.height/2, lifeTime:totalLife});
 var main_size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -989,7 +955,6 @@ var originWidth = 480;
 var originHeight = 360;
 var lastWidth = 0;
 var lastHeight = 0;
-
 	$.root.addEventListener('enterFrame', function(){
 	if ($.width != lastWidth || $.height != lastHeight){
 		var size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -1001,7 +966,6 @@ var lastHeight = 0;
 		lastHeight = $.height;
 		}
 	});
-
 function crtMask(delay){
 	timer(function(){
 		var basic_mask = $.createShape({parent:edge, lifeTime:totalLife-delay});
@@ -1011,7 +975,6 @@ function crtMask(delay){
 			basic_mask.graphics.endFill;
 			}, delay*1000);
 		}
-
 function crtBackgroud(cl, delay, life, par){
 	timer(function(){
 		var bas = $.createShape({parent:par, lifeTime:life});
@@ -1020,7 +983,6 @@ function crtBackgroud(cl, delay, life, par){
 			bas.graphics.endFill;
 		},delay);
 	}
-
 function crtDoor(x_in, y_in, delay, life, type, size, par){
 	//98*108描点在轴中央
 	timer(function(){
@@ -1047,7 +1009,6 @@ function crtDoor(x_in, y_in, delay, life, type, size, par){
 		door.scaleY = size;
 		}, delay);
 	}
-
 function crtFace(x_in, y_in, delay, life, size, cl, al, type, par, mot){
 	//160*220
 	timer(function(){
@@ -1085,7 +1046,6 @@ function crtFace(x_in, y_in, delay, life, size, cl, al, type, par, mot){
 		face.scaleY = size;
 		}, delay);
 	}
-
 function crtHand(x_in, y_in, delay, life, size, par, mot){
 	//-30~200*-85~25
 		timer(function(){
@@ -1114,7 +1074,6 @@ function crtHand(x_in, y_in, delay, life, size, par, mot){
 		hand.scaleY = size;
 		}, delay);
 	}
-
 function crtStair(x_in, y_in, delay, life, height, account, downheight, cl, dr, par){
 	timer(function(){
 		var stair = $.createShape({x:x_in, y:y_in, parent:par, lifeTime:life, motionGroup:[{y:{fromValue:y_in-downheight,toValue:y_in,lifeTime:0.1}}, {y:{fromValue:y_in,toValue:y_in+downheight,lifeTime:life-0.1}}]});
@@ -1130,7 +1089,6 @@ function crtStair(x_in, y_in, delay, life, height, account, downheight, cl, dr, 
 		if(dr == 0){stair.rotationY = 180;}
 		},delay);
 	}
-
 function lrc1(txt, x_in, y_in, delay, life, cl, fsize, par, e){//"冗談混じりの境界線上"
 	timer(function(){
 		lrc = $.createComment(txt,{x:x_in, y:y_in, parent:par, lifeTime:life, color:cl, fontsize:fsize, motionGroup:
@@ -1154,22 +1112,18 @@ function lrc3(txt, x_in, y_in, delay, life, par){//"ねえ"
 			}, 10, 10);
 		}, delay);
 	}
-
 function lrc4(txt, x_in, y_in, delay, life, par){//"その手を引いてみようか？"
 	timer(function(){
 		lrc = $.createComment(txt,{x:x_in, y:y_in, parent:par, color:0, lifeTime:life, forntSize:18, motionGroup:[{y:{fromValue:y_in-360,toValue:y_in-5,lifeTime:0.1}}, {y:{fromValue:y_in-5,toValue:y_in+15,lifeTime:life-0.2}}]});
 		lrc.filters = null;
 		}, delay);
 	}
-
 function crtlryic(txt, delay, life){
 	timer(function(){
 		$.createComment(txt,{x:-230, y:145, color:0xFFFFFF, lifeTime:life-delay-0.02, fontsize:20, parent:edge});
 		}, (delay-30.7)*1000);
 	}
-
 crtBackgroud(0xFFFFFF, 0, 11.5, basic);
-
 timer(function(){
 	var bas = $.createCanvas({parent:basic, lifeTime:2.85, motion:{y:{fromValue:0,toValue:120,lifeTime:0.1,startDelay:2800}}});
 	lrc1("冗談混じりの", -140, -20, 0, 2.9, 0, 36, bas, 0);
@@ -1231,14 +1185,12 @@ timer(function(){
 	lrc4("引いてみようか？", 15, -5, 0, 2.85, bas);
 	crtHand(-240, 0, 0, 2.8, 1.2, bas, [{rotationZ:{fromValue:-90,toValue:-5,lifeTime:0.25}}, {rotationZ:{fromValue:-5,toValue:15,lifeTime:2.65}}]);
 	}, 8400);
-
 crtMask(0);
 crtlryic("在玩笑混合的边界线上", 30.7, 33.5);
 crtlryic("阶梯再远一点的前方", 33.5, 36.3);
 crtlryic("反正完全没什么好事情", 36.3, 38.7);
 crtlryic("呐,要试著把牵起那只手吗？", 38.7, 41.9);</d>
-<d p="41.700000762939,8,25,16777215,1440123604,2,0823e18c,1132364057">//41.7
-
+	<d p="41.700000762939,8,25,16777215,1440123604,2,0823e18c,1132364057">//41.7
 var totalLife = 12;
 var main_basic = $.createCanvas({x:$.width/2, y:$.height/2, lifeTime:totalLife});
 var main_size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -1250,7 +1202,6 @@ var originWidth = 480;
 var originHeight = 360;
 var lastWidth = 0;
 var lastHeight = 0;
-
 	$.root.addEventListener('enterFrame', function(){
 	if ($.width != lastWidth || $.height != lastHeight){
 		var size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -1262,7 +1213,6 @@ var lastHeight = 0;
 		lastHeight = $.height;
 		}
 	});
-
 function crtMask(delay){
 	timer(function(){
 		var basic_mask = $.createShape({parent:edge, lifeTime:totalLife-delay});
@@ -1272,7 +1222,6 @@ function crtMask(delay){
 			basic_mask.graphics.endFill;
 			}, delay*1000);
 		}
-
 function crtBackgroud(cl, delay, life, par){
 	timer(function(){
 		var bas = $.createShape({parent:par, lifeTime:life});
@@ -1281,13 +1230,11 @@ function crtBackgroud(cl, delay, life, par){
 			bas.graphics.endFill;
 		},delay);
 	}
-
 function crtlryic(txt, delay, life){
 	timer(function(){
 		$.createComment(txt,{x:-230, y:145, color:0xFFFFFF, lifeTime:life-delay-0.02, fontsize:20, parent:edge});
 		}, (delay-41.9)*1000);
 	}
-
 function crtBuilding(x_in, y_in, delay, life, cl, w_in, h_in, win_x, win_y, win_s, win_bew, par, mot){
 	timer(function(){
 		var building = $.createCanvas({x:x_in, y:y_in, lifeTime:life, parent:par, motionGroup:mot});
@@ -1305,7 +1252,6 @@ function crtBuilding(x_in, y_in, delay, life, cl, w_in, h_in, win_x, win_y, win_
 			}
 		}, delay);
 	}
-
 function crtDoor(x_in, y_in, delay, life, type, size, par, mot){
 	//98*108描点在轴中央
 	timer(function(){
@@ -1332,7 +1278,6 @@ function crtDoor(x_in, y_in, delay, life, type, size, par, mot){
 		door.scaleY = size;
 		}, delay);
 	}
-
 function crtSBuilding(x_in, y_in, delay, life, par){
 	timer(function(){
 		var building = $.createCanvas({x:x_in, y:y_in, parent:par, lifeTime:life, motion:{y:{fromValue:y_in+60,toValue:y_in,lifeTime:0.1}}});
@@ -1343,7 +1288,6 @@ function crtSBuilding(x_in, y_in, delay, life, par){
 			crtBuilding(434, 205, 0, life, 0, 68, 230, 2, 5, 18, 10, building);
 		}, delay);
 	}
-
 function crtLight(delay, life, par){
 	timer(function(){
 		var l1 = $.createShape({x:-240, y:180, parent:par, lifeTime:life, motionGroup:[{rotationZ:{fromValue:0, toValue:30,lifeTime:0.1}}, {rotationZ:{fromValue:30, toValue:40,lifeTime:life-0.1}}]});
@@ -1364,7 +1308,6 @@ function crtLight(delay, life, par){
 			l2.graphics.endFill;
 		}, delay);
 	}
-
 timer(function(){
 	Plife = 2.5;
 	var bas = $.createCanvas({parent:basic, lifeTime:6});
@@ -1467,14 +1410,13 @@ timer(function(){
 			}, 10, 1.9*100);
 		}, 1000);	
 	}, 8400);
-
 crtMask(0);
 crtlryic("那狼狈跌跤的舞蹈", 41.9, 44.3);
 crtlryic("是吗，要在祭坛上跳起来吗？", 44.3, 47.5);
 crtlryic("会眩目到让人傻眼喔", 47.5, 50.3);
 crtlryic("怎么样，不如就一起在这里！", 50.3, 53.1);
-</d>
-<d p="53,8,25,16777215,1440123615,2,0823e18c,1132364693">//53.0
+	</d>
+	<d p="53,8,25,16777215,1440123615,2,0823e18c,1132364693">//53.0
 var totalLife = 11.2;
 var main_basic = $.createCanvas({x:$.width/2, y:$.height/2, lifeTime:totalLife});
 var main_size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -1486,7 +1428,6 @@ var originWidth = 480;
 var originHeight = 360;
 var lastWidth = 0;
 var lastHeight = 0;
-
 	$.root.addEventListener('enterFrame', function(){
 	if ($.width != lastWidth || $.height != lastHeight){
 		var size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -1498,7 +1439,6 @@ var lastHeight = 0;
 		lastHeight = $.height;
 		}
 	});
-
 function crtMask(delay){
 	timer(function(){
 		var basic_mask = $.createShape({parent:edge, lifeTime:totalLife-delay});
@@ -1508,7 +1448,6 @@ function crtMask(delay){
 			basic_mask.graphics.endFill;
 			}, delay*1000);
 		}
-
 function crtBackgroud(cl, delay, life, par){
 	timer(function(){
 		var bas = $.createShape({parent:par, lifeTime:life});
@@ -1517,7 +1456,6 @@ function crtBackgroud(cl, delay, life, par){
 			bas.graphics.endFill;
 		},delay);
 	}
-
 function crtPhone(x_in, y_in, delay, life, par){
 	//200*400
 	timer(function(){
@@ -1532,7 +1470,6 @@ function crtPhone(x_in, y_in, delay, life, par){
 			button.graphics.endFill;
 		},delay);
 	}
-
 function crtPTalk(txt, type, life, wid, number, par){
 	var bas = $.createCanvas({x:85*type, y:110+number*(60), lifeTime:life, parent:par});
 	var talk = $.createShape({x:-wid/2*type, y:0, parent:bas, lifeTime:life});
@@ -1543,7 +1480,6 @@ function crtPTalk(txt, type, life, wid, number, par){
 	word.font = "微软雅黑";
 	word.filters = null;
 	}
-
 function crtTalk(x_in, y_in, delay, life, size, dir, par){
 	timer(function(){
 		var talk = $.createShape({x:x_in, y:y_in, lifeTime:life, parent:par});
@@ -1567,7 +1503,6 @@ function crtTalk(x_in, y_in, delay, life, size, dir, par){
 		talk.scaleY = size;
 		},delay);
 	}
-
 function crtTTalk(txt, delay, life, Btype, fsize, par){
 	timer(function(){
 		switch(Btype){
@@ -1594,7 +1529,6 @@ function crtTTalk(txt, delay, life, Btype, fsize, par){
 		}, 20, 10);
 		},delay);
 	}
-
 timer(function(){
 	Plife = 5.8;
 	var bas = $.createCanvas({parent:basic, lifeTime:Plife});
@@ -1637,7 +1571,7 @@ timer(function(){
 	crtTTalk("ヽ(￣□￣;)ノ", 4700, 0.8, 1, 24, bas);
 	}, 5600);
 crtMask(0);</d>
-<d p="63.5,8,25,16777215,1440123628,2,0823e18c,1132365409">//63.5
+	<d p="63.5,8,25,16777215,1440123628,2,0823e18c,1132365409">//63.5
 var totalLife = 11.95;
 var main_basic = $.createCanvas({x:$.width/2, y:$.height/2, lifeTime:totalLife});
 var main_size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -1649,7 +1583,6 @@ var originWidth = 480;
 var originHeight = 360;
 var lastWidth = 0;
 var lastHeight = 0;
-
 	$.root.addEventListener('enterFrame', function(){
 	if ($.width != lastWidth || $.height != lastHeight){
 		var size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -1661,7 +1594,6 @@ var lastHeight = 0;
 		lastHeight = $.height;
 		}
 	});
-
 function crtMask(delay){
 	timer(function(){
 		var basic_mask = $.createShape({parent:edge, lifeTime:totalLife-delay});
@@ -1684,7 +1616,6 @@ function crtlryic(txt, delay, life){
 		$.createComment(txt,{x:-230, y:145, color:0xFFFFFF, lifeTime:life-delay-0.02, fontsize:20, parent:edge});
 		}, (delay-63.7)*1000);
 	}
-
 function crtFace(x_in, y_in, delay, life, size, cl, al, type, par){
 	//160*220
 	timer(function(){
@@ -1723,7 +1654,6 @@ function crtFace(x_in, y_in, delay, life, size, cl, al, type, par){
 		face.filters =  $.createBlurFilter(50,50);
 		}, delay);
 	}
-
 function crtMusic(x_in, y_in, delay, life, par){
 	timer(function(){
 		var c = $.createCanvas({x:x_in, y:y_in, parent:par, lifeTime:life});
@@ -1739,7 +1669,6 @@ function crtMusic(x_in, y_in, delay, life, par){
 			}
 		}, delay);
 	}
-
 function crtPill(x_in, y_in, delay, life, size, par, mot){
 	timer(function(){
 		var pill = $.createCanvas({x:x_in, y:y_in, parent:par, lifeTime:life, motionGroup:mot});
@@ -1758,7 +1687,6 @@ function crtPill(x_in, y_in, delay, life, size, par, mot){
 		if(size &lt; 0.5) pill.alpha = 0.4;
 		},delay);
 	}
-
 function crtGlass(x_in, y_in, delay, life, par){
 	//40*50
 		timer(function(){
@@ -1790,7 +1718,6 @@ function crtGlass(x_in, y_in, delay, life, par){
 			}
 		}, delay);
 	}
-
 function crtTalk(x_in, y_in, delay, life, size, dir, par){
 	timer(function(){
 		var talk = $.createShape({x:x_in, y:y_in, lifeTime:life, parent:par});
@@ -1822,7 +1749,6 @@ function crtTalk(x_in, y_in, delay, life, size, dir, par){
 		}
 		},delay);
 	}
-
 function crtNTalk(x_in, y_in, delay, life, par){
 	timer(function(){
 		var bas = $.createCanvas({x:x_in, y:y_in, parent:par, lifeTime:life});
@@ -1840,7 +1766,6 @@ function crtNTalk(x_in, y_in, delay, life, par){
 			}
 		}, delay);
 	}
-
 function lrc9(txt, x_in, y_in, delay, life, par, cl){
 	timer(function(){
 		if(txt == "渦巻いて") mlife = life-1.6;
@@ -1849,8 +1774,6 @@ function lrc9(txt, x_in, y_in, delay, life, par, cl){
 			lrc.filters = null;
 		}, delay);
 	}
-
-
 timer(function(){
 	var bas = $.createCanvas({parent:basic, lifeTime:totalLife});
 	crtBackgroud(0xCCCCCC, 600, totalLife, bas);
@@ -1959,15 +1882,13 @@ timer(function(){
 	lrc9("思い切り", -190, -30, 0, 2.8, bas, 0xFFFFFF);
 	lrc9("吐き出そうか", -155, 0, 0, 2.8, bas, 0xFFFFFF);
 	}, 9100);
-
-
 crtMask(0);
 crtlryic("高昂的声音填满了整个房间", 64.3, 67.2);
 crtlryic("将最差劲的意义卷入脑中", 67.2, 70.0);
 crtlryic("当然，也不是什么好事情", 70.0, 72.5);
 crtlryic("来吧，就一口气吐到爽吧", 72.5, 75.6);
-</d>
-<d p="75.400001525879,8,25,16777215,1440123644,2,0823e18c,1132366297">//75.4
+	</d>
+	<d p="75.400001525879,8,25,16777215,1440123644,2,0823e18c,1132366297">//75.4
 var totalLife = 11.05;
 var main_basic = $.createCanvas({x:$.width/2, y:$.height/2, lifeTime:totalLife});
 var main_size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -1979,7 +1900,6 @@ var originWidth = 480;
 var originHeight = 360;
 var lastWidth = 0;
 var lastHeight = 0;
-
 	$.root.addEventListener('enterFrame', function(){
 	if ($.width != lastWidth || $.height != lastHeight){
 		var size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -1991,7 +1911,6 @@ var lastHeight = 0;
 		lastHeight = $.height;
 		}
 	});
-
 function crtMask(delay){
 	timer(function(){
 		var basic_mask = $.createShape({parent:edge, lifeTime:totalLife-delay});
@@ -2014,7 +1933,6 @@ function crtlryic(txt, delay, life){
 		$.createComment(txt,{x:-230, y:145, color:0xFFFFFF, lifeTime:life-delay-0.02, fontsize:20, parent:edge});
 		}, (delay-75.6)*1000);
 	}
-
 function crtPhone(x_in, y_in, delay, life, par, size, mot){
 	//200*400
 	timer(function(){
@@ -2363,7 +2281,6 @@ function crtlrc(txt, x_in, y_in, delay, life, fsize){
 		lrc.filters = null;
 		}, delay);
 	}
-
 timer(function(){
 	Plife = 1.6;
 	var bas = $.createCanvas({parent:basic, lifeTime:totalLife});
@@ -2470,9 +2387,6 @@ timer(function(){
 			}, 120, 7);
 		}, 1200);
 	}, 8400);
-
-
-
 crtMask(0);
 crtlryic("用短短话语联系起的意义", 75.6, 77.0);
 crtlryic("面都没见就超讨厌的理由", 77.0, 78.4);
@@ -2482,8 +2396,8 @@ crtlryic("含羞之余发怒什么的", 81.2, 82.6);
 crtlryic("低头之余笑着什么的", 82.6, 84.0);
 crtlryic("那种事情，反正", 84.0, 85.3);
 crtlryic("都很无聊啦！", 85.3, 86.5);
-</d>
-<d p="86.199996948242,8,25,16777215,1440123663,2,0823e18c,1132367225">//86.2
+	</d>
+	<d p="86.199996948242,8,25,16777215,1440123663,2,0823e18c,1132367225">//86.2
 var totalLife = 11.5;
 var main_basic = $.createCanvas({x:$.width/2, y:$.height/2, lifeTime:totalLife});
 var main_size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -2495,7 +2409,6 @@ var originWidth = 480;
 var originHeight = 360;
 var lastWidth = 0;
 var lastHeight = 0;
-
 	$.root.addEventListener('enterFrame', function(){
 	if ($.width != lastWidth || $.height != lastHeight){
 		var size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -2507,10 +2420,7 @@ var lastHeight = 0;
 		lastHeight = $.height;
 		}
 	});
-
-
 var bastop = $.createCanvas({parent:basic, lifeTime:11.8, motion:{x:{fromValue:0, toValue:-480, lifeTime:0.2, startDelay:11200}}});
-
 function crtMask(delay, par){
 	timer(function(){
 		var basic_mask = $.createShape({parent:par, lifeTime:totalLife-delay});
@@ -2533,7 +2443,6 @@ function crtlryic(txt, delay, life){
 		$.createComment(txt,{x:-230, y:145, color:0xFFFFFF, lifeTime:life-delay-0.02, fontsize:20, parent:edge});
 		}, (delay-86.4)*1000);
 	}
-
 function crtDPeople(x_in, y_in, cl, delay, life, size, type, par, mot){
 	//100*140
 	timer(function(){
@@ -2641,7 +2550,6 @@ function crtDmask(delay, life, par, type){
 			dedge.graphics.endFill;
 		}, delay);
 	}
-
 function lrc9_1(txt, x_in, y_in, delay, space, in_life, out_life, par){
 	timer(function(){
 		if(out_life &lt; 1) {
@@ -2680,7 +2588,6 @@ function lrc9_3(txt, x_in, y_in, delay, life, par, type){
 			}
 		}, delay);
 	}
-
 timer(function(){
 	Plife = 13;
 	var basup = $.createCanvas({y:380, parent:bastop, lifeTime:Plife, motion:{rotationZ:{fromValue:90, toValue:0, lifeTime:0.2, startDelay:100}}});
@@ -2696,14 +2603,12 @@ timer(function(){
 	
 	crtDPeople(-130, 0, 0, 0, 5.7, 1, 0, bas, [{x:{fromValue:-130,toValue:130,lifeTime:0.4, startDelay:500, easing:"Sine"}}, {x:{fromValue:130,toValue:140,lifeTime:0.1}}, {x:{fromValue:140,toValue:130,lifeTime:0.1}}, {x:{fromValue:130,toValue:-130,lifeTime:0.4, easing:"Sine"}}, {x:{fromValue:-130,toValue:-140,lifeTime:0.1}}, {x:{fromValue:-140,toValue:-130,lifeTime:0.1}}, {x:{fromValue:-130,toValue:130,lifeTime:0.6, easing:"Sine"}}]);
 	crtDPeople(130, 0, 0, 0, 5.4, 1, 1, bas, [{x:{fromValue:130,toValue:-130,lifeTime:0.4, startDelay:500, easing:"Sine"}}, {x:{fromValue:-130,toValue:-140,lifeTime:0.1}}, {x:{fromValue:-140,toValue:-130,lifeTime:0.1}}, {x:{fromValue:-130,toValue:130,lifeTime:0.4, easing:"Sine"}}, {x:{fromValue:130,toValue:140,lifeTime:0.1}}, {x:{fromValue:140,toValue:130,lifeTime:0.1}}, {x:{fromValue:130,toValue:-130,lifeTime:0.6, easing:"Sine"}}]);
-
 	lrc9_1("hop", -60, 0, 800, 51, 0.3, 0.3, bas);
 	lrc9_1("stepで", -90, 0, 1400, 33, 0.3, 0.4, bas);
 	lrc9_1("踊ろうか", -83, 0, 2000, 43, 0.4, 10, bas);
 	lrc9_2("世界", -40, -20, 2700, 0.8, 42, bas);
 	lrc9_2("の", -19, -20, 3500, 0.6, 42, bas);
 	lrc9_2("隅っこで", -75, -20, 4200, 1, 36, bas);
-
 	timer(function(){
 		Plife = 14.5;
 		var s = $.createShape({x:-240, y:-140, parent:bas, lifeTime:Plife, motion:{rotationZ:{fromValue:-90, toValue:0, lifeTime:0.3, easing:"Circle"}}});
@@ -2865,13 +2770,12 @@ timer(function(){
 			left_bas.graphics.endFill;
 			}, 10200);
 	}, 0);
-
 crtMask(0, edge);
 crtMask(0, basic);
 crtlryic("要用 hop step 跳起舞吗", 86.9, 89.2);
 crtlryic("在世界的小角落数起 1·2", 89.2, 92.5);
 crtlryic("享受一下仿佛要晕了的末日感吧", 92.5, 97.4);</d>
-<d p="97.400001525879,8,25,16777215,1440123673,2,0823e18c,1132367689">//97.4
+	<d p="97.400001525879,8,25,16777215,1440123673,2,0823e18c,1132367689">//97.4
 var totalLife = 11.7;
 var main_basic = $.createCanvas({x:$.width/2, y:$.height/2, lifeTime:totalLife});
 var main_size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -2883,7 +2787,6 @@ var originWidth = 480;
 var originHeight = 360;
 var lastWidth = 0;
 var lastHeight = 0;
-
 	$.root.addEventListener('enterFrame', function(){
 	if ($.width != lastWidth || $.height != lastHeight){
 		var size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -2895,7 +2798,6 @@ var lastHeight = 0;
 		lastHeight = $.height;
 		}
 	});
-
 function crtMask(delay){
 	timer(function(){
 		var basic_mask = $.createShape({parent:edge, lifeTime:totalLife-delay});
@@ -2918,7 +2820,6 @@ function crtlryic(txt, delay, life){
 		$.createComment(txt,{x:-230, y:145, color:0xFFFFFF, lifeTime:life-delay-0.02, fontsize:20, parent:edge});
 		}, (delay-97.5)*1000);
 	}
-
 function crtPeople(x_in, y_in, delay, life, size, cl, type, par, mot){
 	//160*200
 	timer(function(){
@@ -3006,7 +2907,6 @@ function crtDoor(x_in, y_in, delay, life, type, size, par, mot){
 		door.scaleY = size;
 		}, delay);
 	}
-
 function lrc(txt, x_in, y_in, delay, life, par){
 	timer(function(){
 		con = $.createCanvas({x:x_in, y:y_in, parent:par, lifeTime:life});
@@ -3029,7 +2929,6 @@ function lrcRound(txt, x_in, y_in, delay, life, par, mot){
 			}
 		}, delay);
 	}
-
 timer(function(){
 	Plife = 2.8;
 	var bas = $.createCanvas({parent:basic, lifeTime:totalLife});
@@ -3141,7 +3040,6 @@ timer(function(){
 	lrcRound("くる", 0, 0, 0, 0.65, basw, [{rotationZ:{fromValue:0,toValue:70,lifeTime:0.3, easing:"Exponential"}}, {rotationZ:{fromValue:70,toValue:-70,lifeTime:0.3, startDelay:100, easing:"Exponential"}}]);
 	lrcRound("くるくる", 0, 0, 650, 0.7, basw, [{rotationZ:{fromValue:-50,toValue:50,lifeTime:0.3, easing:"Exponential", startDelay:100}}, {rotationZ:{fromValue:50,toValue:-40,lifeTime:0.3, easing:"Exponential", startDelay:100}}]);
 	lrcRound("くるくるり", 0, 0, 1400, 0.9, basw, [{rotationZ:{fromValue:-40,toValue:25,lifeTime:0.2, easing:"Exponential", startDelay:100}}, {rotationZ:{fromValue:25,toValue:-10,lifeTime:0.2, startDelay:100}}, {rotationZ:{fromValue:-10,toValue:0,lifeTime:0.1, startDelay:100}}]);
-
 	crtPeople(0, 0, 0, 5.3, 0.6, 0, "full", bas, [{rotationZ:{fromValue:-20,toValue:40}}]);
 		bas.scaleX = 1.5;
 		bas.scaleY = 1.5;
@@ -3184,13 +3082,12 @@ timer(function(){
 		basb.scaleY -= 0.004;
 		}, 20, 150);
 	}, 8500);
-
 crtMask(0);
 crtlryic("好像一口气就会消失掉了", 98.0, 100.6);
 crtlryic("那就将下个瞬间留住吧", 100.6, 103.7);
 crtlryic("旋转旋转不停旋转", 103.7, 106.0);
 crtlryic("迷醉在这打着转的世界里", 106.0, 109.0);</d>
-<d p="109.09999847412,8,25,16777215,1440123689,2,0823e18c,1132368613">//109.1
+	<d p="109.09999847412,8,25,16777215,1440123689,2,0823e18c,1132368613">//109.1
 var totalLife = 11.42;
 var main_basic = $.createCanvas({x:$.width/2, y:$.height/2, lifeTime:totalLife});
 var main_size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -3202,7 +3099,6 @@ var originWidth = 480;
 var originHeight = 360;
 var lastWidth = 0;
 var lastHeight = 0;
-
 	$.root.addEventListener('enterFrame', function(){
 	if ($.width != lastWidth || $.height != lastHeight){
 		var size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -3214,7 +3110,6 @@ var lastHeight = 0;
 		lastHeight = $.height;
 		}
 	});
-
 function crtMask(delay){
 	timer(function(){
 		var basic_mask = $.createShape({parent:edge, lifeTime:totalLife-delay});
@@ -3232,11 +3127,8 @@ function crtBackgroud(cl, delay, life, par){
 			bas.graphics.endFill;
 		},delay);
 	}
-
 crtBackgroud(0xFFFFFF, 0, totalLife, basic);
 crtMask(0);
-
-
 function crtTrapezium(x0, y0, x1, y1, x2, y2, x3, y3, delay, last, cl, al, par){
 	timer(function(){
 	var shp = $.createShape({lifeTime:last, parent:par});
@@ -3324,7 +3216,6 @@ function crtSTitle(delay, life, par_left, par_right, dir){
 		if(dir == 0){tiltle_left.rotationZ = 180;tiltle_right.rotationZ = 180;}
 		},delay);
 	}
-
 function crtInShape(no, par, type, dir){
 	var can = $.createCanvas({parent:par, lifeTime:1.4});
 		if(type == "left") 
@@ -3537,8 +3428,6 @@ function crtIn(txt, no, par){
 				}
 		},no*1400);
 	}
-
-
 crtIn("学习", 0, bas);
 crtIn("工作", 1, bas);
 crtIn("奋斗", 2, bas);
@@ -3547,7 +3436,7 @@ crtIn("恋爱", 4, bas);
 crtIn("家族", 5, bas);
 crtIn("自我", 6, bas);
 crtIn("世界", 7, bas);</d>
-<d p="120.30000305176,8,25,16777215,1440123697,2,0823e18c,1132368979">//120.3
+	<d p="120.30000305176,8,25,16777215,1440123697,2,0823e18c,1132368979">//120.3
 var totalLife = 11.8;
 var main_basic = $.createCanvas({x:$.width/2, y:$.height/2, lifeTime:totalLife});
 var main_size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -3559,7 +3448,6 @@ var originWidth = 480;
 var originHeight = 360;
 var lastWidth = 0;
 var lastHeight = 0;
-
 	$.root.addEventListener('enterFrame', function(){
 	if ($.width != lastWidth || $.height != lastHeight){
 		var size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -3571,7 +3459,6 @@ var lastHeight = 0;
 		lastHeight = $.height;
 		}
 	});
-
 function crtMask(delay){
 	timer(function(){
 		var basic_mask = $.createShape({parent:edge, lifeTime:totalLife-delay});
@@ -3594,7 +3481,6 @@ function crtlryic(txt, delay, life){
 		$.createComment(txt,{x:-230, y:145, color:0xFFFFFF, lifeTime:life-delay-0.02, fontsize:20, parent:edge});
 		}, (delay-120.5)*1000);
 	}
-
 function crtDPeople(x_in, y_in, cl, delay, life, size, type, par, mot){
 	//100*140
 	timer(function(){
@@ -3673,8 +3559,6 @@ function crtStandby(delay, showlife, life, par){
 		}
 		}, delay);
 	}
-
-
 timer(function(){
 	Plife = 13;
 	var bas = $.createCanvas({parent:basic, lifeTime:Plife});
@@ -3756,13 +3640,12 @@ timer(function(){
 	lrc = $.createComment("みようか？」",{x:-75, y:70, color:0x000000, parent:basic, lifeTime:5, fontsize:24, motion:{y:{fromValue:90, toValue:70, lifeTime:3}}});
 	lrc.filters = null;
 	}, 8400);
-
 crtMask(0);
 crtlryic("只有旁观者存在的空间", 120.5, 122.4);
 crtlryic("让竞速模式搭上末班列车", 122.4, 126.1);
 crtlryic("「反正完全没什么好的事情", 126.1, 128.9);
 crtlryic("呐,不如就牵起这只手吧？」", 128.9, 131.7);</d>
-<d p="131.5,8,25,16777215,1440123707,2,0823e18c,1132369557">//131.5
+	<d p="131.5,8,25,16777215,1440123707,2,0823e18c,1132369557">//131.5
 var totalLife = 11.35;
 var main_basic = $.createCanvas({x:$.width/2, y:$.height/2, lifeTime:totalLife});
 var main_size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -3774,7 +3657,6 @@ var originWidth = 480;
 var originHeight = 360;
 var lastWidth = 0;
 var lastHeight = 0;
-
 	$.root.addEventListener('enterFrame', function(){
 	if ($.width != lastWidth || $.height != lastHeight){
 		var size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -3786,7 +3668,6 @@ var lastHeight = 0;
 		lastHeight = $.height;
 		}
 	});
-
 function crtMask(delay){
 	timer(function(){
 		var basic_mask = $.createShape({parent:edge, lifeTime:totalLife-delay});
@@ -3809,7 +3690,6 @@ function crtlryic(txt, delay, life){
 		$.createComment(txt,{x:-230, y:145, color:0xFFFFFF, lifeTime:life-delay-0.02, fontsize:20, parent:edge});
 		}, (delay-131.7)*1000);
 	}
-
 function crtFace(x_in, y_in, delay, life, size, cl, al, type, par, mot){
 	//160*220
 	timer(function(){
@@ -3891,11 +3771,9 @@ function crtCheer(x_in, y_in, delay, life, rad, par){
 		}, delay);
 		return cheer;
 	}
-
 var bas = $.createCanvas({parent:basic, lifeTime:totalLife});
 var basb = $.createCanvas({parent:bas, lifeTime:totalLife});
 var basf = $.createCanvas({parent:bas, lifeTime:totalLife});
-
 timer(function(){
 	var basfff = $.createCanvas({y:130, parent:basf, lifeTime:0.6});
 	crtFace(0, -130, 200, 0.4, 0.8, 0x333333, 0.6, 0, basfff);
@@ -4073,16 +3951,13 @@ timer(function(){
 		crtCheer(Utils.rand(-240,240), Utils.rand(-140,140), 1440, 3, Utils.rand(0,360), bas);
 		}
 	}, 9500);
-
 crtMask(0);
 crtlryic("不知怎的跟平常都不一样", 131.7, 133.5);
 crtlryic("试著去相信命运的恶作剧", 133.5, 137.3);
 crtlryic("跳起那狼狈跌跤的舞", 137.3, 140.1);
 crtlryic("没错，就来当个白痴当到爽吧", 140.1, 143.0);
-
-
-</d>
-<d p="142.80000305176,8,25,16777215,1440123716,2,0823e18c,1132370031">//142.8
+	</d>
+	<d p="142.80000305176,8,25,16777215,1440123716,2,0823e18c,1132370031">//142.8
 var totalLife = 11.42;
 var main_basic = $.createCanvas({x:$.width/2, y:$.height/2, lifeTime:totalLife});
 var main_size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -4094,7 +3969,6 @@ var originWidth = 480;
 var originHeight = 360;
 var lastWidth = 0;
 var lastHeight = 0;
-
 	$.root.addEventListener('enterFrame', function(){
 	if ($.width != lastWidth || $.height != lastHeight){
 		var size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -4106,7 +3980,6 @@ var lastHeight = 0;
 		lastHeight = $.height;
 		}
 	});
-
 function crtMask(delay){
 	timer(function(){
 		var basic_mask = $.createShape({parent:edge, lifeTime:totalLife-delay});
@@ -4129,7 +4002,6 @@ function crtlryic(txt, delay, life){
 		$.createComment(txt,{x:-230, y:145, color:0xFFFFFF, lifeTime:life-delay-0.02, fontsize:20, parent:edge});
 		}, (delay-143)*1000);
 	}
-
 function crtHeart(x_in, y_in, cl, delay, life, size, par, mot, blank){
 	//240*220
 		timer(function(){
@@ -4462,7 +4334,6 @@ function crtHook(x_in, y_in, delay, life, thick, size, par){
 		}, 10, times);
 		}, delay);
 	}
-
 timer(function(){
 	Plife = 1.4;
 	yh = 10;
@@ -4604,8 +4475,6 @@ timer(function(){
 			}, 120, 7);
 		}, 1200);
 	}, 8400);
-
-
 crtMask(0);
 crtlryic("不断重复无趣动作的意义", 143.0, 144.4);
 crtlryic("搭上拍子踩着步伐的理由", 144.4, 145.8);
@@ -4614,8 +4483,8 @@ crtlryic("也是找不到的", 146.8, 148.6);
 crtlryic("伤心的时候就要跳舞", 148.6, 150.0);
 crtlryic("想哭的时候更要大笑", 150.0, 151.4);
 crtlryic("那种任性真的不想再奉陪了！", 151.4, 153.9);
-</d>
-<d p="153.69999694824,8,25,16777215,1440123725,2,0823e18c,1132370507">//153.7
+	</d>
+	<d p="153.69999694824,8,25,16777215,1440123725,2,0823e18c,1132370507">//153.7
 var totalLife = 11.62;
 var main_basic = $.createCanvas({x:$.width/2, y:$.height/2, lifeTime:totalLife});
 var main_size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -4627,7 +4496,6 @@ var originWidth = 480;
 var originHeight = 360;
 var lastWidth = 0;
 var lastHeight = 0;
-
 	$.root.addEventListener('enterFrame', function(){
 	if ($.width != lastWidth || $.height != lastHeight){
 		var size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -4639,7 +4507,6 @@ var lastHeight = 0;
 		lastHeight = $.height;
 		}
 	});
-
 function crtMask(delay){
 	timer(function(){
 		var basic_mask = $.createShape({parent:edge, lifeTime:totalLife-delay});
@@ -4662,7 +4529,6 @@ function crtlryic(txt, delay, life){
 		$.createComment(txt,{x:-230, y:145, color:0xFFFFFF, lifeTime:life-delay-0.02, fontsize:20, parent:edge});
 		}, (delay-153.9)*1000);
 	}
-
 function crtTrapezium(x0, y0, x1, y1, x2, y2, x3, y3, delay, last, cl, al, par){
 	timer(function(){
 	var shp = $.createShape({lifeTime:last, parent:par});
@@ -4782,7 +4648,6 @@ function crtPhone(x_in, y_in, delay, life, par){
 			button.graphics.endFill;
 		},delay);
 	}
-
 function lrc15_1(txt, delay, life, par){
 	timer(function(){
 		var can = $.createCanvas({parent:par, lifeTime:life, motionGroup:[{alpha:{fromValue:0.4,toValue:1,lifeTime:0.05}}, {alpha:{fromValue:1,toValue:0.4,lifeTime:0.05, startDelay:life*1000-100}}]});
@@ -4810,7 +4675,6 @@ function lrc15_2(txt, x_in, y_in, delay, life, mlife, par){
 			}, mlife/(long+1), long);
 		}, delay);
 	}
-
 timer(function(){
 	Plife = 4.8;
 	var bas = $.createCanvas({parent:basic, lifeTime:totalLife});
@@ -4821,7 +4685,6 @@ timer(function(){
 	var basrr = $.createCanvas({parent:basr, lifeTime:Plife, motion:{x:{fromValue:300, toValue:0, lifeTime:0.3, easing:"Exponential"}}});
 	var basl = $.createCanvas({parent:bas, lifeTime:Plife});
 	crtBackgroud(0xEEEEEE, 300, totalLife, basb);
-
 	var lrc = $.createComment("世界",{x:-125, y:0, color:0x000000, parent:basw, lifeTime:Plife, fontsize:36, motionGroup:[{y:{fromValue:-300, toValue:-105, lifeTime:2.3}}, {y:{fromValue:-105,toValue:-45, lifeTime:0.1, easing:"Exponential"}}, {rotationZ:{fromValue:15, toValue:25, lifeTime:1.7}, x:{fromValue:-125, toValue:-120, lifeTime:1.7}, y:{fromValue:-45, toValue:-20, lifeTime:1.7}}]});
 		lrc.rotationZ = 15;
 		lrc.filters = null;
@@ -4911,15 +4774,13 @@ timer(function(){
 	lrc = $.createComment("忘れないわ",{x:260, y:-30, color:0x000000, fontsize:30, parent:bas, lifeTime:Plife, motion:{x:{fromValue:260, toValue:50, lifeTime:0.6, startDelay:3900, easing:"Exponential"}}});
 		lrc.filters = null;
 	}, 6000);
-
-
 crtMask(0);
 crtlryic("在 pop 中唱出品味吧", 154.3, 156.6);
 crtlryic("在这个世界，低下头之前", 156.6, 159.9);
 crtlryic("请发出让人心头一紧的心跳声吧", 159.9, 163.1);
 crtlryic("想忘记还久得很啊", 163.1, 165.5);
-</d>
-<d p="165.10000610352,8,25,16777215,1440123733,2,0823e18c,1132370921">//165.1		165.3(-0.2)
+	</d>
+	<d p="165.10000610352,8,25,16777215,1440123733,2,0823e18c,1132370921">//165.1		165.3(-0.2)
 var totalLife = 8.7;
 var main_basic = $.createCanvas({x:$.width/2, y:$.height/2, lifeTime:totalLife});
 var main_size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -4931,7 +4792,6 @@ var originWidth = 480;
 var originHeight = 360;
 var lastWidth = 0;
 var lastHeight = 0;
-
 	$.root.addEventListener('enterFrame', function(){
 	if ($.width != lastWidth || $.height != lastHeight){
 		var size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -4943,7 +4803,6 @@ var lastHeight = 0;
 		lastHeight = $.height;
 		}
 	});
-
 function crtMask(delay){
 	timer(function(){
 		var basic_mask = $.createShape({parent:edge, lifeTime:totalLife-delay});
@@ -4966,7 +4825,6 @@ function crtlryic(txt, delay, life){
 		$.createComment(txt,{x:-230, y:145, color:0xFFFFFF, lifeTime:life-delay-0.02, fontsize:20, parent:edge});
 		}, (delay-165.3)*1000);
 	}
-
 function crtCloud(x_in, y_in, delay, life, size, par){
 	//110*60
 	var cloud = $.createCanvas({x:x_in, y:y_in, parent:par, lifeTime:life, motion:{x:{fromValue:x_in, toValue:x_in-20*size, lifeTime:life}}});
@@ -5068,7 +4926,6 @@ function crtPeople(x_in, y_in, delay, life, size, cl, par, mot){
 			people.graphics.endFill;
 		}, delay);
 	}
-
 function crtlrc16(txt, x_in, y_in, delay, life, par){
 	timer(function(){
 		var can = $.createCanvas({x:x_in, y:y_in, parent:par, lifeTime:life, motionGroup:[{alpha:{fromValue:0, toValue:1, lifeTime:life/3}}, {alpha:{fromValue:1, toValue:0, lifeTime:life/3, startDelay:life/3*1000}}]});
@@ -5076,7 +4933,6 @@ function crtlrc16(txt, x_in, y_in, delay, life, par){
 			lrc.filters = null;
 		}, delay);
 	}
-
 timer(function(){
 	Plife = 3;
 	var bas = $.createCanvas({parent:basic, lifeTime:totalLife});
@@ -5128,26 +4984,22 @@ timer(function(){
 	Plife = 4;
 	var basw = $.createCanvas({parent:basic, lifeTime:Plife, motionGroup:[{y:{fromValue:-150,toValue:-120,lifeTime:0.2}}, {y:{fromValue:-120,toValue:-115,lifeTime:2.4}}, {y:{fromValue:-115,toValue:0,lifeTime:0.2}}]});
 	var bas = $.createCanvas({parent:basic, lifeTime:Plife});
-
 	crtPeople(-5, 10, 0, 3.4, 0.25, 0x000000, basw, [{rotationZ:{fromValue:30,toValue:60,lifeTime:0.1}}, {y:{fromValue:10, toValue:15, lifeTime:3.1}, rotationZ:{fromValue:60,toValue:80,lifeTime:3.1}}, {rotationZ:{fromValue:80,toValue:180,lifeTime:0.1}}]);
-
 	lrc = $.createComment("きっと何一つ", {x:-190, color:0x000000, fontsize:24, parent:basw, lifeTime:3.4});
 	lrc.filters = null;
 	lrc = $.createComment("変わらないから", {x:35, color:0x000000, fontsize:24, parent:basw, lifeTime:3.4});
 	lrc.filters = null;
-
 	blackMotion = [{y:{fromValue:370,toValue:210,lifeTime:0.1}}, {y:{fromValue:210,toValue:125,lifeTime:2.4}}, {y:{fromValue:125,toValue:-170,lifeTime:0.2}}];
 	crtBuild16(-410, 0x000000, 0, 4, blackMotion, 4/3, bas);
 	crtBuild16(-20, 0x000000, 0, 4, blackMotion, 4/3, bas);
 	crtBuild16(290, 0x000000, 0, 4, blackMotion, 4/3, bas);
 	}, 5800);
-
 crtMask(0);
 crtlryic("这是何等美丽的景观啊！", 165.5, 168.7);
 crtlryic("从这里看得见的风景", 168.7, 171.1);
 crtlryic("一定也不会有什么改变", 171.1, 174.5);
-</d>
-<d p="173.80000305176,8,25,16777215,1440123742,2,0823e18c,1132371423">//173.8
+	</d>
+	<d p="173.80000305176,8,25,16777215,1440123742,2,0823e18c,1132371423">//173.8
 var totalLife = 16.4;
 var main_basic = $.createCanvas({x:$.width/2, y:$.height/2, lifeTime:totalLife});
 var main_size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -5159,7 +5011,6 @@ var originWidth = 480;
 var originHeight = 360;
 var lastWidth = 0;
 var lastHeight = 0;
-
 	$.root.addEventListener('enterFrame', function(){
 	if ($.width != lastWidth || $.height != lastHeight){
 		var size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -5171,7 +5022,6 @@ var lastHeight = 0;
 		lastHeight = $.height;
 		}
 	});
-
 function crtMask(delay){
 	timer(function(){
 		var basic_mask = $.createShape({parent:edge, lifeTime:totalLife-delay});
@@ -5194,7 +5044,6 @@ function crtlryic(txt, delay, life){
 		$.createComment(txt,{x:-230, y:145, color:0xFFFFFF, lifeTime:life-delay-0.02, fontsize:20, parent:edge});
 		}, (delay-174.0)*1000);
 	}
-
 function crtTrapezium(x0, y0, x1, y1, x2, y2, x3, y3, delay, last, cl, al, par){
 	timer(function(){
 	var shp = $.createShape({lifeTime:last, parent:par});
@@ -5326,7 +5175,6 @@ function crtWarningline(x_in, y_in, delay, life, rad, par, mot){
 		line.graphics.endFill;
 		}, delay);
 	}
-
 function crtlrc16(txt, x_in, y_in, yyy, delay, life, par){
 	var lrc = $.createCanvas({y:y_in, parent:par, lifeTime:life});
 	timer(function(){
@@ -5377,7 +5225,6 @@ function crtWaveTxt(txt, x_in, y_in, delay, life, mx, molife, cl, clw,  height, 
 		}, delay);
 		return can;
 	}
-
 Plife = 10;
 var bas = $.createCanvas({parent:basic, lifeTime:totalLife});
 var basb = $.createCanvas({parent:bas, lifeTime:totalLife});
@@ -5391,7 +5238,6 @@ var bast = $.createCanvas({parent:bas, lifeTime:totalLife});
 var bastw = $.createCanvas({parent:bas, lifeTime:totalLife});
 crtBackgroud(0x000000, 0, totalLife, basb);
 crtRoom(0, totalLife, basrl, basrr);
-
 var lrc = $.createComment("one",{x:-40, y:-28, color:0x000000, parent:basr1, lifeTime:Plife, fontsize:48});
 	lrc.filters = null;
 var lrc = $.createComment("two",{x:-40, y:-28, color:0x000000, parent:basr2, lifeTime:Plife, fontsize:48});
@@ -5404,7 +5250,6 @@ var mr = $.createShape({parent:basm, lifeTime:Plife, motion:{x:{fromValue:0, toV
 	mr.graphics.beginFill(0x000000);
 	mr.graphics.drawRect(0, -150, 251, 300);
 	mr.graphics.endFill;
-
 timer(function(){
 	crtBoold(150, basm);
 	crtPeople(3, 0, 0, 11, 0.5, 0x000000, bast, [{rotationZ:{fromValue:150}}]);
@@ -5427,7 +5272,6 @@ timer(function(){
 		line.graphics.lineTo(0, 150);
 		line.graphics.endFill;
 	}, 4900);
-
 lineIn = [{x:{fromValue:-400, toValue:0, lifeTime:0.3, easing:"Exponential"}}];
 timer(function(){
 	var lr = $.createCanvas({parent:bast, lifeTime:6.9});
@@ -5448,7 +5292,6 @@ timer(function(){
 	crtWarningline(120, 0, 0, 5.9, 75, bast, lineIn);
 	$.createComment("しそうになる", {x:-140, color:0x000000, fontsize:48, life:1, parent:bastw, motionGroup:[{y:{fromValue:-180, toValue:-45, lifeTime:0.1}}, {y:{fromValue:-45, toValue:-25, lifeTime:0.8}}, {y:{fromValue:-25, toValue:220, lifeTime:0.1}}]});
 	}, 9600);
-
 var can = $.createCanvas({parent:basic, lifeTime:totalLife, motion:{y:{fromValue:360,toValue:0,lifeTime:0.3, startDelay:10600, easing:"Exponential"}}});
 var canb = $.createCanvas({parent:can, lifeTime:totalLife});
 var canm = $.createCanvas({parent:can, lifeTime:totalLife});
@@ -5485,7 +5328,7 @@ crtlryic("要用 hop step 跳起舞吗", 176.6, 178.9);
 crtlryic("在世界的小角落数起 1·2", 178.9, 182.2);
 crtlryic("享受一下仿佛要晕了的末日感吧", 182.2, 187.8);
 crtlryic("好像一口气就会消失掉了", 187.8, 190.3);</d>
-<d p="190.19999694824,8,25,16777215,1440123752,2,0823e18c,1132371957">//190.2
+	<d p="190.19999694824,8,25,16777215,1440123752,2,0823e18c,1132371957">//190.2
 var totalLife = 8.5;
 var main_basic = $.createCanvas({x:$.width/2, y:$.height/2, lifeTime:totalLife});
 var main_size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -5497,7 +5340,6 @@ var originWidth = 480;
 var originHeight = 360;
 var lastWidth = 0;
 var lastHeight = 0;
-
 	$.root.addEventListener('enterFrame', function(){
 	if ($.width != lastWidth || $.height != lastHeight){
 		var size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -5509,7 +5351,6 @@ var lastHeight = 0;
 		lastHeight = $.height;
 		}
 	});
-
 function crtMask(delay){
 	timer(function(){
 		var basic_mask = $.createShape({parent:edge, lifeTime:totalLife-delay});
@@ -5532,7 +5373,6 @@ function crtlryic(txt, delay, life){
 		$.createComment(txt,{x:-230, y:145, color:0xFFFFFF, lifeTime:life-delay-0.02, fontsize:20, parent:edge});
 		}, (delay-190.3)*1000);
 	}
-
 function crtSTitle(delay, life, par, dir){
 	timer(function(){
 		var tiltle = $.createCanvas({parent:par, lifeTime:life});
@@ -5563,7 +5403,6 @@ function crtlrc18(txt, x_in, y_in, delay, life, par){
 			lrc.filters = null;
 		}, delay);
 	}
-
 var bas = $.createCanvas({parent:basic, lifeTime:totalLife});
 var basb = $.createCanvas({parent:bas, lifeTime:totalLife});
 var bast = $.createCanvas({parent:bas, lifeTime:totalLife});
@@ -5626,7 +5465,6 @@ timer(function(){
 			line.graphics.endFill;
 	lrc = $.createComment("残そうか",{y:-130, color:0x000000, parent:bast, fontsize:36, lifeTime:1.3, motionGroup:[{x:{fromValue:-300,toValue:-115,lifeTime:0.15}}, {x:{fromValue:-115,toValue:-65,lifeTime:1}}, {x:{fromValue:-65,toValue:240,lifeTime:0.15}}]});
 			lrc.filters = null;
-
 	crtlrc18("さよなら", -235, -20, 1300, 5.1, can);
 	crtlrc18("お元気で", 80, -50, 2800, 3.6, can);
 	var canup = $.createCanvas({y:-215, parent:can, lifeTime:totalLife});
@@ -5645,13 +5483,12 @@ timer(function(){
 		bottomBord.graphics.drawRect(-250, 140, 500, 150);
 		bottomBord.graphics.endFill;
 	}, 8000);
-
 crtMask(0);
 crtlryic("那就将下个瞬间留住吧", 190.3, 193.4);
 crtlryic("就此再见，请多保重。", 193.4, 195.9);
 crtlryic("向这个终结的世界赠言", 195.9, 198.5);
-</d>
-<d p="198.89999389648,8,25,16777215,1440124650,2,0823e18c,1132421585">//198.9
+	</d>
+	<d p="198.89999389648,8,25,16777215,1440124650,2,0823e18c,1132421585">//198.9
 var totalLife = 15.2;
 var main_basic = $.createCanvas({x:$.width/2, y:$.height/2, lifeTime:totalLife});
 var main_size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -5663,7 +5500,6 @@ var originWidth = 480;
 var originHeight = 360;
 var lastWidth = 0;
 var lastHeight = 0;
-
 	$.root.addEventListener('enterFrame', function(){
 	if ($.width != lastWidth || $.height != lastHeight){
 		var size = Math.min($.width/$.root.scaleX/originWidth, $.height/$.root.scaleY/originHeight);
@@ -5675,7 +5511,6 @@ var lastHeight = 0;
 		lastHeight = $.height;
 		}
 	});
-
 var a1 = -190;
 var a2 = 190;
 var b0 = -88;
@@ -5776,7 +5611,6 @@ function crtPTitlt(txt, x_in, delay, life, par, type, cl){
 			}
 		}, delay);
 	}
-
 function crtMask(delay){
 	timer(function(){
 		var basic_mask = $.createShape({parent:edge, lifeTime:totalLife-delay});
@@ -5786,14 +5620,12 @@ function crtMask(delay){
 			basic_mask.graphics.endFill;
 			}, delay*1000);
 		}
-
 var bas = $.createCanvas({parent:basic, lifeTime:totalLife-3});
 var basm = $.createCanvas({parent:basic, lifeTime:totalLife-3});
 var bast = $.createCanvas({parent:basic, lifeTime:totalLife-3});
 var basmt = $.createCanvas({parent:basic, lifeTime:totalLife-3});
 var basw = $.createCanvas({parent:basic, lifeTime:totalLife-3});
 var baswt = $.createCanvas({parent:basic, lifeTime:totalLife-3});
-
 crtTrapezium(a1, b0, a2, b0, a3, -140, a0, -140, 0, 11.2, 0xFFFFFF, 1, bas);//上
 crtTrapezium(a0, 140, a1, b1, a1, b0, a0, -140, 0, 11.2, 0xBBBBBB, 1, bas);//左
 crtTrapezium(a2, b1, a3, 140, a3, -140, a2, b0, 0, 11.2, 0x777777, 1, bas);//右
@@ -5801,7 +5633,6 @@ crtTrapezium(a0, 140, a3, 140, a2, b1, a1, b1, 0, 11.2, 0xFFFFFF, 1, bas);//下
 allChessboard(5600, 0.35, 0, 0.6, 16, bas);
 lrc = $.createComment("World's End Dancehall", {x:-100, y:-12, color:0xFFFFFF, fontsize:18, parent:bas, lifeTime:5.6});
 lrc.filters = null;
-
 var ground = $.createShape({parent:basm, lifeTime:totalLife, motionGroup:[{alpha:{fromValue:1, lifeTime:1.1}}, {alpha:{fromValue:0.8, lifeTime:1.4}}, {alpha:{fromValue:0.6, lifeTime:1.4}}, {alpha:{fromValue:0.3, lifeTime:1.4}}, {alpha:{fromValue:0, lifeTime:0.8}}, {alpha:{fromValue:0.4, lifeTime:1.4}}, {alpha:{fromValue:0.7, lifeTime:1.4}}, {alpha:{fromValue:1, lifeTime:1.4}}]});
 	ground.graphics.beginFill(0x000000);
 	ground.graphics.drawRect(-300, -200, 600, 400);
@@ -5810,7 +5641,6 @@ var ground = $.createShape({parent:basmt, lifeTime:totalLife, motionGroup:[{alph
 	ground.graphics.beginFill(0x000000);
 	ground.graphics.drawRect(-300, -200, 600, 400);
 	ground.graphics.endFill;
-
 crtSRow12(0, 1.38, -1, bast, [{rotationZ:{fromValue:0, toValue:30, lifeTime:0.5, easing:"Back"}}]);
 crtSRow12(1400, 1.38, -1, bast, [{rotationZ:{fromValue:0, toValue:30, lifeTime:0.5, easing:"Back"}}]);
 crtSRow12(2800, 1.38, -1, bast, [{rotationZ:{fromValue:0, toValue:30, lifeTime:0.5, easing:"Back"}}]);
@@ -5823,14 +5653,12 @@ crtSRow12(8400, 0.48, 1, bast, [{rotationZ:{fromValue:80, toValue:30}}]);
 crtSRow12(8900, 0.88, -1, bast, [{rotationZ:{fromValue:30, toValue:120}}]);
 crtSRow12(9800, 0.48, 1, bast, [{rotationZ:{fromValue:0, toValue:-50}}]);
 crtSRow12(10300, 0.88, -1, bast, [{rotationZ:{fromValue:-50, toValue:40}}]);
-
 crtWarningline(0, 15, 0, 6.9, 165, basw, [{y:{fromValue:0, toValue:3, lifeTime:0.3, easing:"Elastic", startDelay:500}}, {x:{fromValue:0, toValue:600, lifeTime:0.3, easing:"Exponential"}}]);
 crtWarningline(0, -35, 0, 6.4, 10, basw, [{y:{fromValue:0, toValue:3, lifeTime:0.3, easing:"Elastic", startDelay:1900}}, {x:{fromValue:0, toValue:600, lifeTime:0.3, easing:"Exponential"}}]);
 crtWarningline(0, 70, 0, 6.4, 10, basw, [{y:{fromValue:0, toValue:3, lifeTime:0.3, easing:"Elastic", startDelay:1900}}, {x:{fromValue:0, toValue:600, lifeTime:0.3, easing:"Exponential"}}]);
 crtWarningline(-80, 0, 0, 5.9, 60, basw, [{y:{fromValue:0, toValue:3, lifeTime:0.3, easing:"Elastic", startDelay:4700}}, {x:{fromValue:0, toValue:600, lifeTime:0.3, easing:"Exponential"}}]);
 crtWarningline(-90, 0, 0, 5.9, 135, basw, [{y:{fromValue:0, toValue:3, lifeTime:0.3, easing:"Elastic", startDelay:4700}}, {x:{fromValue:0, toValue:600, lifeTime:0.3, easing:"Exponential"}}]);
 crtWarningline(120, 0, 0, 5.9, 75, basw, [{y:{fromValue:0, toValue:3, lifeTime:0.3, easing:"Elastic", startDelay:3300}}, {x:{fromValue:0, toValue:600, lifeTime:0.3, easing:"Exponential"}}]);
-
 crtPTitlt("WORLD'S", -105, 5600, 0.45, baswt, "in", 0xFFFFFF);
 crtPTitlt("WORLD'S", -105, 6100, 0.85, baswt, "out", 0xFFFFFF);
 crtPTitlt("E N D", -59, 7000, 0.45, baswt, "in", 0xFEFFFE);
@@ -5839,7 +5667,6 @@ crtPTitlt("DANCE", -81, 8400, 0.45, baswt, "in", 0xFDFFFD);
 crtPTitlt("DANCE", -81, 8900, 0.85, baswt, "out", 0xFFFDFD);
 crtPTitlt("HALL", -62, 9800, 0.45, baswt, "in", 0xFCFFFC);
 crtPTitlt("HELL", -62, 10300, 0.9, baswt, "out", 0xFFFCFC);
-
 var topBord = $.createShape({parent:baswt, lifeTime:0.3, motion:{y:{fromValue:140,toValue:0,lifeTime:0.5, easing:"Exponential"}}});
 	topBord.graphics.beginFill(0x000000);
 	topBord.graphics.drawRect(-250, -290, 500, 150);
@@ -5848,7 +5675,6 @@ var bottomBord = $.createShape({parent:baswt, lifeTime:0.3, motion:{y:{fromValue
 	bottomBord.graphics.beginFill(0x000000);
 	bottomBord.graphics.drawRect(-250, 140, 500, 150);
 	bottomBord.graphics.endFill;
-
 var exitsign = $.createCanvas({alpha:0, lifeTime:totalLife, parent:basic, motionGroup:[{alpha:{fromValue:0,toValue:1,lifeTime:1, startDelay:12200}}, {alpha:{fromValue:1,toValue:0,lifeTime:1}}]});
 	var buttom = $.createShape({x:0, y:0, lifeTime:totalLife, parent:exitsign});
 		buttom.graphics.beginFill(0xEE0000);
@@ -5896,12 +5722,10 @@ var exitsign = $.createCanvas({alpha:0, lifeTime:totalLife, parent:basic, motion
 		row.graphics.lineTo(0, 0);
 		row.graphics.lineTo(12, -12);
 		row.graphics.endFill;
-
 crtMask(0);
-
-
 	</d>
-<d p="213.5,8,25,16777215,1440125701,2,0823e18c,1132482723">//213.5 循环模式on
+	<d p="213.5,8,25,16777215,1440125701,2,0823e18c,1132482723">//213.5 循环模式on
 Player.seek(0);
-$.createComment("循环模式on", {});</d>
+$.createComment("循环模式on", {});
+	</d>
 </i>

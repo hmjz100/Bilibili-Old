@@ -1,6 +1,6 @@
 ![Windows 11](https://img.shields.io/badge/Microsoft_Windows_11-pass-green.svg?longCache=true) ![Chrome 108](https://img.shields.io/badge/Google_Chrome_108-pass-green.svg?longCache=true) ![Tampermonkey 4.18](https://img.shields.io/badge/Tampermonkey_4.18-pass-green.svg?longCache=true)  ![Manifest V3](https://img.shields.io/badge/Manifest_V3-pass-green.svg?longCache=true)  
 
-Tampermonkey 用户脚本 / Manifest V3 扩展，恢复 B 站旧版网页，包括小电视播放器。
+用户脚本 / 浏览器扩展，恢复 B 站旧版网页，包括小电视播放器。
 
 ### 安装使用
 以下两种方式二选一即可。

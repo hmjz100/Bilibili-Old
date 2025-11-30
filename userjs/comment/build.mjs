@@ -21,7 +21,7 @@ esbuild.build({
     format: 'esm',
     treeShaking: true,
     charset: 'utf8',
-    outfile: 'tampermonkey/comment/main.user.js',
+    outfile: 'userjs/comment/main.user.js',
     loader: {
         '.html': 'text',
         '.svg': 'text',

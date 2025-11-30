@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@jsc/extension": "file:extension",
-    "@jsc/tampermonkey": "file:tampermonkey",
+    "@jsc/userjs": "file:userjs",
     "fflate": "*",
     "md5": "*",
     "protobufjs": "*",
@@ -17,7 +17,7 @@
   "scripts": {
     "tsc": "tsc --noEmit -p ./src/tsconfig.json",
     "extension": "node extension/build.mjs",
-    "tampermonkey": "node tampermonkey/build.mjs",
-    "comment": "node tampermonkey/comment/build.mjs"
+    "userjs": "node userjs/build.mjs",
+    "comment": "node userjs/comment/build.mjs"
   }
 }

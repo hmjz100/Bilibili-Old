@@ -1,4 +1,4 @@
-name: Bug反馈
+name: Bug 反馈
 description: 反馈发现的问题
 labels: bug
 title: "[Bug]: "
@@ -8,8 +8,8 @@ body:
     attributes:
       label: 问题是发生在那种形态的？
       options:
-        - Chrome扩展
-        - Tampermonkey脚本
+        - 浏览器扩展
+        - 用户脚本
     validations:
       required: true
 
@@ -37,7 +37,7 @@ body:
       label: 参考数据
       description: 帮助诊断的截图或者其他资料
       placeholder: |
-        网页截图、控制台(f12)截图或DevTools快照
+        网页截图、控制台(F12)截图或 DevTools 快照
         **截图可以直接粘贴哦~**
 
   - type: dropdown
@@ -67,5 +67,5 @@ body:
   - type: input
     id: script-version
     attributes:
-      label: 脚本版本
-      description: 扩展请自行到[Actions](https://github.com/hmjz100/Bilibili-Old/actions)检查是不是最新
+      label: 版本
+      description: 用户脚本 / 浏览器扩展 的版本

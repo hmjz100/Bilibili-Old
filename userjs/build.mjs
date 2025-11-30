@@ -71,6 +71,6 @@ esbuild.build({
         userscriptPlugin
     ],
     write: false, // 禁用输出以进行后续处理
-    inject: ['@jsc/tampermonkey'], // 替换化境变量
-    outfile: 'tampermonkey/main.user.js'
+    inject: ['@jsc/userjs'], // 替换化境变量
+    outfile: 'userjs/main.user.js'
 })
