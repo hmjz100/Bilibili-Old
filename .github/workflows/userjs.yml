@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - 'userjs/manifest.json'
+      - 'extension/player/**'
 
 jobs:
   build:
