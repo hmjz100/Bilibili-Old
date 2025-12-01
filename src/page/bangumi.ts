@@ -593,7 +593,7 @@ export class PageBangumi extends Page {
     }
     /** 修复泰区player接口 */
     protected player() {
-        xhrHook.async('api.bilibili.com/x/player/v2?', undefined, async (args) => {
+        xhrHook.async('api.bilibili.com/x/player/wbi/v2?', undefined, async (args) => {
             const obj = urlObj(args[1]);
             const aid = <number>obj.aid;
             const cid = <number>obj.cid;

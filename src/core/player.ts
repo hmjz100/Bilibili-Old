@@ -296,7 +296,7 @@ class Player {
     /** 繁体字幕转简体 */
     private simpleChinese() {
         if (user.userStatus!.simpleChinese) {
-            xhrHook('x/player/v2?', undefined, res => {
+            xhrHook('x/player/wbi/v2?', undefined, res => {
                 try {
                     const response = jsonCheck(res.response);
                     if (response?.data?.subtitle?.subtitles?.length) {

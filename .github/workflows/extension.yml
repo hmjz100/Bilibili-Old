@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
+      - 'src/**'
       - 'extension/manifest.json'
       - 'extension/player/**'
 
