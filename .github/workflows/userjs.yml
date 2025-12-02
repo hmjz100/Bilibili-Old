@@ -1,4 +1,4 @@
-name: 创建用户脚本
+name: 构建用户脚本
 
 on:
   workflow_dispatch:
@@ -15,7 +15,7 @@ jobs:
     steps:
     - name: 检查仓库
       uses: actions/checkout@v3
-      
+
     - name: 安装 Node.js
       uses: actions/setup-node@v3
 
@@ -24,10 +24,10 @@ jobs:
 
     - name: 安装 NPM 依赖
       run: npm install
-      
+
     - name: 创建脚本
       run: npm run userjs
-      
+
     - name: 上传文件
       uses: actions/upload-artifact@v4
       with:

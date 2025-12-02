@@ -4,9 +4,9 @@ import esbuild from 'esbuild';
 import { exec } from 'child_process';
 
 /**
- * 获取文件的`commit`哈希值
+ * 获取文件的 `commit` 哈希值
  * @param {string} path 文件路径：相对/绝对
- * @returns {Promise<string>} `commit`哈希值
+ * @returns {Promise<string>} `commit` 哈希值
  */
 function getHash(path) {
     return new Promise((resolve, reject) => {
