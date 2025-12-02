@@ -432,17 +432,14 @@ class Player {
                         msg.type = 'success';
                         GM.setValue('bilibiliplayer', data[0]);
                         GM.setValue('bilibiliplayerstyle', data[1]);
+                        GM.setValue('version', BLOD.version);
                     }
                     (0, eval)(`${data[0]}\n//@ sourceURL=bilibiliplayer.js`);
                     addCss(data[1], `bilibiliplayer-${BLOD.version}`);
-                    GM.setValue('version', BLOD.version);
-
                 } else {
                     await Promise.all([
-                        GM.executeScript('player/video.js', true)
-                            .then(d => loadScript(d)),
-                        GM.insertCSS('player/video.css', true)
-                            .then(d => loadStyle(d))
+                        GM.executeScript('player/video.js', true).then(d => loadScript(d)),
+                        GM.insertCSS('player/video.css', true).then(d => loadStyle(d))
                     ]);
                 }
             } else {
