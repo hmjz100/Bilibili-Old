@@ -1,3 +1,3 @@
 dist/**/* linguist-generated=true
 *.user.js linguist-generated=true
-* text working-tree-encoding=UTF-8 eol=crlf
+* text working-tree-encoding=UTF-8 eol=crlf tabwidth=4
