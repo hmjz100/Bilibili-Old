@@ -450,6 +450,8 @@ class Player {
 						GM.setValue('bilibiliplayerstyle', data[1]);
 						GM.setValue('version', BLOD.version);
 					}
+					// 清理旧版播放器实例，确保 eval 可以重新赋值 EmbedPlayer
+					this.cleanupPlayer();
 					(0, eval)(`${data[0]}\n//@ sourceURL=bilibiliplayer.js`);
 					addCss(data[1], `bilibiliplayer-${BLOD.version}`);
 				} else {
@@ -497,6 +499,31 @@ class Player {
 				responseText: response
 			}
 		}, false)
+	}
+	/** 清理旧版播放器实例，确保 eval 可以重新赋值 EmbedPlayer */
+	private cleanupPlayer() {
+		try {
+			const descriptor = Object.getOwnPropertyDescriptor(window, 'EmbedPlayer');
+			if (descriptor) {
+				if (!descriptor.configurable) {
+					// 属性不可配置，尝试删除
+					if (!delete (window as any).EmbedPlayer) {
+						debug.warn('清理播放器: EmbedPlayer 属性无法删除');
+					} else {
+						debug('清理播放器: EmbedPlayer 属性已删除');
+					}
+				}
+			}
+			// 清理播放器实例
+			if ((<any>window).player) {
+				try {
+					(<any>window).player.disconnect?.();
+				} catch { }
+				delete (<any>window).player;
+			}
+		} catch (e) {
+			debug.error('清理播放器失败', e);
+		}
 	}
 }
 /** 播放器组件 */
