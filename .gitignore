@@ -1,5 +1,6 @@
 node_modules
 dist
+userjs/main.user.js
 *.crx
 *.pem
 *.map
