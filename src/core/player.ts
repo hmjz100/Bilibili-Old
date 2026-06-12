@@ -384,20 +384,25 @@ class Player {
 	 * 加载播放器
 	 * @param force 强制更新
 	 */
-	async loadplayer(force = false) {
+	async loadplayer(force = false): Promise<void> {
 		if (!(<any>window).jQuery) await loadScript(URLS.JQUERY);
 		try {
 			if (user.userStatus!.bilibiliplayer) {
 				if (_UserScript_) {
 					const data = await Promise.all([
 						GM.getValue<string>('bilibiliplayer'),
-						GM.getValue<string>('bilibiliplayerstyle')
+						GM.getValue<string>('bilibiliplayerstyle'),
+						GM.getValue<string>('version')
 					]);
-					if (force || !data[0] || !data[1]) {
+					// 版本检查：如果缓存版本与当前脚本版本不一致，强制更新
+					const needUpdate = force || !data[0] || !data[1] || data[2] !== BLOD.version;
+					let msg: ReturnType<typeof toast.list>;
+					if (needUpdate) {
 						if (this.updating) throw new Error('一次只能运行一个更新实例！');
 						this.updating = true;
 						if (!BLOD.version) throw new Error(`未知错误导致脚本版本异常！version：${BLOD.version}`);
-						const msg = toast.list('更新播放器组件 >>>', '> 可能需要花费一点时间，请不要关闭页面！',
+						msg = toast.list('更新播放器组件 >>>',
+							'> 可能需要花费一点时间，请不要关闭页面！',
 							'> 如果弹出跨域提醒，推荐【总是允许全部域名】',
 							'> 如果多次更新失败，请禁用【重构播放器】功能！');
 						let i = 1;
@@ -410,14 +415,14 @@ class Player {
 								.then(d => {
 									// 检查是否是404页面或错误信息
 									if (d.includes("Couldn't find the requested file") || d.includes('<!DOCTYPE html>') || d.includes('<html')) {
-										throw new Error('返回内容异常');
+										throw new Error('此版本的脚本组件似乎不存在');
 									}
 									data[0] = d;
-									msg.push(`> 加载播放器组件：${i++}/2`);
+									msg.push(`> [${i++}/2] 获取播放器脚本组件`);
 								})
 								.catch(e => {
 									data[0] = ''; // 清空错误内容
-									msg.push(`> 获取播放器组件出错！${i++}/2`, e);
+									msg.push(`> [${i++}/2] 获取播放器脚本组件出错！`, e);
 									msg.type = 'error';
 								}),
 							GM.fetch(cdn.encode('/extension/player/video.css'))
@@ -428,14 +433,14 @@ class Player {
 								.then(d => {
 									// 检查是否是404页面或错误信息
 									if (d.includes("Couldn't find the requested file") || d.includes('<!DOCTYPE html>') || d.includes('<html')) {
-										throw new Error('返回内容异常');
+										throw new Error('此版本的样式组件似乎不存在');
 									}
 									data[1] = d;
-									msg.push(`> 加载播放器组件：${i++}/2`);
+									msg.push(`> [${i++}/2] 获取播放器样式组件`);
 								})
 								.catch(e => {
 									data[1] = ''; // 清空错误内容
-									msg.push(`> 获取播放器组件出错！${i++}/2`, e);
+									msg.push(`> [${i++}/2] 获取播放器样式组件出错！`, e);
 									msg.type = 'error';
 								})
 						]);
@@ -444,13 +449,16 @@ class Player {
 						if (!data[0] || !data[1]) {
 							throw new Error('获取播放器组件出错！');
 						}
-						msg.push('> -------加载成功-------');
-						msg.type = 'success';
+						// 保存缓存
 						GM.setValue('bilibiliplayer', data[0]);
 						GM.setValue('bilibiliplayerstyle', data[1]);
 						GM.setValue('version', BLOD.version);
+
+						// 显示成功提示
+						msg.type = 'success';
+						msg.push('------ 获取成功 ------');
 					}
-					// 清理旧版播放器实例，确保 eval 可以重新赋值 EmbedPlayer
+					// 执行播放器代码（更新或缓存加载都执行相同的逻辑）
 					this.cleanupPlayer();
 					(0, eval)(`${data[0]}\n//@ sourceURL=bilibiliplayer.js`);
 					addCss(data[1], `bilibiliplayer-${BLOD.version}`);
@@ -465,7 +473,7 @@ class Player {
 				addCss('.bilibili-player-video-progress-detail-img {transform: scale(0.333333);transform-origin: 0px 0px;}', 'detail-img');
 			}
 		} catch (e) {
-			this.updating || toast.error('播放器加载失败！', '已回滚~', e)();
+			this.updating || toast.error('播放器加载失败！', '已回滚到上古播放器~', e)();
 			await loadScript(URLS.VIDEO);
 			addCss('.bilibili-player-video-progress-detail-img {transform: scale(0.333333);transform-origin: 0px 0px;}', 'detail-img');
 		}
@@ -489,7 +497,6 @@ class Player {
 				msg.delay = user.userStatus!.toast.delay;
 			})
 	}
-
 	/** 拦截视频心跳 */
 	heartbeatBlock() {
 		xhrHook.async('/heartbeat', undefined, async res => {
@@ -500,20 +507,9 @@ class Player {
 			}
 		}, false)
 	}
-	/** 清理旧版播放器实例，确保 eval 可以重新赋值 EmbedPlayer */
+	/** 清理旧版播放器实例，确保 eval 可以重新赋值 */
 	private cleanupPlayer() {
 		try {
-			const descriptor = Object.getOwnPropertyDescriptor(window, 'EmbedPlayer');
-			if (descriptor) {
-				if (!descriptor.configurable) {
-					// 属性不可配置，尝试删除
-					if (!delete (window as any).EmbedPlayer) {
-						debug.warn('清理播放器: EmbedPlayer 属性无法删除');
-					} else {
-						debug('清理播放器: EmbedPlayer 属性已删除');
-					}
-				}
-			}
 			// 清理播放器实例
 			if ((<any>window).player) {
 				try {
