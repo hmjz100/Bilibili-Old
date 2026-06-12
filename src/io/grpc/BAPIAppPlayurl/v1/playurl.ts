@@ -13,7 +13,7 @@ export class BAPIAppPlayurlV1 extends BAPIMetadata {
         BAPIAppPlayurlV1.Root || (BAPIAppPlayurlV1.Root = Root.fromJSON(playurl));
     }
     protected lookupType<T extends object>(type: string) {
-        return <Type<T>>BAPIAppPlayurlV1.Root.lookupType(`${this.package}.${type}`)
+        return <Type<T>><unknown>BAPIAppPlayurlV1.Root.lookupType(`${this.package}.${type}`)
     }
     /** 获取播放地址 */
     PlayURL(req: PlayURLReq) {

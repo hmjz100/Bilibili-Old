@@ -32,7 +32,7 @@ export function xhrHook(url: string | string[], modifyOpen?: (args: XMLHttpReque
     let id: number;
     const one = Array.isArray(url) ? url : [url];
     const two = function (this: XMLHttpRequest, args: XMLHttpRequestOpenParams) {
-        once && id && delete rules[id - 1];
+        once && id! && delete rules[id! - 1];
         if (modifyOpen) try { modifyOpen(args) } catch (e) { debug.error("modifyOpen of xhrhook", one, e) }
         if (modifyResponse) try {
             this.addEventListener("readystatechange", () => {

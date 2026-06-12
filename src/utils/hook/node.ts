@@ -28,7 +28,7 @@ export function jsonpHook(url: string | string[], redirect?: (url: string) => st
     let id: number;
     const one = Array.isArray(url) ? url : [url];
     const two = function (this: HTMLScriptElement) {
-        once && id && delete jsonp[id - 1];
+        once && id! && delete jsonp[id! - 1];
         if (redirect) try { this.src = redirect(this.src) || this.src } catch (e) { debug.error("redirect of jsonphook", one, e) }
         if (modifyResponse) {
             const obj = urlObj(this.src);
@@ -61,7 +61,7 @@ jsonpHook.async = (url: string | string[], condition?: (url: string) => boolean,
     const one = Array.isArray(url) ? url : [url];
     const two = function (this: HTMLScriptElement) {
         try {
-            once && id && delete jsonp[id - 1];
+            once && id! && delete jsonp[id! - 1];
             if (!condition || condition(this.src)) {
                 const obj = urlObj(this.src);
                 if (obj) {

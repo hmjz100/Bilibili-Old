@@ -1,23 +1,23 @@
 {
-  "dependencies": {
-    "@jsc/extension": "file:extension",
-    "@jsc/userjs": "file:userjs",
-    "fflate": "*",
-    "md5": "*",
-    "protobufjs": "*",
-    "quill-delta-to-html-cb": "*"
-  },
-  "devDependencies": {
-    "@types/md5": "*",
-    "esbuild": "*",
-    "fs-extra": "*",
-    "navigation-api-types": "*",
-    "typescript": "*"
-  },
-  "scripts": {
-    "tsc": "tsc --noEmit -p ./src/tsconfig.json",
-    "extension": "node extension/build.mjs",
-    "userjs": "node userjs/build.mjs",
-    "comment": "node userjs/comment/build.mjs"
-  }
+	"dependencies": {
+		"@jsc/extension": "file:extension",
+		"@jsc/userjs": "file:userjs",
+		"fflate": "*",
+		"md5": "*",
+		"protobufjs": "*",
+		"quill-delta-to-html-cb": "*"
+	},
+	"devDependencies": {
+		"@types/md5": "*",
+		"esbuild": "*",
+		"fs-extra": "*",
+		"navigation-api-types": "*",
+		"typescript": "*"
+	},
+	"scripts": {
+		"tsc": "tsc --noEmit -p ./src/tsconfig.json",
+		"extension": "node extension/build.mjs",
+		"userjs": "node userjs/build.mjs",
+		"comment": "node userjs/comment/build.mjs"
+	}
 }

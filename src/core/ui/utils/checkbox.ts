@@ -70,7 +70,7 @@ export class CheckBoxs extends HTMLDivElement implements CustomElementsInterface
                     this.checkboxs[d].value = true;
                 } else {
                     this.update(Object.keys(this.checkboxs).concat(d));
-                    this.checkboxs[d].value = true;
+                    (<CheckBox>this.checkboxs[d]).value = true;
                 }
             }
         });
