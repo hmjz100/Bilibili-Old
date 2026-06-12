@@ -231,7 +231,7 @@ export class UI {
             this.switch('comment', '恢复评论翻页', '替换瀑布流评论区', undefined, undefined, '评论区版本将被固定，可能享受不到B站后续为评论区推出的新功能。本功能有专门独立为一个脚本，不要重复安装。'),
             this.switch('staff', '合作UP主', '联合投稿显示合作 UP 主', undefined, undefined, '在原 av 页 up 主信息处列出所有合作 ，up 主。'),
             this.switch('bangumiEplist', '保留 bangumi 分P', '牺牲特殊背景图', undefined, undefined, '旧版 bangumi 遇到有特殊背景图的视频时，会隐藏播放器下方的分集选择界面，二者不可得兼。'),
-            this.switch('jointime', '注册时间', '个人空间显示账户注册时间'),
+            // this.switch('jointime', '注册时间', '个人空间显示账户注册时间'),
             this.switch('history', '纯视频历史', '过滤历史记录页的非视频部分'),
             this.switch('liveRecord', '录屏动态', '允许动态页显示直播录屏'),
             this.switch('commentJumpUrlTitle', '评论超链接标题', '还原为链接或短链接', undefined, undefined, '直接显示链接标题固然方便，但有些时候还是直接显示链接合适。'),

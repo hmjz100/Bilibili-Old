@@ -3,7 +3,7 @@ import html from '../../html/ui-entry.html';
 import svgGear from "../../svg/gear.svg";
 
 /** 设置入口样式 */
-export const UiEntryType: 'new' | 'old' = 'new';
+export const UiEntryType: 'new' | 'old' = 'old';
 export class BilioldEntry extends HTMLElement implements CustomElementsInterface {
     /** 旧版按钮 */
     protected stage: HTMLDivElement;

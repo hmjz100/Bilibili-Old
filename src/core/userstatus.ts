@@ -20,9 +20,9 @@ export const userStatus = {
     /** WebRTC */
     webRTC: false,
     /** 充电鸣谢 */
-    elecShow: true,
+    elecShow: false,
     /** 合作UP */
-    staff: false,
+    staff: true,
     /** bangumi */
     bangumi: true,
     /** 解除限制 */
@@ -73,9 +73,9 @@ export const userStatus = {
     /** 搜索 */
     search: true,
     /** 相簿 */
-    album: true,
+    album: false,
     /** 注册时间 */
-    jointime: false,
+    // jointime: true,
     /** 失效视频 */
     lostVideo: true,
     /** 纯视频历史 */
@@ -145,13 +145,13 @@ export const userStatus = {
         silence: false
     },
     /** 点赞功能 */
-    like: false,
+    like: true,
     /** 重构播放器脚本 */
     bilibiliplayer: true,
     /** 检查播放器脚本更新 */
     checkUpdate: true,
     /** 不登录1080P支持 */
-    show1080p: false,
+    show1080p: true,
     /** 调整顶栏banner样式 */
     fullBannerCover: false,
     /** 原生播放器新版弹幕 */
@@ -171,9 +171,9 @@ export const userStatus = {
     /** 资源cdn */
     cdn: 'jsdelivr',
     /** 弹幕保护计划 */
-    danmakuProtect: false,
+    danmakuProtect: true,
     /** 下载按钮 */
-    downloadButton: false,
+    downloadButton: true,
     /** 全区域搜索 */
     searchAllArea: false,
     /** 评论图片 */
