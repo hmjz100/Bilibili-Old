@@ -12,7 +12,7 @@ import { PageIndex } from './page';
 import { urlCleaner } from './core/url';
 import { cdn } from './utils/cdn';
 import { player } from './core/player';
-import { PageAV } from './page/av';
+import { PageVideo } from './page/video';
 import { PageBangumi } from './page/bangumi';
 import { PageWatchlater } from './page/watchalter';
 import { PagePlaylist } from './page/playlist';
@@ -58,7 +58,7 @@ user.addCallback(status => {
 			// SEO重定向
 			BLOD.path[3] === "s" && urlCleaner.updateLocation(location.href.replace("s/video", "video"));
 			player.loadEmbedPlayer();
-			new PageAV();
+			new PageVideo();
 		}
 		if (status.player && (/\/festival\//.test(location.href) || (/player\./.test(location.href) || /webplayer\/embed/.test(location.href) && !location.href.includes("ancient")))) {
 			player.loadConnectPlayer();
@@ -78,7 +78,7 @@ user.addCallback(status => {
 		if (/\/playlist\/detail\/pl/.test(location.href)) {
 			new PagePlaylistDetail();
 		}
-		if (status.ranking && /\/v\/popular\//.test(location.href)) {
+		if (status.ranking && (/\/v\/popular\//.test(location.href) || BLOD.path[3] == "ranking")) {
 			new PageRanking();
 		}
 		if (status.read && /\/read\/[Cc][Vv]/.test(location.href)) {

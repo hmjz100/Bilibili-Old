@@ -2,39 +2,40 @@ const arr: Record<number, ((code: string) => typeof code)[]>[] = [];
 const param: [string, string, string][] = [];
 let length: number;
 class Webpack {
-    static load = false;
-    protected backup = (<any>window).webpackJsonp;
-    constructor() {
-        Webpack.load = true;
-        Reflect.defineProperty(window, "webpackJsonp", {
-            configurable: true,
-            set: v => {
-                typeof v === 'function' && (this.backup = v);
-                return true
-            },
-            get: () => {
-                return this.backup && ((chunkIds: any[], moreModules: any[], executeModules: any[]) => {
-                    const len = moreModules.length ?? length;
-                    if (len in arr) {
-                        const obj = arr[len];
-                        const pam = param[len];
-                        Object.entries(obj).forEach(d => {
-                            let code = moreModules[<any>d[0]];
-                            if (code) {
-                                code = code.toString();
-                                d[1].forEach(e => code = e(code));
-                                moreModules[<any>d[0]] = new Function(pam[0], pam[1], pam[2], `(${code})(${pam[0]},${pam[1]},${pam[2]})`);
-                            } else {
-                                // 部分webpack此对象是类数组对象，取数组初始化时的值
-                                length = len;
-                            }
-                        })
-                    }
-                    return this.backup(chunkIds, moreModules, executeModules);
-                })
-            }
-        });
-    }
+	static load = false;
+	protected backup = (<any>window).webpackJsonp;
+	constructor() {
+		Webpack.load = true;
+		Reflect.defineProperty(window, "webpackJsonp", {
+			configurable: true,
+			set: v => {
+				typeof v === 'function' && (this.backup = v);
+				return true
+			},
+			get: () => {
+				return this.backup && ((chunkIds: any[], moreModules: any[], executeModules: any[]) => {
+					const len = moreModules.length ?? length;
+					console.log("检测到模块长度:", len, moreModules);
+					if (len in arr) {
+						const obj = arr[len];
+						const pam = param[len];
+						Object.entries(obj).forEach(d => {
+							let code = moreModules[<any>d[0]];
+							if (code) {
+								code = code.toString();
+								d[1].forEach(e => code = e(code));
+								moreModules[<any>d[0]] = new Function(pam[0], pam[1], pam[2], `(${code})(${pam[0]},${pam[1]},${pam[2]})`);
+							} else {
+								// 部分webpack此对象是类数组对象，取数组初始化时的值
+								length = len;
+							}
+						})
+					}
+					return this.backup(chunkIds, moreModules, executeModules);
+				})
+			}
+		});
+	}
 }
 /**
  * hook webpack打包的代码并进行修复。只能处理webpack为函数的版本，**为数组的页面切莫调用！**
@@ -44,11 +45,11 @@ class Webpack {
  * @param params 源代码函数的参数名称序列
  */
 export function webpackHook(len: number, pos: number, rpc: (code: string) => typeof code, params: [string, string, string] = ["t", "e", "i"]) {
-    Webpack.load || new Webpack();
-    if (!arr[len]) {
-        arr[len] = {};
-        param[len] = params;
-    }
-    arr[len][pos] = arr[len][pos] || [];
-    arr[len][pos].push((code: string) => rpc(code));
+	Webpack.load || new Webpack();
+	if (!arr[len]) {
+		arr[len] = {};
+		param[len] = params;
+	}
+	arr[len][pos] = arr[len][pos] || [];
+	arr[len][pos].push((code: string) => rpc(code));
 }

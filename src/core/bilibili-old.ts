@@ -13,58 +13,64 @@ import { fileRead, saveAs } from "../utils/file";
 
 /** 用于暴露的统一接口 */
 export const BLOD = new (class {
-    /** 路径拆分 */
-    path = location.href.split('/');
-    /** bangumi标记 */
-    pgc = false;
-    ui?: UI;
-    get aid() {
-        return (<any>window).aid;
-    };
-    set aid(v) {
-        (<any>window).aid = v;
-    }
-    get cid() {
-        return (<any>window).cid;
-    };
-    set cid(v) {
-        (<any>window).cid = v;
-    }
-    /** bangumi ssid */
-    ssid!: number;
-    /** bangumi epid */
-    epid!: number;
-    /** 限制视频 */
-    limit!: number;
-    /** 东南亚视频标记 */
-    th!: boolean;
-    /** 播放器已加载 */
-    playLoaded = false;
-    /** 已模拟APP端取流 */
-    networkMocked = false;
-    /** 是否大会员 */
-    isVip = false;
-    /** 播放器哈希值 */
-    version?: string;
+	/** 路径拆分 */
+	path = location.href.split('/');
+	/** bangumi标记 */
+	pgc = false;
+	ui?: UI;
+	get aid() {
+		return (<any>window).aid;
+	};
+	set aid(v) {
+		(<any>window).aid = v;
+	}
+	get bvid() {
+		return (<any>window).bvid;
+	}
+	set bvid(v) {
+		(<any>window).bvid = v;
+	}
+	get cid() {
+		return (<any>window).cid;
+	};
+	set cid(v) {
+		(<any>window).cid = v;
+	}
+	/** bangumi ssid */
+	ssid!: number;
+	/** bangumi epid */
+	epid!: number;
+	/** 限制视频 */
+	limit!: number;
+	/** 东南亚视频标记 */
+	th!: boolean;
+	/** 播放器已加载 */
+	playLoaded = false;
+	/** 已模拟APP端取流 */
+	networkMocked = false;
+	/** 是否大会员 */
+	isVip = false;
+	/** 播放器哈希值 */
+	version?: string;
 
-    // 调试接口
-    GM = GM;
-    urlSign = urlSign;
-    objUrl = objUrl;
-    urlObj = urlObj;
-    download = download;
-    danmaku = danmaku;
-    toast = toast;
-    debug = debug;
-    videoInfo = videoInfo;
-    base64 = base64;
-    md5 = md5;
-    htmlVnode = htmlVnode;
-    saveAs = saveAs;
-    fileRead = fileRead;
+	// 调试接口
+	GM = GM;
+	urlSign = urlSign;
+	objUrl = objUrl;
+	urlObj = urlObj;
+	download = download;
+	danmaku = danmaku;
+	toast = toast;
+	debug = debug;
+	videoInfo = videoInfo;
+	base64 = base64;
+	md5 = md5;
+	htmlVnode = htmlVnode;
+	saveAs = saveAs;
+	fileRead = fileRead;
 
-    /** 刷新toast，多用于重构页面后刷新显示 */
-    flushToast() {
-        document.body.contains(toast) || document.body.appendChild(toast)
-    }
+	/** 刷新toast，多用于重构页面后刷新显示 */
+	flushToast() {
+		document.body.contains(toast) || document.body.appendChild(toast)
+	}
 })();
