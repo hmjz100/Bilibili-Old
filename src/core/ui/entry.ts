@@ -57,4 +57,4 @@ export class BilioldEntry extends HTMLElement implements CustomElementsInterface
         }
     }
 }
-customElements.get("biliold-entry-" + _MUTEX_) || customElements.define("bilibili-entry-" + _MUTEX_, BilioldEntry);
+customElements.get("biliold-entry-" + _Slug_) || customElements.define("bilibili-entry-" + _Slug_, BilioldEntry);

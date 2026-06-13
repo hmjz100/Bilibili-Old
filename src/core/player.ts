@@ -390,18 +390,18 @@ class Player {
 			if (user.userStatus!.bilibiliplayer) {
 				if (_UserScript_) {
 					const data = await Promise.all([
-						GM.getValue<string>('bilibiliplayer'),
-						GM.getValue<string>('bilibiliplayerstyle'),
-						GM.getValue<string>('version')
+						GM.getValue<string>('biliPlayerScript'),
+						GM.getValue<string>('biliPlayerStyle'),
+						GM.getValue<string>('biliPlayerCommit')
 					]);
 					// 版本检查：如果缓存版本与当前脚本版本不一致，强制更新
-					const needUpdate = force || !data[0] || !data[1] || data[2] !== BLOD.version;
+					const needUpdate = force || !data[0] || !data[1] || data[2] !== _PlayerCommit_;
 					let msg: ReturnType<typeof toast.list>;
 					if (needUpdate) {
 						if (this.updating) throw new Error('一次只能运行一个更新实例！');
 						this.updating = true;
 						if (!BLOD.version) throw new Error(`未知错误导致脚本版本异常！version：${BLOD.version}`);
-						msg = toast.list('更新播放器组件 >>>',
+						msg = toast.list('更新重构播放器组件 >>>',
 							'> 可能需要花费一点时间，请不要关闭页面！',
 							'> 如果弹出跨域提醒，推荐【总是允许全部域名】',
 							'> 如果多次更新失败，请禁用【重构播放器】功能！');
@@ -415,14 +415,14 @@ class Player {
 								.then(d => {
 									// 检查是否是404页面或错误信息
 									if (d.includes("Couldn't find the requested file") || d.includes('<!DOCTYPE html>') || d.includes('<html')) {
-										throw new Error('此版本的脚本组件似乎不存在');
+										throw new Error('此版本的脚本似乎不存在');
 									}
 									data[0] = d;
-									msg.push(`> [${i++}/2] 获取播放器脚本组件`);
+									msg.push(`> [${i++}/2] 播放器脚本获取成功`);
 								})
 								.catch(e => {
 									data[0] = ''; // 清空错误内容
-									msg.push(`> [${i++}/2] 获取播放器脚本组件出错！`, e);
+									msg.push(`> [${i++}/2] 获取播放器脚本出错！`, e);
 									msg.type = 'error';
 								}),
 							GM.fetch(cdn.encode('/extension/player/video.css'))
@@ -433,32 +433,31 @@ class Player {
 								.then(d => {
 									// 检查是否是404页面或错误信息
 									if (d.includes("Couldn't find the requested file") || d.includes('<!DOCTYPE html>') || d.includes('<html')) {
-										throw new Error('此版本的样式组件似乎不存在');
+										throw new Error('此版本的样式似乎不存在');
 									}
 									data[1] = d;
-									msg.push(`> [${i++}/2] 获取播放器样式组件`);
+									msg.push(`> [${i++}/2] 播放器样式获取成功`);
 								})
 								.catch(e => {
 									data[1] = ''; // 清空错误内容
-									msg.push(`> [${i++}/2] 获取播放器样式组件出错！`, e);
+									msg.push(`> [${i++}/2] 获取播放器样式出错！`, e);
 									msg.type = 'error';
 								})
 						]);
 						this.updating = false;
 						msg.delay = user.userStatus!.toast.delay;
-						if (!data[0] || !data[1]) {
-							throw new Error('获取播放器组件出错！');
-						}
+						if (!data[0] || !data[1]) throw new Error('获取播放器脚本或样式出错！');
+
 						// 保存缓存
-						GM.setValue('bilibiliplayer', data[0]);
-						GM.setValue('bilibiliplayerstyle', data[1]);
-						GM.setValue('version', BLOD.version);
+						GM.setValue('biliPlayerScript', data[0]);
+						GM.setValue('biliPlayerStyle', data[1]);
+						GM.setValue('biliPlayerCommit', _PlayerCommit_);
 
 						// 显示成功提示
 						msg.type = 'success';
 						msg.push('------ 获取成功 ------');
 					}
-					// 执行播放器代码（更新或缓存加载都执行相同的逻辑）
+					// 执行播放器代码前清理旧版播放器实例
 					this.cleanupPlayer();
 					(0, eval)(`${data[0]}\n//@ sourceURL=bilibiliplayer.js`);
 					addCss(data[1], `bilibiliplayer-${BLOD.version}`);
@@ -473,7 +472,7 @@ class Player {
 				addCss('.bilibili-player-video-progress-detail-img {transform: scale(0.333333);transform-origin: 0px 0px;}', 'detail-img');
 			}
 		} catch (e) {
-			this.updating || toast.error('播放器加载失败！', '已回滚到上古播放器~', e)();
+			this.updating || toast.error('重构播放器加载失败！', '已回滚到上古播放器~', e)();
 			await loadScript(URLS.VIDEO);
 			addCss('.bilibili-player-video-progress-detail-img {transform: scale(0.333333);transform-origin: 0px 0px;}', 'detail-img');
 		}

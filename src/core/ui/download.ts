@@ -45,7 +45,7 @@ export class BilioldDownload extends HTMLElement implements CustomElementsInterf
         this._container.replaceChildren(this._noData);
     }
 }
-customElements.get(`download-${_MUTEX_}`) || customElements.define(`download-${_MUTEX_}`, BilioldDownload);
+customElements.get(`download-${_Slug_}`) || customElements.define(`download-${_Slug_}`, BilioldDownload);
 
 export interface IDownlodData {
     url?: string[];

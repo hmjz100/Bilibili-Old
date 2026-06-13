@@ -42,4 +42,4 @@ export class SwitchButton extends HTMLElement implements CustomElementsInterface
         return this;
     }
 }
-customElements.get(`switch-${_MUTEX_}`) || customElements.define(`switch-${_MUTEX_}`, SwitchButton);
+customElements.get(`switch-${_Slug_}`) || customElements.define(`switch-${_Slug_}`, SwitchButton);

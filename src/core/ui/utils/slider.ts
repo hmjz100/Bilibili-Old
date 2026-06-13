@@ -171,7 +171,7 @@ export class SliderBlock extends HTMLElement implements CustomElementsInterface 
         Object.entries(value).forEach(d => this[<'value'>d[0]] = d[1]);
     }
 }
-customElements.get(`slider-${_MUTEX_}`) || customElements.define(`slider-${_MUTEX_}`, SliderBlock);
+customElements.get(`slider-${_Slug_}`) || customElements.define(`slider-${_Slug_}`, SliderBlock);
 
 interface Value {
     /** 默认值 */

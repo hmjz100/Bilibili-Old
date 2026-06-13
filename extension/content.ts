@@ -5,7 +5,7 @@ import { insertCSS } from "./utils/insertcss";
 executeScript('index.js');
 /** 会话网络规则集id */
 const SessionRules = new Set<number>();
-window.addEventListener(_MUTEX_, ev => {
+window.addEventListener(_Slug_, ev => {
 	if (ev instanceof CustomEvent) {
 		switch (ev.detail.data.$type) {
 			case 'fetch': {

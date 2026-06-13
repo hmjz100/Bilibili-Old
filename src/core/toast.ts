@@ -136,7 +136,7 @@ export class Toast extends HTMLDivElement implements CustomElementsInterface {
         }
     }
 }
-customElements.get(`toast-${_MUTEX_}`) || customElements.define(`toast-${_MUTEX_}`, Toast, { extends: 'div' });
+customElements.get(`toast-${_Slug_}`) || customElements.define(`toast-${_Slug_}`, Toast, { extends: 'div' });
 
 /** toast组件 */
 class ToastContainer extends HTMLElement implements CustomElementsInterface {
@@ -255,7 +255,7 @@ class ToastContainer extends HTMLElement implements CustomElementsInterface {
         }
     }
 }
-customElements.get(`toast-container-${_MUTEX_}`) || customElements.define(`toast-container-${_MUTEX_}`, ToastContainer);
+customElements.get(`toast-container-${_Slug_}`) || customElements.define(`toast-container-${_Slug_}`, ToastContainer);
 
 /**
  * 浮动通知  

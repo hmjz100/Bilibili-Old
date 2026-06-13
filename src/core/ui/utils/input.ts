@@ -136,6 +136,6 @@ export class InputArea extends HTMLElement implements CustomElementsInterface {
         Object.entries(value).forEach(d => this[<'value'>d[0]] = d[1]);
     }
 }
-customElements.get(`input-${_MUTEX_}`) || customElements.define(`input-${_MUTEX_}`, InputArea);
+customElements.get(`input-${_Slug_}`) || customElements.define(`input-${_Slug_}`, InputArea);
 
 export { Value as IInputAreaValue }

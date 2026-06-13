@@ -55,7 +55,7 @@ export class CheckBox extends HTMLElement implements CustomElementsInterface {
         Object.entries(value).forEach(d => this[<'value'>d[0]] = d[1]);
     }
 }
-customElements.get(`checkbox-${_MUTEX_}`) || customElements.define(`checkbox-${_MUTEX_}`, CheckBox);
+customElements.get(`checkbox-${_Slug_}`) || customElements.define(`checkbox-${_Slug_}`, CheckBox);
 
 export class CheckBoxs extends HTMLDivElement implements CustomElementsInterface {
     protected $value: string[] = [];
@@ -106,7 +106,7 @@ export class CheckBoxs extends HTMLDivElement implements CustomElementsInterface
         })
     }
 }
-customElements.get(`checkboxs-${_MUTEX_}`) || customElements.define(`checkboxs-${_MUTEX_}`, CheckBoxs, { extends: 'div' });
+customElements.get(`checkboxs-${_Slug_}`) || customElements.define(`checkboxs-${_Slug_}`, CheckBoxs, { extends: 'div' });
 
 interface Value {
     /** 是否选中 */

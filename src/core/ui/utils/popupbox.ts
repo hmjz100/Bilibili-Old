@@ -97,4 +97,4 @@ export class PopupBox extends HTMLElement implements CustomElementsInterface {
         }
     }
 }
-customElements.get(`popupbox-${_MUTEX_}`) || customElements.define(`popupbox-${_MUTEX_}`, PopupBox);
+customElements.get(`popupbox-${_Slug_}`) || customElements.define(`popupbox-${_Slug_}`, PopupBox);

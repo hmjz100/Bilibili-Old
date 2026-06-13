@@ -28,4 +28,4 @@ export class ItemContainer extends HTMLDivElement implements CustomElementsInter
         this._card.append(...item);
     }
 }
-customElements.get(`item-container-${_MUTEX_}`) || customElements.define(`item-container-${_MUTEX_}`, ItemContainer, { extends: 'div' });
+customElements.get(`item-container-${_Slug_}`) || customElements.define(`item-container-${_Slug_}`, ItemContainer, { extends: 'div' });

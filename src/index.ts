@@ -38,7 +38,7 @@ import { loginExit } from './page/logout';
 document.domain = 'bilibili.com';
 
 // 提取版本哈希（仅限用户脚本）
-BLOD.version = GM.info?.script.version.slice(-40);
+BLOD.version = _Slug_ || GM.info?.script?.version?.slice?.(-40);
 // 获取用户数据后初始化
 user.addCallback(status => {
 	toast.update(status.toast);

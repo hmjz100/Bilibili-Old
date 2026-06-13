@@ -53,4 +53,4 @@ export class Desc extends HTMLElement implements CustomElementsInterface {
         }
     }
 }
-customElements.get(`desc-${_MUTEX_}`) || customElements.define(`desc-${_MUTEX_}`, Desc);
+customElements.get(`desc-${_Slug_}`) || customElements.define(`desc-${_Slug_}`, Desc);

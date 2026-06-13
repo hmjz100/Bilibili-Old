@@ -50,7 +50,7 @@ export const BLOD = new (class {
 	networkMocked = false;
 	/** 是否大会员 */
 	isVip = false;
-	/** 播放器哈希值 */
+	/** 版本提交哈希值 */
 	version?: string;
 
 	// 调试接口

@@ -59,4 +59,4 @@ export class Menuitem extends HTMLDivElement implements CustomElementsInterface 
         return this.container;
     }
 }
-customElements.get(`menuitem-${_MUTEX_}`) || customElements.define(`menuitem-${_MUTEX_}`, Menuitem, { extends: 'div' });
+customElements.get(`menuitem-${_Slug_}`) || customElements.define(`menuitem-${_Slug_}`, Menuitem, { extends: 'div' });

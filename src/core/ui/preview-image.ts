@@ -99,4 +99,4 @@ export class PreviewImage extends HTMLElement implements CustomElementsInterface
         document.body.style.overflow = "hidden";
     }
 }
-customElements.get(`preview-image-${_MUTEX_}`) || customElements.define(`preview-image-${_MUTEX_}`, PreviewImage);
+customElements.get(`preview-image-${_Slug_}`) || customElements.define(`preview-image-${_Slug_}`, PreviewImage);

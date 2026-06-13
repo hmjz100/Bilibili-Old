@@ -22,4 +22,4 @@ export class SettingItem extends HTMLDivElement implements CustomElementsInterfa
         this._value.appendChild(value);
     }
 }
-customElements.get(`item-${_MUTEX_}`) || customElements.define(`item-${_MUTEX_}`, SettingItem, { extends: 'div' });
+customElements.get(`item-${_Slug_}`) || customElements.define(`item-${_Slug_}`, SettingItem, { extends: 'div' });

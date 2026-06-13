@@ -61,7 +61,7 @@ export class SelectMenu extends HTMLElement implements CustomElementsInterface {
         Object.entries(value).forEach(d => this[<'value'>d[0]] = d[1]);
     }
 }
-customElements.get(`select-${_MUTEX_}`) || customElements.define(`select-${_MUTEX_}`, SelectMenu);
+customElements.get(`select-${_Slug_}`) || customElements.define(`select-${_Slug_}`, SelectMenu);
 
 interface Value {
     /** 当前值 */

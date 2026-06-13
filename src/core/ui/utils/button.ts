@@ -17,4 +17,4 @@ export class PushButton extends HTMLElement implements CustomElementsInterface {
         this._button.textContent = v;
     }
 }
-customElements.get(`button-${_MUTEX_}`) || customElements.define(`button-${_MUTEX_}`, PushButton);
+customElements.get(`button-${_Slug_}`) || customElements.define(`button-${_Slug_}`, PushButton);
