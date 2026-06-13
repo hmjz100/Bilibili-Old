@@ -1,18 +1,25 @@
+<div align="center">
+<img width="90" src="https://raw.githubusercontent.com/hmjz100/Bilibili-Old-Player/dev/bilibiliplayer/images/ploading.gif" style="background:white" alt="logo">
+
+# Bilibili-Old (Classic)
+恢复旧版哔哩哔哩页面，为了那些念旧的人。
+包括小电视播放器。
+
 ![Windows 11](https://img.shields.io/badge/Microsoft_Windows_11-pass-green.svg?longCache=true) ![Chrome 108](https://img.shields.io/badge/Google_Chrome_108-pass-green.svg?longCache=true) ![Tampermonkey 4.18](https://img.shields.io/badge/Tampermonkey_4.18-pass-green.svg?longCache=true)  ![Manifest V3](https://img.shields.io/badge/Manifest_V3-pass-green.svg?longCache=true)  
+</div>
 
-用户脚本 / 浏览器扩展，恢复 B 站旧版网页，包括小电视播放器。
-
-### 安装使用
+## 食用
 以下两种方式二选一即可。
 
-#### 用户脚本
+### 用户脚本
 进入 [Actions](https://github.com/hmjz100/Bilibili-Old/actions) 查找
 
-#### 浏览器扩展
+### 浏览器扩展
 进入 [Actions](https://github.com/hmjz100/Bilibili-Old/actions) 查找
 
 ---
-### 功能实现
+## 功能
+
 1. 恢复旧版页面
    - [B站主页](https://www.bilibili.com) 
    - av/BV：[av2](https://www.bilibili.com/video/av2)
@@ -68,7 +75,7 @@
    - 下载视频、封面、弹幕和字幕
 
 ---
-### 已知问题
+## 问题
 **以下问题这里可能处于并将长期处于无法解决状态，请多担待！**
 1. 恢复旧版页面前，新版页面可能一闪而过。
 2. 恢复后的页面可能被新版页面残留脚本、样式破坏，请通过刷新缓解。
@@ -77,7 +84,7 @@
 5. 一些功能由于API的失效做不到完全还原，只能尽可能寻求替代方案。
 
 ---
-### B站更新摘记  
+## 更新
 记录从旧版页面被抛弃以来B站的一些修改。
 - 2019 年 12 月 09 日：弃用旧版av、Bangumi改版，万恶之始。
 - 2019 年 12 月 24 日：弃用旧版稍后再看，借由稍后再看恢复旧版页面的方法失效。
@@ -110,30 +117,25 @@
 - 2026 年 06 月 01 日：旧版历史记录页面被强制跳转到新版。
 
 ---
-### 开发环境
-> 
-> 操作系统        Microsoft Windows 11 professional 10.0.22621.819  
-> 浏览器          Google Chrome 108.0.5359.125 (正式版本) （64 位） (cohort: Stable)  
-> 代码编辑器      Visual Studio Code 1.74.2  
-> 编译器          Node.js v19.1.0  
->
+## 开发
 
 参见[开发者文档](https://github.com/hmjz100/Bilibili-Old/blob/master/.github/contributing.md)。
 
 ---
-### 参考致谢
-- [protobufjs](https://github.com/protobufjs/protobuf.js)：protobuf编解码
-- [toastr](https://github.com/CodeSeven/toastr/)：浮动通知
-- [Wayback Machine](https://archive.org/web/)：旧版页面存档
-- [bilibiliOldPlayer](https://github.com/indefined/UserScripts)：原型参考及指导
-- [BiliPlus](https://www.biliplus.com/)：第三方接口
-- [Bilibilijj](https://www.jijidown.com/)：第三方接口
-- [如何看待 2020 年 3 月 23 日哔哩哔哩将稿件的「av 号」变更为「BV 号」？ - mcfx的回答 - 知乎](https://www.zhihu.com/question/381784377/answer/1099438784)：av/BV互转算法
-- [YouTube Links](https://greasyfork.org/zh-CN/scripts/5566)：下载面板参考
-- [用crc彩虹表反向B站弹幕“匿名”？我不想浪费内存，但是要和彩虹表一样快！](https://moepus.oicp.net/2016/11/27/crccrack/)：crc逆向原理
-- [BiliBili_crc2mid](https://github.com/esterTion/BiliBili_crc2mid)：crc逆向算法来源
-- [解除 B 站区域限制](https://greasyfork.org/scripts/25718)：解除视频限制功能参考
+## 致谢
+- [MotooriKashin](//github.com/MotooriKashin) - 原项目的作者，感谢他的工作。
+- [Wayback Machine](https://archive.org/web/) - 对哔哩哔哩旧版页面及模块的存档
+- [protobufjs](https://github.com/protobufjs/protobuf.js) - protobuf.js 库
+- [toastr](https://github.com/CodeSeven/toastr/) - 浮动通知库
+- [bilibiliOldPlayer](https://github.com/indefined/UserScripts) - 原型参考及指导
+- [BiliPlus](https://www.biliplus.com/) - 第三方接口
+- [Bilibilijj](https://www.jijidown.com/) - 第三方接口
+- [如何看待 2020 年 3 月 23 日哔哩哔哩将稿件的「av 号」变更为「BV 号」？ - mcfx的回答 - 知乎](https://www.zhihu.com/question/381784377/answer/1099438784) - av/BV互转算法
+- [YouTube Links](https://greasyfork.org/zh-CN/scripts/5566) - 下载面板参考
+- [用crc彩虹表反向B站弹幕“匿名”？我不想浪费内存，但是要和彩虹表一样快！](https://moepus.oicp.net/2016/11/27/crccrack/) - crc逆向原理
+- [BiliBili_crc2mid](https://github.com/esterTion/BiliBili_crc2mid) - CRC 逆向算法来源
+- [解除 B 站区域限制](https://greasyfork.org/scripts/25718) - 解除视频限制功能参考	
 
 --- 
-### 开源许可
+## 开源许可
 [MIT License](https://opensource.org/licenses/MIT)
