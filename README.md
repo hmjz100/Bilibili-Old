@@ -134,7 +134,8 @@
 - [YouTube Links](https://greasyfork.org/zh-CN/scripts/5566) - 下载面板参考
 - [用crc彩虹表反向B站弹幕“匿名”？我不想浪费内存，但是要和彩虹表一样快！](https://moepus.oicp.net/2016/11/27/crccrack/) - crc逆向原理
 - [BiliBili_crc2mid](https://github.com/esterTion/BiliBili_crc2mid) - CRC 逆向算法来源
-- [解除 B 站区域限制](https://greasyfork.org/scripts/25718) - 解除视频限制功能参考	
+- [解除 B 站区域限制](https://greasyfork.org/scripts/25718) - 解除视频限制功能参考
+- [LINUX DO 社区](https://linux.do/) - 开源推广
 
 --- 
 ## 开源许可
