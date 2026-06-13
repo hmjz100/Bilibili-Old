@@ -1,5 +1,7 @@
+import manifest from './manifest.json' with { type: 'json' };
 import fs from 'fs-extra';
 import esbuild from 'esbuild';
+import { exec } from 'child_process';
 
 console.log("Building Extension...");
 console.log("Version: ", manifest.version);
@@ -18,8 +20,7 @@ function getProjectHash() {
 }
 
 const commit = await getProjectHash();
-const playerCommit = await fs.promises.readFile('./extension/player/video.js', 'utf-8')?.match?.(/revision:"([a-f0-9]{7,40})"/)?.[1] || commit;
-
+const playerCommit = (await fs.promises.readFile('./extension/player/video.js', 'utf-8')).match(/revision:"([a-f0-9]{7,40})"/)?.[1] || commit;
 console.log("Commit: ", commit);
 console.log("Commit (player): ", playerCommit);
 

@@ -20,7 +20,7 @@ function getProjectHash() {
 }
 
 const commit = await getProjectHash();
-const playerCommit = await fs.promises.readFile('./extension/player/video.js', 'utf-8')?.match?.(/revision:"([a-f0-9]{7,40})"/)?.[1] || commit;
+const playerCommit = (await fs.promises.readFile('./extension/player/video.js', 'utf-8')).match(/revision:"([a-f0-9]{7,40})"/)?.[1] || commit;
 
 console.log("Commit: ", commit);
 console.log("Commit (player): ", playerCommit);
