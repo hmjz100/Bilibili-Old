@@ -11,8 +11,9 @@ export class PageHistory extends Page {
 		super(htmlHistory);
 		this.__INITIAL_STATE__();
 		Header.primaryMenu();
-        Header.banner();
+		Header.banner();
 		this.updateDom();
+		(<any>window).spmReportData = {};
 		user.addCallback(status => {
 			status.history && this.archive();
 		})
