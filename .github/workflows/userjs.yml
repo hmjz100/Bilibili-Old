@@ -4,33 +4,36 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'src/**'
-      - 'userjs/manifest.json'
-      - 'extension/player/**'
+      - "src/**"
+      - "userjs/manifest.json"
+      - "extension/player/**"
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   build:
     name: Build UserJS
     runs-on: ubuntu-latest
     steps:
-    - name: 检查仓库
-      uses: actions/checkout@v3
+      - name: 检查仓库
+        uses: actions/checkout@v4
 
-    - name: 安装 Node.js
-      uses: actions/setup-node@v3
+      - name: 安装 Node.js
+        uses: actions/setup-node@v4
 
-    - name: 更新 NPM
-      run: npm update
+      - name: 更新 NPM
+        run: npm update
 
-    - name: 安装 NPM 依赖
-      run: npm install
+      - name: 安装 NPM 依赖
+        run: npm install
 
-    - name: 创建脚本
-      run: npm run userjs
+      - name: 创建脚本
+        run: npm run userjs
 
-    - name: 上传文件
-      uses: actions/upload-artifact@v4
-      with:
-        name: Bilibili-Old-UserJS
-        path: userjs/main.user.js
-        retention-days: 30
+      - name: 上传文件
+        uses: actions/upload-artifact@v4
+        with:
+          name: Bilibili-Old-UserJS
+          path: userjs/main.user.js
+          retention-days: 30
