@@ -11,11 +11,17 @@
 ## 食用
 以下两种方式二选一即可。
 
-### 用户脚本
-进入 [Actions](https://github.com/hmjz100/Bilibili-Old/actions) 查找
+### 金丝雀版 (最新构建)
 
-### 浏览器扩展
-进入 [Actions](https://github.com/hmjz100/Bilibili-Old/actions) 查找
+免登录一键下载最新 [Actions 构建](https://github.com/hmjz100/Bilibili-Old/actions) 由 nightly.link 支持
+
+下载：[用户脚本构建](https://nightly.link/hmjz100/Bilibili-Old/workflows/userjs/dev/Bilibili-Old-UserJS.zip) | 
+[扩展构建](https://nightly.link/hmjz100/Bilibili-Old/workflows/extension/dev/Bilibili-Old-Extension.zip)
+
+用户脚本下载完成后会是一个 zip 压缩包，将此压缩包在用户脚本管理器（如篡改猴、暴力猴、脚本猫）中，以 “Zip 导入” 形式导入安装即可使用。
+
+### 正式版
+目前 Bug 太多，还不打算做。
 
 ---
 ## 功能
