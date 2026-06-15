@@ -1,4 +1,13 @@
 {
+	"name": "bilibili-old",
+	"version": "10.8.9",
+	"author": "Hmjz100",
+	"scripts": {
+		"tsc": "tsc --noEmit -p ./src/tsconfig.json",
+		"extension": "node extension/build.mjs",
+		"userjs": "node userjs/build.mjs",
+		"comment": "node userjs/comment/build.mjs"
+	},
 	"dependencies": {
 		"@jsc/extension": "file:extension",
 		"@jsc/userjs": "file:userjs",
@@ -13,11 +22,5 @@
 		"fs-extra": "*",
 		"navigation-api-types": "*",
 		"typescript": "*"
-	},
-	"scripts": {
-		"tsc": "tsc --noEmit -p ./src/tsconfig.json",
-		"extension": "node extension/build.mjs",
-		"userjs": "node userjs/build.mjs",
-		"comment": "node userjs/comment/build.mjs"
 	}
 }

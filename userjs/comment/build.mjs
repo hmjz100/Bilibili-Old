@@ -41,7 +41,7 @@ const footer = '\n})();\n//@ sourceURL=bilibili-old.js`;\n';
 
 esbuild.build({
 	entryPoints: [
-		'src/comment.ts'
+		'./src/comment.ts'
 	],
 	target: "chrome76",
 	bundle: true,

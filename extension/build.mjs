@@ -1,10 +1,10 @@
-import manifest from './manifest.json' with { type: 'json' };
+import pkg from '../package.json' with { type: 'json' };
 import fs from 'fs-extra';
 import esbuild from 'esbuild';
 import { exec } from 'child_process';
 
 console.log("Building Extension...");
-console.log("Version: ", manifest.version);
+console.log("Version: ", pkg.version);
 
 /**
  * 获取项目的 `commit` 哈希值
@@ -30,20 +30,25 @@ fs.copy("./extension/_locales", "./dist/_locales");
 fs.copy("./extension/images", "./dist/images");
 fs.copy("./extension/player", "./dist/player");
 fs.copy("./extension/rules", "./dist/rules");
-fs.copy("./extension/manifest.json", "./dist/manifest.json");
+
+const manifest = (await fs.promises.readFile('./extension/manifest.json', 'utf-8')).replace(
+	/"description": "(.*)",/,
+	`"description": "$1",\n\t"version": "${pkg.version}",`
+);
+await fs.promises.writeFile('./dist/manifest.json', manifest);
 
 // 打包后台脚本和内容脚本
 esbuild.build({
 	entryPoints: [
-		'extension/background.ts',
-		'extension/content.ts',
+		'./extension/background.ts',
+		'./extension/content.ts',
 	],
 	target: "chrome76",
 	bundle: true,
 	// sourcemap: true,
 	minify: true,
 	outdir: 'dist',
-	outbase: "chrome",
+	outbase: "extension",
 	format: 'iife',
 	treeShaking: true,
 	charset: 'utf8',
@@ -55,7 +60,7 @@ esbuild.build({
 // 打包MAIN脚本
 esbuild.build({
 	entryPoints: [
-		'src/index.ts'
+		'./src/index.ts'
 	],
 	bundle: true,
 	// sourcemap: true,

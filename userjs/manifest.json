@@ -1,28 +1,28 @@
 {
-    "name": "哔哩哔哩旧播放页",
-    "namespace": "github.com/hmjz100",
-    "version": "10.8.9",
-    "description": "恢复旧版哔哩哔哩页面，为了那些念旧的人。",
-    "author": "hmjz100, MotooriKashin, wly5556",
-    "homepage": "https://github.com/hmjz100/Bilibili-Old",
-    "homepageURL": "https://github.com/hmjz100/Bilibili-Old",
-    "supportURL": "https://github.com/hmjz100/Bilibili-Old/issues",
-    "icon": "https://www.bilibili.com/favicon.ico",
-    "match": "*://*.bilibili.com/*",
-    "connect": [
-        "*",
-        "github.com",
-        "testingcf.jsdelivr.net"
-    ],
-    "grant": [
-        "GM.xmlHttpRequest",
-        "GM.getValue",
-        "GM.setValue",
-        "GM.deleteValue",
-        "GM.cookie",
-        "GM.registerMenuCommand"
-    ],
-    "run-at": "document-start",
-    "early-start": "",
-    "license": "MIT"
+	"name": "哔哩哔哩旧播放页",
+	"namespace": "github.com/hmjz100",
+	"version": "",
+	"description": "恢复旧版哔哩哔哩页面，为了那些念旧的人。",
+	"author": "hmjz100, MotooriKashin, wly5556",
+	"license": "MIT",
+	"homepage": "https://github.com/hmjz100/Bilibili-Old",
+	"homepageURL": "https://github.com/hmjz100/Bilibili-Old",
+	"supportURL": "https://github.com/hmjz100/Bilibili-Old/issues",
+	"icon": "https://www.bilibili.com/favicon.ico",
+	"match": "*://*.bilibili.com/*",
+	"connect": [
+		"*",
+		"github.com",
+		"testingcf.jsdelivr.net"
+	],
+	"grant": [
+		"GM.xmlHttpRequest",
+		"GM.getValue",
+		"GM.setValue",
+		"GM.deleteValue",
+		"GM.cookie",
+		"GM.registerMenuCommand"
+	],
+	"run-at": "document-start",
+	"early-start": ""
 }

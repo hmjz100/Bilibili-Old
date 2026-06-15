@@ -1,10 +1,11 @@
 import manifest from './manifest.json' with { type: 'json' };
+import pkg from '../package.json' with { type: 'json' };
 import fs from 'fs-extra';
 import esbuild from 'esbuild';
 import { exec } from 'child_process';
 
 console.log("Building UserScript...");
-console.log("Version: ", manifest.version);
+console.log("Version: ", pkg.version);
 
 /**
  * 获取项目的 `commit` 哈希值
@@ -26,16 +27,16 @@ console.log("Commit: ", commit);
 console.log("Commit (player): ", playerCommit);
 
 // 写入版本号
-manifest.version += `-${commit}`;
+manifest.version = `${pkg.version}-${commit}`;
 
 // 生成文件页眉
 const banner = Object.entries(manifest).reduce((s, d) => {
 	if (Array.isArray(d[1])) {
 		d[1].forEach(e => {
-			s += `// @${d[0].padEnd(13, " ")}${e}\n`
+			s += `// @${d[0]}${e ? ' '.repeat(13 - d[0].length) + e : ''}\n`
 		});
 	} else {
-		s += `// @${d[0].padEnd(13, " ")}${d[1]}\n`;
+		s += `// @${d[0]}${d[1] ? ' '.repeat(13 - d[0].length) + d[1] : ''}\n`;
 	}
 	return s;
 }, `// ==UserScript==\n`) + '// ==/UserScript==\n\nconst MODULES = `\n';
@@ -61,7 +62,7 @@ const userscriptPlugin = {
 // 打包用户脚本
 esbuild.build({
 	entryPoints: [
-		'src/index.ts'
+		'./src/index.ts'
 	],
 	target: "chrome76",
 	bundle: true,
