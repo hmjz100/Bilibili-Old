@@ -9,11 +9,10 @@ import { user } from "../core/user";
 import { videoInfo } from "../core/video-info";
 import htmlBangumi from '../html/bangumi.html';
 import { jsonCheck } from "../io/api";
-import { apiBangumiSeason, IBangumiEpisode, IBangumiSeasonResponse } from "../io/api-bangumi-season";
+import { IBangumiEpisode } from "../io/api-bangumi-season";
 import { ApiGlobalOgvView } from "../io/api-global-view";
 import { apiPgcSeason } from "../io/api-pgc-season";
 import { ISubtitle, PlayerResponse } from "../io/api-player";
-import { ApiSeasonSection } from "../io/api-season-section";
 import { apiSeasonStatus, ISeasonStatusResponse } from "../io/api-season-status";
 import { apiTagInfo } from "../io/api-tag-info";
 import { apiTagTop } from "../io/api-tag-top";
@@ -21,7 +20,7 @@ import { apiViewDetail } from "../io/api-view-detail";
 import { debug } from "../utils/debug";
 import { addCss } from "../utils/element";
 import { unitFormat } from "../utils/format/unit";
-import { urlObj } from "../utils/format/url";
+import { urlObj, objUrl } from "../utils/format/url";
 import { propertyHook } from "../utils/hook/method";
 import { xhrHook } from "../utils/hook/xhr";
 import { poll } from "../utils/poll";
@@ -97,14 +96,14 @@ export class PageBangumi extends Page {
 			args[1] = args[1].replace("web/recommend", "season/web");
 		}, r => {
 			try {
-				const result = jsonCheck(r.response);
-				result.result = result.data.season;
-				r.responseType === "json" ? r.response = result : r.response = r.responseText = JSON.stringify(result);
+				const recommend = jsonCheck(r.response);
+				recommend.result = recommend.data.season;
+				r.responseType === "json" ? r.response = recommend : r.response = r.responseText = JSON.stringify(recommend);
 				// 补全播放器获取到的数据
 				propertyHook.modify<Function>(window, 'getPlayerExtraParams', d => {
 					return () => {
 						this.playerExtraParams = d();
-						this.playerExtraParams.recommend = result.result;
+						this.playerExtraParams.recommend = recommend.result;
 						return this.playerExtraParams;
 					};
 				})
@@ -118,9 +117,9 @@ export class PageBangumi extends Page {
 			args[1] = args[1].replace("bangumi.bilibili.com/ext/web_api/season_count", "api.bilibili.com/pgc/web/season/stat");
 		}, r => {
 			try {
-				const result = jsonCheck(r.response);
-				result.result.favorites = result.result.follow;
-				r.responseType === "json" ? r.response = result : r.response = r.responseText = JSON.stringify(result);
+				const season_count = jsonCheck(r.response);
+				season_count.result.favorites = season_count.result.follow;
+				r.responseType === "json" ? r.response = season_count : r.response = r.responseText = JSON.stringify(season_count);
 			} catch (e) { }
 		}, true);
 	}
@@ -129,12 +128,21 @@ export class PageBangumi extends Page {
 		xhrHook("bangumi.bilibili.com/view/web_api/season", args => {
 			args[1] = args[1].replace("bangumi.bilibili.com/view/web_api/season", "api.bilibili.com/pgc/view/web/season");
 		}, r => {
-			const bangumiResult = jsonCheck(r.response);
-			bangumiResult.result.episodes.forEach((e: any) => {
+			const season = jsonCheck(r.response);
+
+			Object.assign(season.result, {
+				style: season.result.styles || {},
+				total_ep: season.result.total || 0,
+				season_status: season.result.status || {},
+				season_type: season.result.type || 0,
+				series_title: season.result.series?.series_title || ''
+			});
+
+			season.result.episodes.forEach((e: any) => {
 				e.index_title = e.long_title;
 				e.index = e.title;
 			});
-			return r.responseType === "json" ? r.response = bangumiResult : r.response = r.responseText = JSON.stringify(bangumiResult);
+			return r.responseType === "json" ? r.response = season : r.response = r.responseText = JSON.stringify(season);
 		}, false);
 	}
 	/** 修复点评数据 */
@@ -260,7 +268,7 @@ export class PageBangumi extends Page {
 	/** 初始化`__INITIAL_STATE__` */
 	protected initialState() {
 		const data = this.epid ? { ep_id: this.epid } : { season_id: this.ssid };
-		Promise.allSettled([apiSeasonStatus(data), new Promise(r => poll(() => this.initilized, r))])
+		Promise.allSettled([apiSeasonStatus(data), new Promise(r => poll(() => this.initialized, r))])
 			.then(d => <[ISeasonStatusResponse?]>d.map(d => d.status === 'fulfilled' && d.value))
 			.then(async d => {
 				const t = (<any>window).__INITIAL_STATE__;
