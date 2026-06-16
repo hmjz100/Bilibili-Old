@@ -7,7 +7,7 @@ export abstract class Page {
     /** 页面框架vdom */
     protected vdom!: VdomTool;
     /** 初始化完成 */
-    protected initilized = false;
+    protected initialized = false;
     /** 禁止清除webpackJsonp */
     protected webpackJsonp = false;
     /**
@@ -38,7 +38,7 @@ export abstract class Page {
     }
     /** 重写完成回调 */
     protected loadedCallback() {
-        this.initilized = true;
+        this.initialized = true;
         poll(() => document.readyState === "complete", () => {
             document.querySelector("#jvs-cert") || window.dispatchEvent(new ProgressEvent("load"));
         });

@@ -298,9 +298,9 @@ class Player {
 		if (user.userStatus!.simpleChinese) {
 			xhrHook('x/player/wbi/v2?', undefined, res => {
 				try {
-					const response = jsonCheck(res.response);
-					if (response?.data?.subtitle?.subtitles?.length) {
-						response.data.subtitle.subtitles.forEach((d: any) => {
+					const wbiSubtitle = jsonCheck(res.response);
+					if (wbiSubtitle?.data?.subtitle?.subtitles?.length) {
+						wbiSubtitle.data.subtitle.subtitles.forEach((d: any) => {
 							if (typeof d.subtitle_url === 'string') {
 								switch (d.lan) {
 									case 'zh-Hant':

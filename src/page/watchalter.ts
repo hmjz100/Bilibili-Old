@@ -47,9 +47,9 @@ export class PageWatchlater extends Page {
             }, undefined, 0);
             jsonpHook('x/web-interface/view?', undefined, d => {
                 setTimeout(() => {
-                    const data: IAidDatail = jsonCheck(d).data;
-                    BLOD.aid = data.aid;
-                    this.like.likes = data.stat.like;
+                    const view = jsonCheck(d).data;
+                    BLOD.aid = view.aid;
+                    this.like.likes = view.stat.like;
                     this.like.init();
                 });
                 return d;

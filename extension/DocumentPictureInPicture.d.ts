@@ -19,7 +19,7 @@ declare interface DocumentPictureInPicture extends EventTarget {
 }
 
 declare interface IDocumentPictureInPictureOptions {
-    /** 
+    /**
      * 一个非负数，表示为画中画窗口视口设置的高度（以像素为单位）。
      * 如果options未指定，则使用默认值 0。
      */

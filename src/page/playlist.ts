@@ -80,8 +80,8 @@ export class PagePlaylist extends Page {
                 args[2] = objUrl('', obj);
             });
             xhrHook('x/v2/medialist/resource/list?', undefined, async res => {
-                const data = jsonCheck(res.response);
-                data.data.media_list.forEach((d: IAidInfo) => {
+                const medialistResourceList = jsonCheck(res.response);
+                medialistResourceList.data.media_list.forEach((d: IAidInfo) => {
                     videoInfo.aidInfo(d);
                 });
             })
@@ -122,9 +122,9 @@ export class PagePlaylist extends Page {
             });
             jsonpHook('x/web-interface/view?', undefined, d => {
                 setTimeout(() => {
-                    const data: IAidDatail = jsonCheck(d).data;
-                    BLOD.aid = data.aid;
-                    this.like.likes = data.stat.like;
+                    const view = jsonCheck(d).data;
+                    BLOD.aid = view.aid;
+                    this.like.likes = view.stat.like;
                 });
                 return d;
             }, false);

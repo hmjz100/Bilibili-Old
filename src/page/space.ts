@@ -129,10 +129,10 @@ export class PageSpace extends Page {
 		// 收藏
 		xhrHook('x/v3/fav/resource/list', undefined, async res => {
 			try {
-				const data = jsonCheck(res.response);
-				delete data.data?.ttl; // 修复收藏时间
-				if (data.data.medias) {
-					data.data.medias.forEach((d: any) => {
+				const favResourceList = jsonCheck(res.response);
+				delete favResourceList.data?.ttl; // 修复收藏时间
+				if (favResourceList.data.medias) {
+					favResourceList.data.medias.forEach((d: any) => {
 						d.attr % 2 && this.aids.push(d.id);
 					});
 				}
