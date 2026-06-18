@@ -40,15 +40,7 @@ export class PageSearch extends Page {
         propertyHook(window, "__INITIAL_STATE__", undefined);
     }
     protected style() {
-        addCss(`
-.home-wrap .home-form .home-suggest .hotlist {
-    display: flex;
-    flex-direction: column;
-    width: auto;
-}
-.home-wrap .home-form .home-suggest .hotlist .item {
-    width: auto;
-}`);
+        addCss(`.home-wrap .home-form .home-suggest .hotlist{display:flex;flex-direction:column;width:auto}.home-wrap .home-form .home-suggest .hotlist .item{width:auto}`);
     }
     /** 获取港澳台搜索数据 */
     protected gat() {

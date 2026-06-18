@@ -230,7 +230,7 @@ export class Header {
 	protected loadOldHeader(target?: HTMLElement) {
 		if (target) {
 			if (target.className === 'bili-header__bar') {
-				addCss('.bili-header.large-header,.header-channel,.z-top-container.has-menu[type="all"] {display: none;}');
+				addCss('.bili-header.large-header,.header-channel,.z-top-container.has-menu[type="all"]{display:none}');
 			}
 			document.body.classList.remove('header-v3');
 			target.style.display = 'none';
@@ -239,7 +239,7 @@ export class Header {
 		}
 		if (this.oldHeadLoaded) return;
 		this.oldHeadLoaded = true;
-		addCss('#internationalHeader,#biliMainHeader,#bili-header-container{display: none;}');
+		addCss('#internationalHeader,#biliMainHeader,#bili-header-container{display:none}');
 		document.body.insertBefore(this.oldHeader, document.body.firstChild);
 		((<any>window).jQuery ? Promise.resolve() : loadScript("//static.hdslb.com/js/jquery.min.js"))
 			.then(() => loadScript("//s1.hdslb.com/bfs/seed/jinkela/header/header.js"))
@@ -254,16 +254,16 @@ export class Header {
 			.then(() => {
 				target && (target.style.display = 'none');
 				this.styleClear();
-				addCss('.bili-footer {position: relative;}');
+				addCss('.bili-footer{position: relative;}');
 				document.getElementsByClassName('bili-header-m')[1]?.remove();
 			})
 	}
 	static fullBannerCover = false;
 	/** 顶栏样式修复 */
 	protected static styleFix() {
-		addCss(".nav-item.live {width: auto;}.lt-row {display: none !important;} .bili-header-m #banner_link{background-size: cover;background-position: center !important;}", 'lt-row-fix');
+		addCss(".nav-item.live{width:auto}.lt-row{display:none!important}.bili-header-m #banner_link{background-size:cover;background-position:center!important}", 'lt-row-fix');
 		addCss(cssAvatarAnimation, "avatarAnimation");
-		this.fullBannerCover && addCss('.bili-header-m #banner_link{height: 9.375vw !important;min-width: 1000px;min-height: 155px;max-height: 240px;}')
+		this.fullBannerCover && addCss('.bili-header-m #banner_link{height:9.375vw!important;min-width:1000px;min-height:155px;max-height:240px}')
 	}
 	/** 禁用新版顶栏相关样式 */
 	protected async styleClear() {

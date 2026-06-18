@@ -174,7 +174,7 @@ class Player {
 			}
 		});
 		// 修正播放器样式
-		addCss(`#bofqi .player,#bilibili-player .player{width: 100%;height: 100%;display: block;}.bilibili-player .bilibili-player-auxiliary-area{z-index: 1;}`, 'nano-fix');
+		addCss(`#bofqi .player,#bilibili-player .player{width:100%;height:100%;display:block}.bilibili-player .bilibili-player-auxiliary-area{z-index:1}`, 'nano-fix');
 	}
 	/** 不启用旧版播放器允许新版播放器启动 */
 	nanoPermit() {
@@ -469,12 +469,12 @@ class Player {
 				}
 			} else {
 				await loadScript(URLS.VIDEO);
-				addCss('.bilibili-player-video-progress-detail-img {transform: scale(0.333333);transform-origin: 0px 0px;}', 'detail-img');
+				addCss('.bilibili-player-video-progress-detail-img{transform:scale(0.333333);transform-origin:0px 0px}', 'detail-img');
 			}
 		} catch (e) {
 			this.updating || toast.error('重构播放器加载失败！', '已回滚到上古播放器~', e)();
 			await loadScript(URLS.VIDEO);
-			addCss('.bilibili-player-video-progress-detail-img {transform: scale(0.333333);transform-origin: 0px 0px;}', 'detail-img');
+			addCss('.bilibili-player-video-progress-detail-img{transform:scale(0.333333);transform-origin:0px 0px}', 'detail-img');
 		}
 	}
 	changeNaiveVideo() {

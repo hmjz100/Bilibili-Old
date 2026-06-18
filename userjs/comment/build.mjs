@@ -43,7 +43,7 @@ esbuild.build({
 	entryPoints: [
 		'./src/comment.ts'
 	],
-	target: "chrome76",
+	target: "es2015",
 	bundle: true,
 	format: 'esm',
 	treeShaking: true,
@@ -55,8 +55,8 @@ esbuild.build({
 		".css": 'text'
 	},
 	define: {
-		_Slug_: `'${commit}'`, // 编译时生成的唯一标记
-		_UserScript_: 'true', // 用户脚本标记
+		_Slug_: `'${commit}'`,
+		_UserScript_: 'true',
 	},
 	banner: {
 		js: banner

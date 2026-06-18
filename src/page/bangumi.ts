@@ -408,10 +408,10 @@ export class PageBangumi extends Page {
 			.finally(() => {
 				if ((<any>window).__INITIAL_STATE__.special) {
 					// 带海报的bangumi隐藏顶栏banner和wrapper
-					addCss("#bili-header-m > #banner_link,#bili-header-m > .bili-wrapper{ display: none; }");
+					addCss("#bili-header-m > #banner_link,#bili-header-m > .bili-wrapper{display:none}");
 				}
 				// 修复怪异模式下人类所不能理解的样式问题 ಥ_ಥ
-				if (document.compatMode === "BackCompat") addCss(".header-info > .count-wrapper {height: 18px !important;}");
+				if (document.compatMode === "BackCompat") addCss(".header-info > .count-wrapper{height:18px !important}");
 				// 禁止新版页面残留破坏样式
 				window.addEventListener('resize', e => {
 					const container = document.querySelector(".main-container");
@@ -617,7 +617,7 @@ export class PageBangumi extends Page {
 		if (user.userStatus!.like) {
 			poll(() => document.querySelector<HTMLSpanElement>('#bangumi_header > div.header-info > div.count-wrapper.clearfix > div.bangumi-coin-wrap'), d => {
 				d.parentElement?.insertBefore(this.like, d);
-				addCss('.ulike {margin-left: 15px;position: relative;float: left;height: 100%;line-height: 18px;font-size: 12px;color: #222;}', 'ulike-bangumi');
+				addCss('.ulike{margin-left:15px;position:relative;float:left;height:100%;line-height:18px;font-size:12px;color:#222}', 'ulike-bangumi');
 			});
 			xhrHook('pgc/web/season/stat?', undefined, async res => {
 				try {

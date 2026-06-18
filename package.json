@@ -3,7 +3,7 @@
 	"version": "10.8.9",
 	"author": "Hmjz100",
 	"scripts": {
-		"tsc": "tsc --noEmit -p ./src/tsconfig.json",
+		"tsc": "tsc -p ./src/tsconfig.json --noEmit --removeComments",
 		"extension": "node extension/build.mjs",
 		"userjs": "node userjs/build.mjs",
 		"comment": "node userjs/comment/build.mjs"
@@ -18,8 +18,10 @@
 	},
 	"devDependencies": {
 		"@types/md5": "*",
+		"clean-css": "^5.3.3",
 		"esbuild": "*",
 		"fs-extra": "*",
+		"html-minifier-terser": "^7.2.0",
 		"navigation-api-types": "*",
 		"typescript": "*"
 	}

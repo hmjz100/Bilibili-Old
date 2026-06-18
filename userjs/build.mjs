@@ -2,6 +2,8 @@ import manifest from './manifest.json' with { type: 'json' };
 import pkg from '../package.json' with { type: 'json' };
 import fs from 'fs-extra';
 import esbuild from 'esbuild';
+import { minify } from 'html-minifier-terser';
+import CleanCSS from 'clean-css';
 import { exec } from 'child_process';
 
 console.log("Building UserScript...");
@@ -59,28 +61,57 @@ const userscriptPlugin = {
 	},
 };
 
+const htmlMinifyPlugin = {
+	name: 'html-minify',
+	setup(build) {
+		build.onLoad({ filter: /\.html$/ }, async (args) => {
+			let content = await fs.promises.readFile(args.path, 'utf8');
+			content = await minify(content, {
+				collapseWhitespace: true,
+				removeComments: true,
+				removeEmptyAttributes: true,
+				minifyCSS: true
+			});
+			return { contents: content, loader: 'text' };
+		});
+	}
+};
+
+const cssMinifyPlugin = {
+	name: 'css-minify',
+	setup(build) {
+		build.onLoad({ filter: /\.css$/ }, async (args) => {
+			let content = await fs.promises.readFile(args.path, 'utf8');
+			const result = new CleanCSS({ level: 2 }).minify(content);
+			return { contents: result.styles, loader: 'text' };
+		});
+	}
+};
+
 // 打包用户脚本
 esbuild.build({
 	entryPoints: [
 		'./src/index.ts'
 	],
-	target: "chrome76",
+	target: "es2015",
+	format: "iife",
+	charset: "utf8",
 	bundle: true,
-	format: 'iife',
 	treeShaking: true,
-	charset: 'utf8',
+	// sourcemap: true,
+	minify: true,
 	loader: {
-		'.html': 'text',
-		'.svg': 'text',
-		".css": 'text'
+		'.svg': 'text'
 	},
 	define: {
-		_Slug_: `'${commit}'`, // 编译时生成的唯一标记
-		_UserScript_: 'true', // 用户脚本标记
+		_Slug_: `'${commit}'`,
+		_UserScript_: 'true',
 		_PlayerCommit_: `'${playerCommit}'`, // 播放器组件版本标记
 	},
 	plugins: [
-		userscriptPlugin
+		userscriptPlugin,
+		htmlMinifyPlugin,
+		cssMinifyPlugin
 	],
 	write: false, // 禁用输出以进行后续处理
 	inject: ['@jsc/userjs'], // 替换化境变量

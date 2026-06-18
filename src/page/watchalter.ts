@@ -14,78 +14,78 @@ import { Header } from "./header";
 import { Page } from "./page";
 
 export class PageWatchlater extends Page {
-    protected like: Like;
-    constructor() {
-        super(html);
-        this.like = new Like();
-        new Comment();
-        this.toAv();
-        this.enLike();
-        this.toview();
-        this.living();
-        this.commentAgent();
-        this.exp();
-        Header.primaryMenu();
-        Header.banner();
-        this.updateDom();
-    }
-    /** 记录视频数据 */
-    protected toview() {
-        jsonpHook('history/toview/web?', undefined, d => {
-            setTimeout(() => {
-                d.data.list.forEach((d: IAidDatail) => videoInfo.aidDatail(d));
-            });
-            return d;
-        })
-    }
-    /** 点赞功能 */
-    protected enLike() {
-        if (user.userStatus!.like) {
-            poll(() => document.querySelector<HTMLSpanElement>('#viewlater-app > div > div > div > div.video-top-info.clearfix.bili-wrapper.bili-wrapper > div.video-info-module > div.number > span.u.coin.on'), d => {
-                d.parentElement?.insertBefore(this.like, d);
-                addCss('.video-info-module .number .ulike {margin-left: 15px;margin-right: 5px;}', 'ulike-watchlater');
-            }, undefined, 0);
-            jsonpHook('x/web-interface/view?', undefined, d => {
-                setTimeout(() => {
-                    const view = jsonCheck(d).data;
-                    BLOD.aid = view.aid;
-                    this.like.likes = view.stat.like;
-                    this.like.init();
-                });
-                return d;
-            }, false);
-        }
-    }
-    /** 修正直播错误 */
-    protected living() {
-        xhrHook("api.live.bilibili.com/bili/living_v2/", undefined, r => { r.response = r.responseText = ` ${r.response}` }, false);
-    }
-    /** 修复评论播放跳转 */
-    protected commentAgent() {
-        (<any>window).commentAgent = { seek: (t: number) => (<any>window).player && (<any>window).player.seek(t) };
-    }
+	protected like: Like;
+	constructor() {
+		super(html);
+		this.like = new Like();
+		new Comment();
+		this.toAv();
+		this.enLike();
+		this.toview();
+		this.living();
+		this.commentAgent();
+		this.exp();
+		Header.primaryMenu();
+		Header.banner();
+		this.updateDom();
+	}
+	/** 记录视频数据 */
+	protected toview() {
+		jsonpHook('history/toview/web?', undefined, d => {
+			setTimeout(() => {
+				d.data.list.forEach((d: IAidDatail) => videoInfo.aidDatail(d));
+			});
+			return d;
+		})
+	}
+	/** 点赞功能 */
+	protected enLike() {
+		if (user.userStatus!.like) {
+			poll(() => document.querySelector<HTMLSpanElement>('#viewlater-app > div > div > div > div.video-top-info.clearfix.bili-wrapper.bili-wrapper > div.video-info-module > div.number > span.u.coin.on'), d => {
+				d.parentElement?.insertBefore(this.like, d);
+				addCss('.video-info-module .number .ulike{margin-left:15px;margin-right:5px}', 'ulike-watchlater');
+			}, undefined, 0);
+			jsonpHook('x/web-interface/view?', undefined, d => {
+				setTimeout(() => {
+					const view = jsonCheck(d).data;
+					BLOD.aid = view.aid;
+					this.like.likes = view.stat.like;
+					this.like.init();
+				});
+				return d;
+			}, false);
+		}
+	}
+	/** 修正直播错误 */
+	protected living() {
+		xhrHook("api.live.bilibili.com/bili/living_v2/", undefined, r => { r.response = r.responseText = ` ${r.response}` }, false);
+	}
+	/** 修复评论播放跳转 */
+	protected commentAgent() {
+		(<any>window).commentAgent = { seek: (t: number) => (<any>window).player && (<any>window).player.seek(t) };
+	}
 
-    /** 重定向回av页 */
-    private toAv() {
-        if (user.userStatus?.watchlater2Av) {
-            jsonpHook(['web-interface/view?', 'cb_view'], url => {
-                const obj = urlObj(url);
-                if (obj.aid) {
-                    location.replace(`/video/av${obj.aid}`);
-                }
-                return url;
-            });
-        }
-    }
+	/** 重定向回av页 */
+	private toAv() {
+		if (user.userStatus?.watchlater2Av) {
+			jsonpHook(['web-interface/view?', 'cb_view'], url => {
+				const obj = urlObj(url);
+				if (obj.aid) {
+					location.replace(`/video/av${obj.aid}`);
+				}
+				return url;
+			});
+		}
+	}
 
-    /** 经验值接口 */
-    protected exp() {
-        xhrHook.async('plus/account/exp.php', undefined, async () => {
-            const res = await fetch('https://api.bilibili.com/x/web-interface/coin/today/exp', { credentials: 'include' });
-            const json = await res.json();
-            json.number = json.data;
-            const response = JSON.stringify(json)
-            return { response, responseText: response, responseType: 'json' }
-        })
-    }
+	/** 经验值接口 */
+	protected exp() {
+		xhrHook.async('plus/account/exp.php', undefined, async () => {
+			const res = await fetch('https://api.bilibili.com/x/web-interface/coin/today/exp', { credentials: 'include' });
+			const json = await res.json();
+			json.number = json.data;
+			const response = JSON.stringify(json)
+			return { response, responseText: response, responseType: 'json' }
+		})
+	}
 }

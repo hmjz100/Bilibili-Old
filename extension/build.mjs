@@ -1,6 +1,8 @@
 import pkg from '../package.json' with { type: 'json' };
 import fs from 'fs-extra';
 import esbuild from 'esbuild';
+import { minify } from 'html-minifier-terser';
+import CleanCSS from 'clean-css';
 import { exec } from 'child_process';
 
 console.log("Building Extension...");
@@ -37,23 +39,53 @@ const manifest = (await fs.promises.readFile('./extension/manifest.json', 'utf-8
 );
 await fs.promises.writeFile('./dist/manifest.json', manifest);
 
+const htmlMinifyPlugin = {
+	name: 'html-minify',
+	setup(build) {
+		build.onLoad({ filter: /\.html$/ }, async (args) => {
+			let content = await fs.promises.readFile(args.path, 'utf8');
+			content = await minify(content, {
+				collapseWhitespace: true,
+				removeComments: true,
+				minifyCSS: true
+			});
+			return { contents: content, loader: 'text' };
+		});
+	}
+};
+
+const cssMinifyPlugin = {
+	name: 'css-minify',
+	setup(build) {
+		build.onLoad({ filter: /\.css$/ }, async (args) => {
+			let content = await fs.promises.readFile(args.path, 'utf8');
+			const result = new CleanCSS({ level: 2 }).minify(content);
+			return { contents: result.styles, loader: 'text' };
+		});
+	}
+};
+
 // 打包后台脚本和内容脚本
 esbuild.build({
 	entryPoints: [
 		'./extension/background.ts',
 		'./extension/content.ts',
 	],
-	target: "chrome76",
+	target: "es2015",
+	format: "iife",
+	charset: "utf8",
+	outdir: "dist",
+	outbase: "extension",
 	bundle: true,
+	treeShaking: true,
 	// sourcemap: true,
 	minify: true,
-	outdir: 'dist',
-	outbase: "extension",
-	format: 'iife',
-	treeShaking: true,
-	charset: 'utf8',
+	plugins: [
+		htmlMinifyPlugin,
+		cssMinifyPlugin
+	],
 	define: {
-		_Slug_: `'${commit}'`, // 编译时生成的唯一标记
+		_Slug_: `'${commit}'`,
 	}
 });
 
@@ -62,23 +94,26 @@ esbuild.build({
 	entryPoints: [
 		'./src/index.ts'
 	],
+	target: "es2015",
+	format: "iife",
+	charset: "utf8",
+	outdir: "dist",
+	outbase: "src",
 	bundle: true,
+	treeShaking: true,
 	// sourcemap: true,
 	minify: true,
-	outdir: 'dist',
-	outbase: "src",
-	format: 'iife',
-	treeShaking: true,
-	charset: 'utf8',
+	plugins: [
+		htmlMinifyPlugin,
+		cssMinifyPlugin
+	],
 	loader: {
-		'.html': 'text',
-		'.svg': 'text',
-		".css": 'text'
+		'.svg': 'text'
 	},
 	define: {
-		_Slug_: `'${commit}'`, // 编译时生成的唯一标记
-		_UserScript_: 'false', // 用户脚本标记
-		_PlayerCommit_: `'${playerCommit}'`, // 玩家脚本提交哈希值
+		_Slug_: `'${commit}'`,
+		_UserScript_: 'false',
+		_PlayerCommit_: `'${playerCommit}'`,
 	},
 	inject: ['@jsc/extension'], // 替换化境变量
 });

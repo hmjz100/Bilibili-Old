@@ -47,7 +47,7 @@ export class Like extends HTMLSpanElement implements CustomElementsInterface {
                     debug.error('获取点赞情况失败', e)
                 });
         }
-        addCss('.ulike {cursor: pointer;}.ulike svg{vertical-align: middle;margin-right: 10px;transform: translateY(-1px);}', `ulike${_Slug_}`);
+        addCss('.ulike{cursor:pointer}.ulike svg{vertical-align:middle;margin-right:10px;transform:translateY(-1px)}', `ulike${_Slug_}`);
     }
     /** 更新点赞数 */
     get likes() {

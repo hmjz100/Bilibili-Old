@@ -307,7 +307,7 @@ export class PageVideo extends Page {
 		});
 		propertyHook(window, 'callAppointPart', this.callAppointPart);
 		// 修正播单列表高度
-		addCss('.bilibili-player .bilibili-player-auxiliary-area .bilibili-player-playlist .bilibili-player-playlist-playlist {height: calc(100% - 45px);}.bilibili-player-playlist-nav-title,.bilibili-player-playlist-nav-ownername{display: none;}');
+		addCss('.bilibili-player .bilibili-player-auxiliary-area .bilibili-player-playlist .bilibili-player-playlist-playlist{height:calc(100% - 45px)}.bilibili-player-playlist-nav-title,.bilibili-player-playlist-nav-ownername{display:none}');
 	}
 
 	/** hook合集切p回调 */
@@ -343,7 +343,7 @@ export class PageVideo extends Page {
 			poll(() => document.querySelector<HTMLSpanElement>('#viewbox_report > div.number > span.u.coin'), d => {
 				if (this.destroy) return this.like.remove();
 				d.parentElement?.insertBefore(this.like, d);
-				addCss('.video-info-m .number .ulike {margin-left: 15px;margin-right: 5px;}', 'ulike-av');
+				addCss('.video-info-m .number .ulike{margin-left:15px;margin-right:5px}', 'ulike-av');
 			});
 			const destroy = videoInfo.bindChange(v => {
 				if (this.destroy) {

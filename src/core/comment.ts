@@ -221,13 +221,11 @@ export class Comment {
 	/** 样式修补 */
 	protected styleFix() {
 		// 加高评论区操作按钮
-		addCss(`.bb-comment .comment-list .list-item .info .btn-hover, .comment-bilibili-fold .comment-list .list-item .info .btn-hover {
-            line-height: 24px;
-        }`, "comment-btn-24pxH");
+		addCss(`.bb-comment .comment-list .list-item .info .btn-hover,.comment-bilibili-fold .comment-list .list-item .info .btn-hover{line-height:24px}`, "comment-btn-24pxH");
 		// 不让楼中楼操作菜单在非hover状态时消失
-		addCss(`.operation.btn-hide-re .opera-list {visibility: visible}`, "keep-operalist-visible");
+		addCss(`.operation.btn-hide-re .opera-list{visibility:visible}`, "keep-operalist-visible");
 		// 评论图片
-		addCss('.image-exhibition {margin-top: 8px;user-select: none;} .image-exhibition .image-item-wrap {max-width: 240px;display: flex;justify-content: center;position: relative;border-radius: 4px;overflow: hidden;cursor: zoom-in;} .image-exhibition .image-item-wrap.vertical {flex-direction: column} .image-exhibition .image-item-wrap.extra-long {justify-content: start;} .image-exhibition .image-item-wrap img {width: 100%;}', 'image-exhibition');
+		addCss('.image-exhibition{margin-top:8px;user-select:none}.image-exhibition .image-item-wrap{max-width:240px;display:flex;justify-content:center;position:relative;border-radius:4px;overflow:hidden;cursor:zoom-in}.image-exhibition .image-item-wrap.vertical{flex-direction:column}.image-exhibition .image-item-wrap.extra-long{justify-content:start}.image-exhibition .image-item-wrap img{width:100%}', 'image-exhibition');
 	}
 	/** 退出abtest，获取翻页评论区 */
 	protected initAbtest() {
@@ -255,15 +253,7 @@ export class Comment {
 					const com = document.querySelector<HTMLElement>('.bb-comment');
 					com?.insertAdjacentElement('beforebegin', div);
 					com?.parentElement?.classList.add('common');
-					addCss('.b-head {\
-    font-size: 18px;\
-    line-height: 24px;\
-    color: #222;\
-    margin: 0 0 20px;\
-}\
-.b-head .results {\
-    margin-right: 10px;\
-}', 'b-head');
+					addCss('.b-head{font-size:18px;line-height:24px;color:#222;margin:0 0 20px}.b-head .results{margin-right:10px}', 'b-head');
 				}
 			});
 
@@ -418,22 +408,11 @@ export class Comment {
 				let dialogid = clickTarget.getAttribute("dialog-id");
 				let selfRpid = clickTarget.getAttribute("data-id");
 				// 载入所需的样式
-				addCss(`
-            .comment-dialog .dialog{display:none!important}
-            .comment-dialog > .comment-list{transform:translateY(-13px)}
-            .comment-dialog{min-height:200px;max-height:70vh;overflow-y:auto}
-            .comment-dialog-container{width:600px;z-index:100000;position:fixed;background:#fff;left:50%;top:50%;transform:translate(-50%,-50%);box-shadow:0 0 20px 3px #0000005c;border-radius:10px;padding:0 18px;opacity:1;transition:opacity 0.1s}
-            .comment-dialog-container.hidden{opacity:0}`, "comment-dialog");
+				addCss(`.comment-dialog .dialog{display:none!important}.comment-dialog > .comment-list{transform:translateY(-13px)}.comment-dialog{min-height:200px;max-height:70vh;overflow-y:auto}.comment-dialog-container{width:600px;z-index:100000;position:fixed;background:#fff;left:50%;top:50%;transform:translate(-50%,-50%);box-shadow:0 0 20px 3px #0000005c;border-radius:10px;padding:0 18px;opacity:1;transition:opacity 0.1s}.comment-dialog-container.hidden{opacity:0}`, "comment-dialog");
 				let container = document.createElement("div");
 				container.className = "comment-dialog-container hidden";
 				// 为了利用已有的评论区样式、与样式的选择器匹配上，悬浮窗的dom树与评论区的相同
-				container.innerHTML = `
-            <div class="comment-dialog bb-comment">
-            <div class="comment-list">
-            <div class="list-item" data-id="${rootid}">
-            <div class="con" style="border:none;margin:0;padding:0;">
-            <div class="reply-box">
-            </div></div></div></div></div>`;
+				container.innerHTML = `<div class="comment-dialog bb-comment"><div class="comment-list"><div class="list-item" data-id="${rootid}"><div class="con" style="border:none;margin:0;padding:0;"><div class="reply-box"></div></div></div></div></div>`;
 				document.body.appendChild(container);
 				let replyBox = container.getElementsByClassName("reply-box")[0];
 				setTimeout(() => {
@@ -500,9 +479,9 @@ export class Comment {
 								fixEmojiPosition(replyBox);
 								// 高亮被查看上下文的评论
 								(<HTMLElement>replyBox.querySelector(`div[data-id="${selfRpid}"]`)).style.cssText = `
-                            background: linear-gradient(45deg, rgba(115,108,231,0.13) 0%, rgba(0,161,214,0.13) 67%, rgba(0,212,255,0.13) 100%);
-                            border-radius: 15px;
-                            margin-right: 15px;`
+							background: linear-gradient(45deg, rgba(115,108,231,0.13) 0%, rgba(0,161,214,0.13) 67%, rgba(0,212,255,0.13) 100%);
+							border-radius: 15px;
+							margin-right: 15px;`
 							}
 						}
 						nextPage(resp.data.cursor.max_floor);
