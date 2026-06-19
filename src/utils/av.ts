@@ -25,6 +25,40 @@ export namespace AV {
 	const REG_EXP_STR = new RegExp(`[bB][vV]1[${ALPHABET.join('')}]{9}`, 'g');
 
 	/**
+	 * 大整数按位与（避免 JavaScript 32位位运算限制）
+	 */
+	function bitwiseAnd(a: number, b: number): number {
+		let result = 0;
+		let bit = 1;
+		while (a > 0 || b > 0) {
+			if ((a & 1) === 1 && (b & 1) === 1) {
+				result += bit;
+			}
+			a = Math.floor(a / 2);
+			b = Math.floor(b / 2);
+			bit *= 2;
+		}
+		return result;
+	}
+
+	/**
+	 * 大整数按位异或（避免 JavaScript 32位位运算限制）
+	 */
+	function bitwiseXor(a: number, b: number): number {
+		let result = 0;
+		let bit = 1;
+		while (a > 0 || b > 0) {
+			if ((a & 1) !== (b & 1)) {
+				result += bit;
+			}
+			a = Math.floor(a / 2);
+			b = Math.floor(b / 2);
+			bit *= 2;
+		}
+		return result;
+	}
+
+	/**
 	 * aid => BV
 	 * 
 	 * @example
@@ -69,7 +103,7 @@ export namespace AV {
 			r = r * BASE + ALPHABET.indexOf(bvid[DIGIT_MAP[i]]);
 		}
 
-		return `${(r & MASK_CODE) ^ XOR_CODE}`;
+		return `${bitwiseXor(bitwiseAnd(r, MASK_CODE), XOR_CODE)}`;
 	}
 
 	/**
