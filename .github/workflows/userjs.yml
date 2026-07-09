@@ -31,10 +31,17 @@ jobs:
       - name: 创建脚本
         run: npm run userjs
 
-      - name: 上传文件
+      - name: 上传文件 (压缩包)
         uses: actions/upload-artifact@v7
         with:
-          name: Bilibili-Old.user.js
+          name: Bilibili-Old-UserJS
+          path: userjs/main.user.js
+          retention-days: 30
+          compression-level: 9
+
+      - name: 上传文件 (用户脚本)
+        uses: actions/upload-artifact@v7
+        with:
           path: userjs/main.user.js
           retention-days: 30
           archive: false
