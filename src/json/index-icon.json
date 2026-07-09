@@ -5162,14 +5162,14 @@
 		]
 	},
 	{
-		"icon": "https://i0.hdslb.com/bfs/archive/e8993c0d9305dfd56286d462808bb20ad16e30cb.gif",
 		"id": 1199,
-		"links": [
-			"https://www.bilibili.com/blackboard/activity-BPU2019.html"
-		],
 		"time": 1578794882,
 		"title": "百大UP主颁奖",
-		"weight": 10
+		"weight": 10,
+		"icon": "https://i0.hdslb.com/bfs/archive/e8993c0d9305dfd56286d462808bb20ad16e30cb.gif",
+		"links": [
+			"https://www.bilibili.com/blackboard/activity-BPU2019.html"
+		]
 	},
 	{
 		"id": 1200,

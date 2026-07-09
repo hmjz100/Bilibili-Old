@@ -12,7 +12,7 @@ import { IStaf } from "../io/api";
 import { apiArticleCards } from "../io/api-article-cards";
 import { apiBiliplusView } from "../io/api-biliplus-view";
 import { apiViewDetail, ApiViewDetail } from "../io/api-view-detail";
-import menuConfig from '../json/sort.txt';
+import menuConfig from '../json/sort.json';
 import toview from '../json/toview.json';
 import { addCss } from "../utils/element";
 import { objUrl, urlObj } from "../utils/format/url";
@@ -113,7 +113,7 @@ export class PageVideo extends Page {
 
 	/** 修复：视频分区 */
 	protected menuConfig() {
-		webpackHook(717, 100, code => code.replace(/MenuConfig[\S\s]+?LiveMenuConfig/, `MenuConfig=${menuConfig},e.LiveMenuConfig`));
+		webpackHook(717, 100, code => code.replace(/MenuConfig[\S\s]+?LiveMenuConfig/, `MenuConfig=${JSON.stringify(menuConfig)},e.LiveMenuConfig`));
 	}
 
 	/** 移除上古顶栏 */
@@ -243,12 +243,12 @@ export class PageVideo extends Page {
 			let fl = '<span class="title">UP主列表</span><div class="up-card-box">';
 			fl = staff.reduce((s, d) => {
 				s = s + `<div class="up-card">
-                    <a href="//space.bilibili.com/${d.mid}" data-usercard-mid="${d.mid}" target="_blank" class="avatar">
-                    <img src="${d.face}@48w_48h.webp" /><!---->
-                    <span class="info-tag">${d.title}</span><!----></a>
-                    <div class="avatar">
-                    <a href="//space.bilibili.com/${d.mid}" data-usercard-mid="${d.mid}" target="_blank" class="${(d.vip && d.vip.status) ? 'name-text is-vip' : 'name-text'}">${d.name}</a>
-                    </div></div>`
+					<a href="//space.bilibili.com/${d.mid}" data-usercard-mid="${d.mid}" target="_blank" class="avatar">
+					<img src="${d.face}@48w_48h.webp" /><!---->
+					<span class="info-tag">${d.title}</span><!----></a>
+					<div class="avatar">
+					<a href="//space.bilibili.com/${d.mid}" data-usercard-mid="${d.mid}" target="_blank" class="${(d.vip && d.vip.status) ? 'name-text is-vip' : 'name-text'}">${d.name}</a>
+					</div></div>`
 				return s;
 			}, fl) + `</div>`;
 			node.innerHTML = fl;

@@ -17,10 +17,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 检查仓库
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: 安装 Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
 
       - name: 更新 NPM
         run: npm update
@@ -32,8 +32,9 @@ jobs:
         run: npm run userjs
 
       - name: 上传文件
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: Bilibili-Old-UserJS
+          name: Bilibili-Old.user.js
           path: userjs/main.user.js
           retention-days: 30
+          archive: false

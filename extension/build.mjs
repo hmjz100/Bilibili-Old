@@ -115,5 +115,5 @@ esbuild.build({
 		_UserScript_: 'false',
 		_PlayerCommit_: `'${playerCommit}'`,
 	},
-	inject: ['@jsc/extension'], // 替换化境变量
+	inject: ['@jsc/extension'], // 替换环境变量
 });

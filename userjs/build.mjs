@@ -88,6 +88,26 @@ const cssMinifyPlugin = {
 	}
 };
 
+const jsonMinifyPlugin = {
+	name: 'json-minify',
+	setup(build) {
+		build.onLoad({ filter: /\.json$/ }, async (args) => {
+			let content = await fs.promises.readFile(args.path, 'utf8');
+			content = content.replace(/^\uFEFF/, ''); // 治 BOM
+
+			// 压缩 JSON 得到绝对没有换行的单行字符串
+			const minified = JSON.stringify(JSON.parse(content));
+
+			return {
+				// 关键：把它包在 JSON.parse('...') 里面作为纯字符串导出
+				// 用 JSON.stringify 再次包裹以确保里面的所有转义序列（包括 \\n）在 JS 字符串字面量中绝对安全
+				contents: `export default JSON.parse(${JSON.stringify(minified)});`,
+				loader: 'js'
+			};
+		});
+	}
+};
+
 // 打包用户脚本
 esbuild.build({
 	entryPoints: [
@@ -111,9 +131,10 @@ esbuild.build({
 	plugins: [
 		userscriptPlugin,
 		htmlMinifyPlugin,
-		cssMinifyPlugin
+		cssMinifyPlugin,
+		jsonMinifyPlugin
 	],
 	write: false, // 禁用输出以进行后续处理
-	inject: ['@jsc/userjs'], // 替换化境变量
+	inject: ['@jsc/userjs'], // 替换环境变量
 	outfile: 'userjs/main.user.js'
 })
