@@ -17,6 +17,7 @@
 		"quill-delta-to-html-cb": "*"
 	},
 	"devDependencies": {
+		"@types/chrome": "^0.2.2",
 		"@types/md5": "*",
 		"clean-css": "^5.3.3",
 		"esbuild": "*",
