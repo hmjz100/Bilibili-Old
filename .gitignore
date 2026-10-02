@@ -1,6 +1,11 @@
+# 安装产物
 node_modules
-dist
+pnpm-lock.yaml
+package-lock.json
+
+# 构建产物
 userjs/main.user.js
+dist
 *.crx
 *.pem
 *.map

@@ -41,7 +41,7 @@ VSCode 里的 TypeScript 项目，使用 ESBuild 编译打包为对应浏览器�
 - 在 Github 复刻本项目
 - 使用 Github Desktop 克隆复刻的项目到本地
 - 使用 VSCode 打开，并打开一个包含 Git 的命令行
-- 更新 NPM 依赖（推荐 `cmpm i`）
+- 更新 NPM 依赖（推荐 `pmpm i`）
 - 开发吧！
 - VSCode 里运行对应的任务生成浏览器扩展或用户脚本。（详见对应子条目）
 - 测试。（详见对应子条目）
