@@ -1,3 +1,11 @@
 dist/**/* linguist-generated=true
+*.jpg binary
+*.png binary
+*.gif binary
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary
+*.eot binary
 *.user.js linguist-generated=true
 * text working-tree-encoding=UTF-8 eol=crlf tabwidth=4
