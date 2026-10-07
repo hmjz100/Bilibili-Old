@@ -455,6 +455,7 @@ export class UI {
 			}, '单位：/MB', undefined, undefined, '如果一个文件有多个下载源，那么此项会间接决定使用几个下载源。一旦要下载的文件不小于此项的2倍，aria2便会同时尝试连接多个下载源。这也是提高下载速率的有效方法。注意：某种意义上此项是越小越好，原因不言而喻。'),
 			this.button(<'aria2'>'aria2.test', '测试 RPC 连接', () => {
 				const msg = toast.list('正在测试 RPC 连接 >>>');
+				// 无参构造 = 使用当前用户设置（服务器/端口/token），与下载流程保持一致
 				new Aria2().getVersion()
 					.then(d => {
 						msg.type = 'success';

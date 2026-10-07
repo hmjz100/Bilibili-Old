@@ -3,6 +3,7 @@
 	"name": "__MSG_name__",
 	"description": "__MSG_description__",
 	"default_locale": "zh_CN",
+	"minimum_chrome_version": "111",
 	"permissions": [
 		"storage",
 		"tabs",
@@ -11,7 +12,6 @@
 		"cookies",
 		"management",
 		"declarativeNetRequest",
-		"declarativeNetRequestWithHostAccess",
 		"declarativeNetRequestFeedback"
 	],
 	"host_permissions": ["<all_urls>"],
@@ -35,14 +35,22 @@
 	},
 	"web_accessible_resources": [
 		{
-			"resources": ["*"],
+			"resources": ["player/*", "images/*"],
 			"matches": ["*://*.bilibili.com/*"]
 		}
 	],
 	"content_scripts": [
 		{
+			"world": "ISOLATED",
 			"all_frames": true,
 			"js": ["content.js"],
+			"matches": ["*://*.bilibili.com/*"],
+			"run_at": "document_start"
+		},
+		{
+			"world": "MAIN",
+			"all_frames": true,
+			"js": ["index.js"],
 			"matches": ["*://*.bilibili.com/*"],
 			"run_at": "document_start"
 		}

@@ -44,10 +44,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 }))
                     .then(data => sendResponse({ data }))
                     .catch(err => sendResponse({ err: err.toString() }));
-                break;
+                return true;
             }
             case 'insertCSS': {
-                chrome.scripting.executeScript(Object.assign(message.data, {
+                chrome.scripting.insertCSS(Object.assign(message.data, {
                     target: {
                         tabId: sender.tab.id,
                         frameIds: [sender.frameId]
@@ -55,19 +55,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 }))
                     .then(data => sendResponse({ data }))
                     .catch(err => sendResponse({ err: err.toString() }));
-                break;
+                return true;
             }
             case "updateRulesetOptions": { // 更新静态规则
                 chrome.declarativeNetRequest.updateEnabledRulesets(message.data)
                     .then(data => sendResponse({ data }))
                     .catch(err => sendResponse({ err: err.toString() }));
-                break;
+                return true;
             }
             case "updateSessionRules": { // 更新会话规则 data不存在表示移除对应标签页的规则
                 updateSessionRules(sender.tab.id!, message.data, message.tab)
                     .then(data => sendResponse({ data }))
                     .catch(err => sendResponse({ err: err.toString() }));
-                break;
+                return true;
             }
             case 'removeSessionRules': {
                 chrome.declarativeNetRequest.updateSessionRules({

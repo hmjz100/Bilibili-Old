@@ -9,3 +9,6 @@ dist
 *.crx
 *.pem
 *.map
+
+# 临时文件与调研资料
+.temp

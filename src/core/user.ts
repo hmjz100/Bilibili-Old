@@ -52,7 +52,8 @@ class User {
      * @param newValue 新值
      */
     protected emitChange<T extends keyof typeof userStatus>(key: T, newValue: (typeof userStatus)[T]) {
-        this.changes[key].forEach(async d => { d(newValue) });
+        // 未被 bindChange 监听过的键没有回调栈，直接跳过
+        this.changes[key]?.forEach(async d => { d(newValue) });
     }
     /** 用户数据回调 */
     addCallback(callback: (status: typeof userStatus) => void) {

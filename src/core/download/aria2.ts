@@ -1,20 +1,42 @@
 import { base64 } from "../../utils/base64";
 import { objUrl } from "../../utils/format/url";
+import { user } from "../user";
 import { getMetux } from "../../utils/mutex";
 
 export class Aria2 {
-    private get url() {
-        return `${this.server}:${this.port}/jsonrpc`
+    /**
+     * 归一化后的 RPC 服务器地址：
+     * - 去掉首尾空白，空值回落到 `http://localhost`；
+     * - 缺少协议时补 `http://`（只写 `192.168.1.5` 也能用）；
+     * - 去掉尾部斜杠，避免拼出 `http://localhost/:6800/jsonrpc` 这种地址。
+     *
+     * 注意：端口号只由构造参数/「端口」设置项决定，请不要写进服务器地址里，
+     * 否则会拼成 `http://host:7300:6800/jsonrpc`（本类不支持服务器地址内的路径前缀）。
+     */
+    private get serverURL() {
+        let server = String(this.server ?? '').trim() || 'http://localhost';
+        if (!/^[a-z][a-z0-9+.-]*:\/\//i.test(server)) {
+            server = `http://${server}`;
+        }
+        return server.replace(/\/+$/, '');
     }
+    private get url() {
+        return `${this.serverURL}:${this.port}/jsonrpc`
+    }
+    /**
+     * 省略参数时按**当前用户设置**取值，传入参数则以传入值为准。
+     * 下载流程会显式传入全部参数，而设置面板里的“测试 RPC 连接”使用无参构造，
+     * 因此这里的默认值必须是用户设置，否则测试会拿硬编码的默认值去连。
+     */
     constructor(
-        private userAgent?: string,
-        private referer?: string,
-        private dir?: string,
-        private server = 'http://localhost',
-        private port = 6800,
-        private token?: string,
-        private split?: number,
-        private size?: number
+        private userAgent: string | undefined = user.userStatus?.userAgent,
+        private referer: string | undefined = user.userStatus?.referer,
+        private dir: string | undefined = user.userStatus?.filepath,
+        private server: string = user.userStatus?.aria2?.server ?? 'http://localhost',
+        private port: number = user.userStatus?.aria2?.port ?? 6800,
+        private token: string | undefined = user.userStatus?.aria2?.token,
+        private split: number | undefined = user.userStatus?.aria2?.split,
+        private size: number | undefined = user.userStatus?.aria2?.size
     ) { }
     /** 命令行 */
     cmdlet(data: IAria2Data) {

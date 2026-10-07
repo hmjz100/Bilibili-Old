@@ -4,6 +4,14 @@ import esbuild from 'esbuild';
 import { minify } from 'html-minifier-terser';
 import CleanCSS from 'clean-css';
 import { exec } from 'child_process';
+import path from 'node:path';
+
+/**
+ * `@jsc/extension` 是指向本目录的 `file:` 依赖，安装时被 pnpm 复制/硬链接进 `node_modules`。
+ * 一旦该副本与源码脱钩（编辑器/工具重写文件会打断硬链接），构建就会静默打包**旧代码**。
+ * 这里强制别名回本目录的实时源码，杜绝这类“改了没生效”。
+ */
+const extensionAlias = { '@jsc/extension': path.resolve('./extension/index.ts') };
 
 console.log("Building Extension...");
 console.log("Version: ", pkg.version);
@@ -86,7 +94,8 @@ esbuild.build({
 	],
 	define: {
 		_Slug_: `'${commit}'`,
-	}
+	},
+	alias: extensionAlias,
 });
 
 // 打包MAIN脚本
@@ -115,5 +124,6 @@ esbuild.build({
 		_UserScript_: 'false',
 		_PlayerCommit_: `'${playerCommit}'`,
 	},
+	alias: extensionAlias,
 	inject: ['@jsc/extension'], // 替换环境变量
 });
