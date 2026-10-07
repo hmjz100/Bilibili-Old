@@ -2,10 +2,11 @@
 <img width="90" src="https://raw.githubusercontent.com/hmjz100/Bilibili-Old-Player/dev/bilibiliplayer/images/ploading.gif" style="background:white" alt="logo">
 
 # Bilibili-Old (Classic)
-恢复旧版哔哩哔哩页面，为了那些念旧的人。
-包括小电视播放器。
+### 经典焕新生
 
-![Windows 11](https://img.shields.io/badge/Microsoft_Windows_11-pass-green.svg?longCache=true) ![Chrome 108](https://img.shields.io/badge/Google_Chrome_108-pass-green.svg?longCache=true) ![Tampermonkey 4.18](https://img.shields.io/badge/Tampermonkey_4.18-pass-green.svg?longCache=true)  ![Manifest V3](https://img.shields.io/badge/Manifest_V3-pass-green.svg?longCache=true)  
+恢复旧版哔哩哔哩页面、小电视播放器，为了那些念旧的人。
+
+![Windows 11](https://img.shields.io/badge/Microsoft_Windows_11-pass-green.svg?longCache=true) ![Chrome 111](https://img.shields.io/badge/Google_Chrome_111-pass-green.svg?longCache=true) ![Tampermonkey 4.18](https://img.shields.io/badge/Tampermonkey_4.18-pass-green.svg?longCache=true)  ![Manifest V3](https://img.shields.io/badge/Manifest_V3-pass-green.svg?longCache=true)  
 </div>
 
 ## 食用
@@ -13,12 +14,13 @@
 
 ### 金丝雀版 (最新构建)
 
-免登录一键下载最新 [Actions 构建](https://github.com/hmjz100/Bilibili-Old/actions) 由 nightly.link 支持
-
-下载：[用户脚本构建](https://nightly.link/hmjz100/Bilibili-Old/workflows/userjs/dev/Bilibili-Old-UserJS.zip) | 
+由 nightly.link 支持的下载：[用户脚本构建](https://nightly.link/hmjz100/Bilibili-Old/workflows/userjs/dev/Bilibili-Old-UserJS.zip) | 
 [扩展构建](https://nightly.link/hmjz100/Bilibili-Old/workflows/extension/dev/Bilibili-Old-Extension.zip)
 
 用户脚本下载完成后会是一个 zip 压缩包，将此压缩包在用户脚本管理器（如篡改猴、暴力猴、脚本猫）中，以 “Zip 导入” 形式导入安装即可使用。
+
+此外，还可以在 [Actions 构建](https://github.com/hmjz100/Bilibili-Old/actions) 中的用户脚本构建中取到未经压缩的 main.user.js 用户脚本。
+
 
 ### 正式版
 目前 Bug 太多，还不打算做。
@@ -85,9 +87,9 @@
 **以下问题这里可能处于并将长期处于无法解决状态，请多担待！**
 1. 恢复旧版页面前，新版页面可能一闪而过。
 2. 恢复后的页面可能被新版页面残留脚本、样式破坏，请通过刷新缓解。
-3. 原生旧版播放器已获取不到90分钟后的弹幕池，所以如非必要请使用重构播放器。
+3. 原生旧版播放器已获取不到 90 分钟后的弹幕池，所以如非必要请使用重构播放器。
 4. **充电、B币支付等功能在可能已失去维护，请不要使用或者移步新版页面！**
-5. 一些功能由于API的失效做不到完全还原，只能尽可能寻求替代方案。
+5. 一些功能由于 API 的失效做不到完全还原，只能尽可能寻求替代方案。
 
 ---
 ## 更新
@@ -119,12 +121,11 @@
 - 2022 年 02 月 16 日：和谐评论接口，无法再获取评论楼层数。
 - 2022 年 07 月 05 日：启用HiRes无损音频支持。
 - 2022 年 11 月 02 日：弃用新视频flv封装。
-...
+- ... 此处省略
 - 2026 年 06 月 01 日：旧版历史记录页面被强制跳转到新版。
 
 ---
 ## 开发
-
 参见[开发者文档](https://github.com/hmjz100/Bilibili-Old/blob/master/.github/contributing.md)。
 
 ---
