@@ -15,7 +15,7 @@ updates:
     versioning-strategy: "increase"
     # 前缀末尾的空格用于阻止 Dependabot 自动补一个半角冒号
     commit-message:
-      prefix: "更新： "
+      prefix: "Dependabot："
     # 次要/补丁更新合并成一个 PR；重大更新不列入分组，仍然逐个单独开 PR 便于确认
     groups:
       production-dependencies:
@@ -38,7 +38,7 @@ updates:
       timezone: "Asia/Shanghai"
     open-pull-requests-limit: 5
     commit-message:
-      prefix: "更新： "
+      prefix: "Dependabot："
     groups:
       actions-minor-and-patch:
         update-types: ["minor", "patch"]
