@@ -1,0 +1,44 @@
+# Dependabot 版本更新配置
+# 配置项文档：https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+version: 2
+updates:
+  # 根目录依赖
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+      timezone: "Asia/Shanghai"
+    open-pull-requests-limit: 5
+    # 本仓库不提交锁文件，用 increase 保证 package.json 里的版本范围会被真正抬高
+    versioning-strategy: "increase"
+    # 前缀末尾的空格用于阻止 Dependabot 自动补一个半角冒号
+    commit-message:
+      prefix: "更新： "
+    # 次要/补丁更新合并成一个 PR；重大更新不列入分组，仍然逐个单独开 PR 便于确认
+    groups:
+      production-dependencies:
+        dependency-type: "production"
+        update-types: ["minor", "patch"]
+      development-dependencies:
+        dependency-type: "development"
+        update-types: ["minor", "patch"]
+    ignore:
+      # 工作区内的本地依赖（file:），由本仓库自行维护，无需版本更新
+      - dependency-name: "@jsc/*"
+
+  # 工作流里用到的 Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+      timezone: "Asia/Shanghai"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "更新： "
+    groups:
+      actions-minor-and-patch:
+        update-types: ["minor", "patch"]

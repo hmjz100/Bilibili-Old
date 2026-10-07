@@ -2,19 +2,28 @@ name: Dependabot Auto Merge
 
 on: pull_request_target
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   merge:
-    if: github.actor == 'dependabot[bot]'
     name: Dependabot Auto Merge
+    if: github.actor == 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/github-script@v6
-        with:
-          github-token: ${{secrets.BOTPR}}
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '@dependabot squash and merge'
-            })
+      # 读取本次更新属于 patch / minor / major
+      - name: 获取更新类型
+        id: meta
+        uses: dependabot/fetch-metadata@v2
+
+      # 重大更新留人工确认，只自动合并次要与补丁更新
+      # 需要仓库 Settings -> General -> Pull Requests 中开启 Allow auto-merge
+      - name: 自动合并
+        if: steps.meta.outputs.update-type != 'version-update:semver-major'
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          # 优先使用 PAT（BOTPR），这样合并后的提交还能触发构建/部署工作流；
+          # 未配置时退回 GITHUB_TOKEN（用 GITHUB_TOKEN 合并不会再触发其它工作流）
+          GH_TOKEN: ${{ secrets.BOTPR || secrets.GITHUB_TOKEN }}
+        run: gh pr merge --auto --squash "$PR_URL"

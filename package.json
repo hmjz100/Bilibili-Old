@@ -27,16 +27,16 @@
 		"typescript": "*"
 	},
 	"allowScripts": {
-		"file:.pnpm/esbuild@0.28.2/node_modules/esbuild": true,
-		"file:.pnpm/html-minifier-terser@7.2.0/node_modules/html-minifier-terser": true,
-		"file:../terser@5.51.2/node_modules/terser": true,
-		"file:../../camel-case@4.1.2/node_modules/camel-case": true,
-		"file:../../entities@4.5.0/node_modules/entities": true,
-		"file:../../param-case@3.0.4/node_modules/param-case": true,
-		"file:../../acorn@8.18.0/node_modules/acorn": true,
-		"file:../../pascal-case@3.1.2/node_modules/pascal-case": true,
-		"file:../../dot-case@3.0.4/node_modules/dot-case": true,
-		"file:../../no-case@3.0.4/node_modules/no-case": true,
-		"file:../../lower-case@2.0.2/node_modules/lower-case": true
+		"acorn": true,
+		"camel-case": true,
+		"dot-case": true,
+		"entities": true,
+		"esbuild": true,
+		"html-minifier-terser": true,
+		"lower-case": true,
+		"no-case": true,
+		"param-case": true,
+		"pascal-case": true,
+		"terser": true
 	}
 }
