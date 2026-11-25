@@ -7,8 +7,10 @@ import { poll } from "../utils/poll";
 import { AV } from "../utils/av";
 import { debug } from "../utils/debug";
 import {
-	BSB_CATEGORIES, BSBVoteType, bsbGetSegments, bsbSubmitSegments, bsbVote, bsbViewedVideoSponsorTime
+	BSB_CATEGORIES, BSBVoteType, bsbGetSegments, bsbSubmitSegments, bsbVote, bsbViewedVideoSponsorTime,
+	bsbHashPrefix, bsbRequest
 } from "../io/api-bsb";
+import { SBSegmentBucket } from "../io/api-sponsorblock";
 import {
 	SBActionType, SBCategory, SBCategoryOption, SBHideType, SBSourceType, SBTime
 } from "../io/api-sponsorblock";
@@ -17,8 +19,8 @@ import {
 const skipBuffer = 0.003;
 /** 片段直达片尾时的回退缓冲 */
 const endTimeSkipBuffer = 0.5;
-/** 跳过提示停留时长 /s */
-const noticeDelay = 5;
+/** 跳过提示停留时长 /s（自动跳过后的撤销提示） */
+const noticeDelay = 2.5;
 /** 手动跳过提示提前量 /s：在片段开始前多久弹出提示 */
 const manualNoticeLead = 3;
 /** 分类行为展示名 */
@@ -31,6 +33,30 @@ BSB_CATEGORIES.forEach(d => categoryConfig.set(d.name, d));
 /** 分类标签 */
 export function bsbCategoryLabel(category: SBCategory) {
 	return categoryConfig.get(category)?.label ?? category;
+}
+
+/**
+ * 广告类分类（只展示这几类的胶囊标识）  
+ * 开场动画、结束画面、互动提醒等属于内容本身，不是广告，故不展示胶囊
+ */
+const AD_CATEGORIES: SBCategory[] = [
+	<SBCategory>'sponsor',
+	<SBCategory>'selfpromo',
+	<SBCategory>'exclusive_access'
+];
+/** 该分类是否为广告类 */
+export function bsbIsAdCategory(category: SBCategory) {
+	return AD_CATEGORIES.indexOf(category) >= 0;
+}
+/** 胶囊内使用的短标签 */
+const shortLabels = new Map<SBCategory, string>([
+	[<SBCategory>'sponsor', '赞助'],
+	[<SBCategory>'selfpromo', '自我推广'],
+	[<SBCategory>'exclusive_access', '独家访问']
+]);
+/** 胶囊短标签（无短标签时回退到完整标签） */
+export function bsbCategoryShortLabel(category: SBCategory) {
+	return shortLabels.get(category) ?? bsbCategoryLabel(category);
 }
 
 /** 分类颜色 */
@@ -95,7 +121,12 @@ interface BSBPlayer {
 /** 由跳过产生的 seek 记录，用于与用户 seek 区分 */
 const skipSeeks = new WeakMap<HTMLVideoElement, { time: number }>();
 
-/** 记录一次由跳过产生的 seek */
+/**
+ * 记录一次由跳过产生的 seek。  
+ * 【重构播放器】的 seek 是异步的：`player.seek()` 返回后可能过数百毫秒才真正改变 currentTime，  
+ * 若此时标记已失效，`seeking` 事件会被误判为"用户手动拖动"，导致撤销弹窗刚出现就被关闭。  
+ * 故标记保留较长时间，并以目标时间做兜底比对。
+ */
 function markSkipSeek(video: HTMLVideoElement, time: number) {
 	const seek = { time };
 	skipSeeks.set(video, seek);
@@ -104,16 +135,25 @@ function markSkipSeek(video: HTMLVideoElement, time: number) {
 	};
 	video.addEventListener('seeked', clear, { once: true });
 	// 兜底：某些情况下不会触发 seeked（如跳转到相同位置），超时后清理标记
-	setTimeout(clear, 1000);
+	setTimeout(clear, 3000);
 }
 
 /**
  * 该 seek 是否由跳过产生。  
- * 以标记为准而不比较时间：部分浏览器在 seeking 事件触发时尚未更新 currentTime，
- * 用时间比较会把跳过误判为用户操作，导致后续自动跳过被取消。
+ * 以标记为准；若标记已过期，则比对跳转前后的时间差——  
+ * 落在目标时间附近（±1.5s）即认为是插件自身的跳转。
  */
-function isSkipSeek(video: HTMLVideoElement) {
-	return skipSeeks.has(video);
+function isSkipSeek(video: HTMLVideoElement, from?: number) {
+	const seek = skipSeeks.get(video);
+	if (seek) {
+		// 标记存在时进一步确认：跳转到目标时间附近才算
+		if (typeof from === 'number' && Math.abs(video.currentTime - from) > 1.5 &&
+			Math.abs(video.currentTime - seek.time) > 1.5) return false;
+		return true;
+	}
+	// 标记已过期：若跳转前后时间几乎没变（±1.5s），多半是插件自身的跳过
+	if (typeof from === 'number' && Math.abs(video.currentTime - from) <= 1.5) return true;
+	return false;
 }
 
 /** 已绑定过事件的视频标签，避免重复绑定 */
@@ -128,9 +168,19 @@ const BSB_CSS = `
 .bsb-notice-label{padding:1px 6px;border-radius:2px;color:#fff;font-weight:bold}
 .bsb-notice-unskip{padding:2px 8px;border:0;border-radius:2px;background:#00a1d6;color:#fff;cursor:pointer;font-size:12px}
 .bsb-notice-unskip:hover{background:#00b4e6}
-.bsb-preview{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:hidden;border-radius:4px;z-index:2}
-.bsb-preview-item{position:absolute;top:0;height:100%;opacity:.85;border-radius:1px}
+.bsb-notice-close{padding:1px 6px;border:0;border-radius:2px;background:#555;color:#fff;cursor:pointer;font-size:12px;line-height:1}
+.bsb-notice-close:hover{background:#777}
+.bsb-full-badge{display:inline-flex;align-items:center;padding:1px 6px;border-radius:999px;font-size:11px;font-weight:bold;color:#fff;white-space:nowrap;line-height:1.4;vertical-align:middle;opacity:.85}.bsb-preview{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:hidden;border-radius:4px;z-index:0}
+.bsb-preview-item{position:absolute;top:0;height:100%;opacity:.85;border-radius:1px;z-index:1}
 .bsb-preview-poi{height:150%;top:-25%;opacity:1;border-radius:2px}
+.bsb-preview-item::after{content:attr(data-category);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);white-space:nowrap;padding:2px 6px;border-radius:3px;background:rgba(0,0,0,.85);color:#fff;font-size:10px;font-weight:500;opacity:0;pointer-events:none;transition:opacity .15s;z-index:10}
+.bsb-preview-item:hover::after{opacity:1}
+.bsb-preview-item[data-action-type="poi"]::after{content:"精彩时刻: " attr(data-category)}
+.bsb-preview-item[data-action-type="mute"]::after{content:"静音: " attr(data-category)}
+.bsb-preview-item[data-action-type="skip"]::after{content:"跳过: " attr(data-category)}
+.bsb-preview-item[data-action-type="full"]::after{content:"全片: " attr(data-category)}
+.bsb-recommend-badge{display:inline-flex!important;align-items:center!important;justify-content:center!important;box-sizing:content-box!important;width:auto!important;height:auto!important;min-width:0!important;max-width:none!important;max-height:none!important;margin:0!important;padding:1px 5px!important;border:0!important;border-radius:999px!important;font-size:10px!important;font-weight:600!important;font-family:sans-serif!important;line-height:1.4!important;color:#fff!important;background:#fb7299!important;white-space:nowrap!important;box-shadow:0 1px 3px rgba(0,0,0,.25)!important;cursor:help!important;pointer-events:auto!important;text-decoration:none!important;opacity:.75!important}
+.bsb-recommend-badge:hover{opacity:1!important}
 .bsb-list{max-height:220px;overflow:auto;text-align:left}
 .bsb-list-row{display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid rgba(0,0,0,.1);font-size:12px}
 .bsb-list-label{padding:1px 6px;border-radius:2px;color:#fff;white-space:nowrap}
@@ -242,6 +292,43 @@ class BilibiliSponsorBlock {
 			.filter(d => !this.downvoted.has(d.UUID))
 			.map(d => ({ ...d, source: SBSourceType.Server }))
 			.sort((a, b) => a.segment[0] - b.segment[0]);
+		this.updateFullVideoBadge();
+	}
+	/**
+	 * 更新"全片"胶囊标记。  
+	 * 服务器把整片标记下发为 `actionType: "full"` 且 `segment: [0, 0]`（起止时间无意义），  
+	 * 故以 `actionType` 为准，同时兼容"起止覆盖整部时长"的普通片段。
+	 */
+	protected updateFullVideoBadge() {
+		const duration = Number(this.player()?.getDuration()) || 0;
+		const full = this.allSegments.find(d => {
+			if (d.actionType === SBActionType.Full) return true;
+			// 兼容：普通片段但起止覆盖整部视频
+			return d.segment.length === 2 && duration > 1 &&
+				d.segment[0] <= 0.5 && d.segment[1] >= duration - 1;
+		});
+		// 移除旧标记
+		document.querySelectorAll('.bsb-full-badge').forEach(e => e.remove());
+		// 只展示广告类分类（赞助/自我推广），开场动画等不展示
+		if (!full || !bsbIsAdCategory(full.category)) return;
+		// 旧版页面：稿件信息条 `.tm-info`（显示分区、发布时间等）
+		const tmInfo = document.querySelector<HTMLElement>('.tm-info, .tminfo');
+		// 新版页面：播放器信息区
+		const bpxInfo = document.querySelector<HTMLElement>('.bpx-player-video-info');
+		const badge = document.createElement('span');
+		badge.className = 'bsb-full-badge';
+		badge.style.backgroundColor = bsbCategoryColor(full.category);
+		badge.textContent = bsbCategoryShortLabel(full.category);
+		badge.title = '本视频被标记为整段内容（该分类覆盖全片）';
+		if (tmInfo) {
+			// 放在信息条内部最左侧（行内元素，不影响下方布局）
+			badge.style.display = 'inline-block';
+			badge.style.marginRight = '6px';
+			badge.style.verticalAlign = 'middle';
+			tmInfo.insertBefore(badge, tmInfo.firstChild);
+		} else if (bpxInfo) {
+			bpxInfo.insertBefore(badge, bpxInfo.firstChild);
+		}
 	}
 	/** 被用户点踩的片段 UUID（本地隐藏） */
 	protected downvoted = new Set<string>();
@@ -265,6 +352,47 @@ class BilibiliSponsorBlock {
 		} finally {
 			this.fetching = false;
 		}
+	}
+	/**
+	 * 批量查询多个 bvid 的片段  
+	 * 返回 Map<bvid, SBTime[]>，value 为该稿件的片段列表（无片段则为空数组）
+	 */
+	async checkMultipleBvids(bvids: string[]): Promise<Map<string, SBTime[]>> {
+		const result = new Map<string, SBTime[]>();
+		if (!bvids.length) return result;
+		// 按前缀分组
+		const groups = new Map<string, string[]>();
+		for (const bvid of bvids) {
+			const prefix = await bsbHashPrefix(bvid);
+			const arr = groups.get(prefix) ?? [];
+			arr.push(bvid);
+			groups.set(prefix, arr);
+		}
+		debug('空降助手：查询推荐视频', bvids.length, '个稿件', groups.size, '个分桶');
+		// 限制并发地获取每个前缀的桶
+		const entries = Array.from(groups.entries());
+		const concurrency = 4;
+		for (let i = 0; i < entries.length; i += concurrency) {
+			await Promise.all(entries.slice(i, i + concurrency).map(async ([prefix, groupBvids]) => {
+				try {
+					const response = await bsbRequest<SBSegmentBucket[]>('GET', `/api/skipSegments/${prefix}`);
+					const buckets = response.data ?? [];
+					for (const bvid of groupBvids) {
+						const bucket = buckets.find((d: SBSegmentBucket) => d.videoID === bvid);
+						const segments = (bucket?.segments ?? []).filter((d: SBTime) =>
+							d.actionType === SBActionType.Skip ||
+							d.actionType === SBActionType.Poi ||
+							d.actionType === SBActionType.Mute
+						);
+						result.set(bvid, segments);
+					}
+				} catch (e) {
+					debug.error('空降助手：查询推荐视频出错', prefix, e);
+					groupBvids.forEach(b => result.set(b, []));
+				}
+			}));
+		}
+		return result;
 	}
 	/** 取消调度 */
 	protected cancelSchedule() {
@@ -432,6 +560,7 @@ class BilibiliSponsorBlock {
 		} else {
 			this.hideNotice();
 		}
+		// 跳过会触发 seeking 事件，此处重新排一次调度（撤销弹窗不应被自身跳转关闭）
 		this.startSchedule();
 	}
 	/** 统计并上报 */
@@ -448,7 +577,7 @@ class BilibiliSponsorBlock {
 	protected noticeSkipped(segment: SBTime) {
 		if (!user.userStatus!.bsb.notice) return;
 		this.hideNotice();
-		this.notice = this.createNotice(segment, `已跳过 ${timeCode(segment.segment[0])} ~ ${timeCode(segment.segment[1])}`, '撤销', () => {
+		this.notice = this.createNotice(segment, `片段 ${timeCode(segment.segment[0])} ~ ${timeCode(segment.segment[1])}`, '撤销', () => {
 			this.hideNotice();
 			this.cancelSchedule();
 			// 撤销后不再自动跳过该片段，否则会立刻跳回片段末尾
@@ -465,7 +594,7 @@ class BilibiliSponsorBlock {
 		this.manualSegment = segment;
 		this.hideNotice();
 		// 提示常驻，直到用户操作或片段结束，避免错过
-		this.notice = this.createNotice(segment, `即将进入${bsbCategoryLabel(segment.category)}片段 ${timeCode(segment.segment[0])} ~ ${timeCode(segment.segment[1])}`, '跳过', () => {
+		this.notice = this.createNotice(segment, `片段 ${timeCode(segment.segment[0])} ~ ${timeCode(segment.segment[1])}`, '跳过', () => {
 			this.hideNotice();
 			this.manualNoticed = '';
 			this.manualSegment = undefined;
@@ -494,8 +623,14 @@ class BilibiliSponsorBlock {
 			<span class="bsb-notice-label" style="background:${bsbCategoryColor(segment.category)}">${bsbCategoryLabel(segment.category)}</span>
 			<span class="bsb-notice-text">${text}</span>
 			<button class="bsb-notice-unskip" type="button">${button}</button>
+			<button class="bsb-notice-close" type="button">✕</button>
 		</div>`;
 		notice.querySelector('.bsb-notice-unskip')?.addEventListener('click', callback);
+		const closeBtn = notice.querySelector<HTMLButtonElement>('.bsb-notice-close');
+		closeBtn?.addEventListener('click', () => {
+			this.hideNotice();
+			closeBtn?.blur();
+		});
 		this.positionNotice(notice, host);
 		if (!sticky) this.noticeTimer = setTimeout(() => this.hideNotice(), noticeDelay * 1e3);
 		return notice;
@@ -607,10 +742,15 @@ class BilibiliSponsorBlock {
 			const width = (d.segment[1] - d.segment[0]) / duration * 100;
 			// 精彩时刻（poi）以更高的标记展示，便于识别
 			const poi = d.actionType === SBActionType.Poi;
-			addElement('div', {
+			const item = addElement('div', {
 				class: `bsb-preview-item${poi ? ' bsb-preview-poi' : ''}`,
 				style: `left:${left}%;width:${width}%;background:${bsbCategoryColor(d.category)}`
 			}, preview);
+			// 添加 data 属性供 hover tooltip 显示片段类型
+			item.dataset.category = d.category;
+			item.dataset.actionType = d.actionType;
+			item.dataset.start = String(d.segment[0]);
+			item.dataset.end = String(d.segment[1]);
 		});
 		this.previewBar = preview;
 		this.previewKey = cacheKey;
@@ -626,12 +766,20 @@ class BilibiliSponsorBlock {
 		if (!video || boundVideos.has(video)) return;
 		boundVideos.add(video);
 		// 用户主动 seek 时撤掉调度，由 play/timeupdate 按新进度重排
+		let lastTime = video.currentTime;
 		video.addEventListener('seeking', () => {
+			const from = lastTime;
+			lastTime = video.currentTime;
 			if (!this.available) return;
-			this.manualNoticed = '';
-			this.manualSegment = undefined;
-			if (!isSkipSeek(video)) this.cancelSchedule();
+			// 是插件自身触发的跳转（如自动跳过），不关闭提示
+			if (!isSkipSeek(video, from)) {
+				this.manualNoticed = '';
+				this.manualSegment = undefined;
+				this.hideNotice(); // 用户手动调整进度条，关闭跳过提示
+				this.cancelSchedule();
+			}
 		});
+		video.addEventListener('timeupdate', () => { lastTime = video.currentTime; });
 		// 播放推进/恢复播放时重排（含用户 seek 后的第一次 timeupdate）
 		const restart = () => {
 			if (!this.available) return;
@@ -727,9 +875,17 @@ class BilibiliSponsorBlock {
 		const status = await bsbVote(segment.UUID, type);
 		if (status === 200) {
 			toast.success(type === BSBVoteType.Up ? '已点赞该片段' : '已点踩该片段');
+			// 记录自己的投票，用于在列表中标识
+			if (type === BSBVoteType.Up) {
+				this.upvoted.add(segment.UUID);
+				this.downvoted.delete(segment.UUID);
+			} else {
+				this.downvoted.add(segment.UUID);
+				this.upvoted.delete(segment.UUID);
+			}
+			this.saveVotes();
 			// 点踩后本地隐藏该片段
 			if (type === BSBVoteType.Down) {
-				this.downvoted.add(segment.UUID);
 				this.applySegments();
 				this.renderPreviewBar();
 				this.startSchedule();
@@ -740,6 +896,45 @@ class BilibiliSponsorBlock {
 		} else {
 			toast.error('投票失败！', `HTTP ${status}`);
 		}
+	}
+	/** 自己点赞过的片段 UUID */
+	protected upvoted = new Set<string>();
+	/**
+	 * 保存自己的投票记录
+	 */
+	protected saveVotes() {
+		try {
+			GM.setValue('bsbVotes', {
+				up: Array.from(this.upvoted),
+				down: Array.from(this.downvoted)
+			});
+		} catch (e) {
+			debug.error('空降助手：保存投票记录失败', e);
+		}
+	}
+	/**
+	 * 读取自己保存的投票记录
+	 */
+	protected async loadVotes() {
+		try {
+			const raw = await GM.getValue<{ up?: string[]; down?: string[] }>('bsbVotes');
+			if (raw) {
+				(raw.up ?? []).forEach((d: string) => this.upvoted.add(d));
+				(raw.down ?? []).forEach((d: string) => this.downvoted.add(d));
+			}
+		} catch (e) {
+			debug.error('空降助手：读取投票记录失败', e);
+		}
+	}
+	/**
+	 * 查询片段是否已被自己投票
+	 * @param segment 片段
+	 * @returns 1 表示已点赞，-1 表示已点踩，0 表示未投票
+	 */
+	voteState(segment: SBTime): number {
+		if (this.upvoted.has(segment.UUID)) return 1;
+		if (this.downvoted.has(segment.UUID)) return -1;
+		return 0;
 	}
 	/**
 	 * 注入样式表。  
@@ -762,6 +957,11 @@ class BilibiliSponsorBlock {
 	load() {
 		this.injectStyle();
 		this.updateIdentity();
+		// 读取历史投票记录（异步），读完后重新过滤片段
+		this.loadVotes().then(() => {
+			this.applySegments();
+			this.renderPreviewBar();
+		});
 		// 开关切换时重新开始/停止工作
 		user.bindChange('bsb', () => {
 			if (user.userStatus!.bsb.enabled) {
@@ -771,6 +971,8 @@ class BilibiliSponsorBlock {
 				this.hideNotice();
 				this.renderPreviewBar();
 			}
+			// 视频卡片标识开关可能已变化，立即重扫一次
+			this.scanAndMarkRecommendations();
 		});
 		// 稿件就绪后立即尝试一次
 		this.reset();
@@ -797,6 +999,128 @@ class BilibiliSponsorBlock {
 				this.renderPreviewBar();
 			}
 		}, 1000);
+		// 推荐视频/看过该视频的还喜欢 扫描器（每 5 秒运行一次）
+		this.startRecommendationScanner();
+	}
+	/** 启动推荐视频扫描器 */
+	protected startRecommendationScanner() {
+		setInterval(() => {
+			if (!user.userStatus?.bsb.enabled) return;
+			this.scanAndMarkRecommendations();
+		}, 5000);
+	}	/**
+	 * 扫描页面上的视频卡片（通用），标记有空降片段的视频
+	 */
+	protected async scanAndMarkRecommendations() {
+		// 视频卡片标识开关关闭：清除已有标识并不再请求
+		if (!user.userStatus?.bsb.cardBadge) {
+			document.querySelectorAll('.bsb-recommend-badge').forEach(e => e.remove());
+			this.videoHasSkip.clear();
+			return;
+		}
+		// 收集页面上的所有视频卡片
+		const videoCards = this.collectVideoCards();
+		if (!videoCards.length) return;
+		// 只查询尚未查询过的稿件，避免重复请求
+		const pending = Array.from(new Set(videoCards.map(d => d.bvid))).filter(d => !this.videoHasSkip.has(d));
+		if (pending.length) {
+			const results = await this.checkMultipleBvids(pending);
+			results.forEach((v, k) => this.videoHasSkip.set(k, v));
+		}
+		// 注入标记：列表可能被播放器重绘，故每次都补一次（已存在则跳过）
+		for (const d of videoCards) {
+			const segments = this.videoHasSkip.get(d.bvid);
+			if (!segments?.length) continue;
+			this.injectRecommendationBadge(d.bvid, d.host, segments);
+		}
+	}
+	/** 稿件的空降片段（查询结果缓存，避免重复请求） */
+	protected videoHasSkip = new Map<string, SBTime[]>();
+	/**
+	 * 收集页面上的所有视频卡片（通用实现，不局限于某一类推荐位）  
+	 * 凡是带封面的视频链接都纳入范围：播放器推荐、"看过该视频的还喜欢"、相关推荐、UP 主投稿等。
+	 */
+	protected collectVideoCards(): { bvid: string; host: HTMLElement }[] {
+		const cards: { bvid: string; host: HTMLElement }[] = [];
+		const seen = new Set<Element>();
+		document.querySelectorAll<HTMLAnchorElement>('a[href*="/video/"]').forEach(link => {
+			const bvid = this.extractBvidFromCard(link);
+			// 跳过当前稿件与无封面的纯文字链接
+			if (!bvid || bvid === this.bvid) return;
+			const img = link.querySelector('img');
+			if (!img) return;
+			const host = this.findBadgeHost(link, img);
+			if (!host || seen.has(host)) return;
+			seen.add(host);
+			cards.push({ bvid, host });
+		});
+		return cards;
+	}
+	/**
+	 * 查找用于承载角标的封面容器
+	 * @param link 视频链接
+	 * @param img 封面图片
+	 */
+	protected findBadgeHost(link: HTMLElement, img: HTMLImageElement): HTMLElement | undefined {
+		// 常见的封面容器
+		const pic = link.querySelector<HTMLElement>('.pic, .bili-video-card__image, .video-card__image, [class*="cover"], [class*="thumb"], [class*="pic"]');
+		if (pic) return pic;
+		// 播放器推荐位的封面
+		const playerLeft = link.querySelector<HTMLElement>('.bilibili-player-recommend-left');
+		if (playerLeft) return playerLeft;
+		// 兜底：图片的父级
+		return <HTMLElement>(img.parentElement ?? link);
+	}
+	/** 从视频卡片元素提取 bvid（旧版页面多用 av 号，需转换） */
+	protected extractBvidFromCard(card: Element): string | null {
+		// 优先从 a 标签 href 提取
+		const link = card.querySelector<HTMLAnchorElement>('a[href*="/video/"]') ?? (<HTMLAnchorElement>card);
+		const href = link?.getAttribute('href') ?? '';
+		// BV 号
+		const bvMatch = href.match(/\/video\/(BV[A-Za-z0-9]{10})/);
+		if (bvMatch) return bvMatch[1];
+		// av 号（旧版页面常见）
+		const avMatch = href.match(/\/video\/av(\d+)/);
+		if (avMatch) {
+			try {
+				return AV.toBV(Number(avMatch[1]));
+			} catch { }
+		}
+		// 备选：data-bvid / data-aid 属性
+		const bvidAttr = card.getAttribute('data-bvid');
+		if (bvidAttr && /^BV[A-Za-z0-9]{10}$/.test(bvidAttr)) return bvidAttr;
+		const aidAttr = card.getAttribute('data-aid');
+		if (aidAttr && /^\d+$/.test(aidAttr)) {
+			try {
+				return AV.toBV(Number(aidAttr));
+			} catch { }
+		}
+		return null;
+	}
+	/** 注入推荐视频标记（封面左上角的胶囊形 badge，显示广告类别） */
+	protected injectRecommendationBadge(bvid: string, host: HTMLElement, segments: SBTime[]) {
+		// 避免重复注入
+		if (host.querySelector('.bsb-recommend-badge')) return;
+		// 只展示广告类分类（赞助/自我推广）
+		const first = segments.find(d => bsbIsAdCategory(d.category));
+		if (!first) return;
+		const label = bsbCategoryShortLabel(first.category);
+		const color = bsbCategoryColor(first.category);
+		// 使用自定义元素：页面样式表里不存在该标签的规则，不会被拉伸覆盖
+		const badge = document.createElement('bsb-badge');
+		badge.className = 'bsb-recommend-badge';
+		badge.textContent = label;
+		badge.title = `该视频有空降片段（${label}）`;
+		badge.style.setProperty('background', color, 'important');
+		badge.style.setProperty('opacity', '0.75', 'important');
+		// 角标定位在封面左上角（内联 !important 以覆盖页面可能的定位样式）
+		const st = badge.style;
+		st.setProperty('position', 'absolute', 'important');
+		st.setProperty('left', '4px', 'important');
+		st.setProperty('top', '4px', 'important');
+		st.setProperty('z-index', '10', 'important');
+		host.style.setProperty('position', 'relative', 'important');
+		host.appendChild(badge);
 	}
 	/** 供设置界面调用的操作集合 */
 	get actions() {

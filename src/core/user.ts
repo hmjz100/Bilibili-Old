@@ -19,8 +19,17 @@ class User {
     /** 用户数据加载回调序列 */
     userLoadedCallbacks: ((status: typeof userStatus) => void)[] = [];
     constructor() {
-        GM.getValue('userStatus', userStatus).then(status => {
-            status = Object.assign(userStatus, status)
+        GM.getValue('userStatus', userStatus).then(saved => {
+            // 顶层浅合并
+            const status = Object.assign(userStatus, saved);
+            // 嵌套对象（如 bsb）逐字段合并：旧存档里没有的新增字段不能被整块覆盖掉
+            Object.keys(userStatus).forEach(k => {
+                const def = (<any>userStatus)[k];
+                const cur = (<any>saved)?.[k];
+                if (def && typeof def === 'object' && !Array.isArray(def) && cur && typeof cur === 'object') {
+                    (<any>status)[k] = Object.assign({}, def, cur);
+                }
+            });
             const proxy = propertryChangeHook(status, (key, value) => {
                 clearTimeout(this.timer);
                 this.timer = setTimeout(() => GM.setValue('userStatus', status));

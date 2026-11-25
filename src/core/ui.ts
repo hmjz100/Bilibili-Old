@@ -2,6 +2,7 @@ import svgBlind from "../svg/blind.svg";
 import svgDmset from "../svg/dmset.svg";
 import svgDownload from "../svg/download.svg";
 import svgGear from "../svg/gear.svg";
+import svgFork from "../svg/fork.svg";
 import svgLineChart from "../svg/linechart.svg";
 import svgNet from "../svg/net.svg";
 import svgNote from "../svg/note.svg";
@@ -26,6 +27,7 @@ import { Desc } from "./ui/desc";
 import { BilioldEntry } from "./ui/entry";
 import { BiliOldInterface } from "./ui/interface";
 import { SettingItem } from "./ui/item";
+import { setBSBUseTestEnvironment } from "../io/api-bsb";
 import { Menuitem } from "./ui/menu";
 import { PushButton } from "./ui/utils/button";
 import { CheckBoxs } from "./ui/utils/checkbox";
@@ -210,27 +212,166 @@ export class UI {
 	/**
 	 * 显示空降助手片段列表，可点赞/点踩
 	 */
-	protected showBSBSegments() {
-		const segments = sponsorBlock.segmentList;
-		if (!segments.length) return alert('当前视频没有可用的空降片段数据。<br>你可以自己标记并提交片段。', '空降片段');
-		// PopupBox 使用 closed shadow root，无法从 document 查询，故自行挂载节点
-		const box = addElement('div', { class: 'bsb-dialog' }, document.body);
-		box.innerHTML = `<div class="bsb-dialog-title">空降片段（${segments.length}）</div>
-<div class="bsb-list">${segments.map((d, i) => {
+	protected async showBSBSegments() {
+		let segments = sponsorBlock.segmentList;
+		if (!segments.length) {
+			// 尝试从服务器加载片段
+			await sponsorBlock.actions.refresh();
+			segments = sponsorBlock.segmentList;
+			if (!segments.length) return alert('当前视频没有可用的空降片段数据。\n你可以自己标记并提交片段。', '空降片段');
+		}
+		// 使用 Shadow DOM 隔离样式，视觉风格与其它弹窗（popupbox）保持一致
+		const box = document.createElement('div');
+		const shadow = box.attachShadow({ mode: 'closed' });
+		shadow.innerHTML = `<div class="box">
+	<div class="contain">
+		<div class="title">空降片段（${segments.length}）</div>
+		<div class="list">${segments.map((d, i) => {
 			const color = sponsorBlock.categoryColor(<any>d.category);
 			const option = sponsorBlock.categoryOptionLabel(<any>d.category);
 			const label = sponsorBlock.categoryLabel(<any>d.category);
-			return `<div class="bsb-list-row" data-i="${i}">
-				<span class="bsb-list-label" style="background:${color}">${label}</span>
-				<span class="bsb-list-time">${sponsorBlock.timeCode(d.segment[0])} ~ ${sponsorBlock.timeCode(d.segment[1])}</span>
-				<span class="bsb-list-option">${option}</span>
-				${d.source === SBSourceType.Local ? '<span class="bsb-list-draft">草稿</span>' : `<span class="bsb-list-vote">
-					<button type="button" data-vote="up" data-i="${i}">👍 ${d.votes ?? 0}</button>
-					<button type="button" data-vote="down" data-i="${i}">👎</button>
+			// 只标识自己是否投过票，不显示票数
+			const voted = sponsorBlock.voteState(d);
+			return `<div class="row" data-i="${i}">
+				<span class="label" style="background:${color}">${label}</span>
+				<span class="time">${sponsorBlock.timeCode(d.segment[0])} ~ ${sponsorBlock.timeCode(d.segment[1])}</span>
+				<span class="option">${option}</span>
+				${d.source === SBSourceType.Local ? '<span class="draft">草稿</span>' : `<span class="vote">
+					<button type="button" data-vote="up" data-i="${i}" class="${voted === 1 ? 'voted-up' : ''}" title="${voted === 1 ? '已点赞' : '点赞'}">👍</button>
+					<button type="button" data-vote="down" data-i="${i}" class="${voted === -1 ? 'voted-down' : ''}" title="${voted === -1 ? '已点踩' : '点踩'}">👎</button>
 				</span>`}
 			</div>`;
-		}).join('')}</div>`;
-		const close = addElement('div', { class: 'bsb-dialog-close' }, box, '关闭');
+		}).join('')}</div>
+	</div>
+	<div class="fork"></div>
+</div>
+<style type="text/css">
+	.box {
+		top: 50%;
+		left: 50%;
+		transform: translateX(-50%) translateY(-50%);
+		transition: 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
+		padding: 12px;
+		background-color: #fff;
+		color: black;
+		border-radius: 8px;
+		box-shadow: 0 4px 12px 0 rgb(0 0 0 / 5%);
+		border: 1px solid rgba(136, 136, 136, 0.13333);
+		box-sizing: border-box;
+		position: fixed;
+		font-size: 13px;
+		z-index: 11115;
+		line-height: 14px;
+		width: min(420px, 90vw);
+		max-height: 80vh;
+		overflow: hidden;
+	}
+	.contain {
+		display: flex;
+		flex-direction: column;
+		max-height: 80vh;
+	}
+	.fork {
+		position: absolute;
+		transform: scale(0.8);
+		right: 10px;
+		top: 10px;
+		height: 20px;
+		width: 20px;
+		pointer-events: visible;
+		cursor: pointer;
+	}
+	.fork:hover {
+		border-radius: 50%;
+		background-color: rgba(0, 0, 0, 10%);
+	}
+	.fork svg {
+		width: 14px;
+		height: 14px;
+		fill: #999;
+	}
+	.fork:hover svg {
+		fill: #333;
+	}
+	.title {
+		font-weight: bold;
+		text-align: center;
+		padding: 0 28px 8px 0;
+		margin-bottom: 6px;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+	}
+	.list {
+		overflow: auto;
+	}
+	.row {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		padding: 6px 0;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+		font-size: 12px;
+	}
+	.row:last-child {
+		border-bottom: none;
+	}
+	.label {
+		padding: 2px 8px;
+		border-radius: 3px;
+		color: #fff;
+		font-weight: 600;
+		font-size: 11px;
+		white-space: nowrap;
+		flex-shrink: 0;
+	}
+	.time {
+		font-family: monospace;
+		font-size: 11px;
+		color: #666;
+		white-space: nowrap;
+		flex-shrink: 0;
+	}
+	.option {
+		color: #999;
+		font-size: 11px;
+		white-space: nowrap;
+		flex-shrink: 0;
+	}
+	.draft {
+		padding: 1px 6px;
+		border-radius: 2px;
+		background: #f90;
+		color: #fff;
+		font-size: 10px;
+		white-space: nowrap;
+	}
+	.vote {
+		margin-left: auto;
+		display: flex;
+		gap: 4px;
+	}
+	.vote button {
+		padding: 3px 8px;
+		border: 0;
+		border-radius: 3px;
+		background: #f0f0f0;
+		cursor: pointer;
+		font-size: 11px;
+		line-height: 1.4;
+		transition: background 0.15s, color 0.15s;
+		min-width: 28px;
+	}
+	.vote button:hover {
+		background: #e0e0e0;
+	}
+	.vote button.voted-up {
+		background: #00a1d6;
+	}
+	.vote button.voted-down {
+		background: #f66;
+	}
+</style>`;
+		const fork = shadow.querySelector('.fork');
+		if (fork) fork.innerHTML = svgFork;
 		const hide = () => {
 			box.remove();
 			document.removeEventListener('click', outside);
@@ -238,31 +379,30 @@ export class UI {
 		const outside = (e: Event) => {
 			if (!box.contains(<Node>e.target)) hide();
 		};
-		close.addEventListener('click', (e: Event) => {
-			e.stopPropagation();
-			hide();
-		});
+		fork?.addEventListener('click', hide);
 		setTimeout(() => document.addEventListener('click', outside), 100);
-		box.querySelector<HTMLElement>('.bsb-list')?.addEventListener('click', (e: Event) => {
+		shadow.querySelector<HTMLElement>('.list')?.addEventListener('click', (e: Event) => {
 			const btn = (<HTMLElement>e.target).closest('button');
 			if (!btn) return;
 			const i = Number(btn.dataset.i);
 			const segment = segments[i];
 			if (!segment) return;
 			e.stopPropagation();
-			if (btn.dataset.vote === 'up') {
-				sponsorBlock.voteSegment(segment, BSBVoteType.Up);
-			} else {
-				sponsorBlock.voteSegment(segment, BSBVoteType.Down);
-				btn.closest('.bsb-list-row')?.remove();
-			}
+			sponsorBlock.voteSegment(segment, btn.dataset.vote === 'up' ? BSBVoteType.Up : BSBVoteType.Down);
 		});
+		document.body.appendChild(box);
 	}
 	/** 空降助手设置 */
 	protected initSettingSponsor() {
 		this.menuitem.sponsor.addSetting([
 			this.switch(<'bsb'>'bsb.enabled', '空降助手', '跳过视频中的赞助广告', svgBlind, undefined, '移植自 <a href="https://github.com/hanydd/BilibiliSponsorBlock" target="_blank">BilibiliSponsorBlock</a>（小电视空降助手）。启用后将自动从服务器获取其他用户标注的广告片段并跳过。片段数据由网友共同标注，并非所有视频都有数据，你也可以提交自己标注的片段为空降指挥部添砖加瓦。<br>※ 需要能够访问 bsbsb.top，网络不畅时请酌情禁用。'),
 			this.switch(<'bsb'>'bsb.notice', '跳过提示', '跳过广告时弹出提示', undefined, undefined, '跳过片段后在播放器视频区域的右下角弹出提示，可以点击【撤销】回退到片段开头。'),
+			this.switch(<'bsb'>'bsb.cardBadge', '视频卡片', '识别视频卡片中的视频是否有相关标记，并显示标识', undefined, undefined, '识别视频卡片中的视频是否有相关标记，并显示标识。<br>※ 页面中的推荐视频、"看过该视频的还喜欢"等相关视频卡片都会显示。<br>※ 关闭后不再请求服务器，可减少流量消耗。'),
+			this.switch(<'bsb'>'bsb.testEnvironment', '使用测试 API', '切换至测试环境开发用的服务器', undefined, () => {
+				const enabled = user.userStatus!.bsb.testEnvironment;
+				setBSBUseTestEnvironment(enabled);
+				toast.success(enabled ? '已切换到测试环境 API' : '已切换回正式环境 API');
+			}, '切换至测试环境开发用的服务器。测试环境与正式环境功能基本相同，数据是分开的。开启后将使用 bsbsb.top/test/api/** 接口。<br>※ 测试环境数据每天 5:00 从正式环境同步，不会污染正式环境数据。'),
 			this.selectCustom(<'bsb'>'bsb.defaultCategory', '默认分类', {
 				value: user.userStatus!.bsb.defaultCategory,
 				candidate: BSB_CATEGORIES.map(d => d.name),
@@ -285,8 +425,8 @@ export class UI {
 			this.button(<'bsb'>'bsb.refresh', '刷新片段', () => {
 				sponsorBlock.actions.refresh();
 			}, '重新从服务器获取片段数据', '刷新', svgNet, '强制忽略服务器缓存重新获取当前视频的片段数据。'),
-			this.button(<'bsb'>'bsb.list', '片段列表', () => {
-				this.showBSBSegments();
+			this.button(<'bsb'>'bsb.list', '片段列表', async () => {
+				await this.showBSBSegments();
 			}, '查看并管理当前视频的片段', '查看', svgWarn, '列出当前视频已标注的空降片段，可以点赞/点踩你认为标注质量好或差的片段。点踩后该片段将不再为你显示。'),
 		]);
 		this.menuitem.sponsor.addCard('分类设定');

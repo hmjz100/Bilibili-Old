@@ -1,8 +1,22 @@
 import { objUrl } from "../utils/format/url";
 import { SBCategory, SBCategoryConfig, SBCategoryOption, SBSegmentBucket, SBActionType, SBTime } from "./api-sponsorblock";
 
-/** 空降助手（小电视空降助手）服务器 */
+/** 空降助手（小电视空降助手）服务器 — 正式环境 */
 export const BSB_SERVERS = ['https://bsbsb.top', 'https://bsbsb.cc', 'http://103.236.70.57:9876'];
+
+/** 测试环境服务器 — 每天 5:00 从正式环境同步数据，适合开发调试，不会污染正式数据 */
+export const BSB_TEST_SERVERS = ['https://bsbsb.top/test/api'];
+
+/** 当前使用的服务器列表，可通过 setBSBUseTestEnvironment(true) 切换到测试环境 */
+let currentBServers = BSB_SERVERS;
+
+/**
+ * 切换是否使用测试环境 API
+ * @param useTest true 使用测试环境，false 使用正式环境
+ */
+export function setBSBUseTestEnvironment(useTest: boolean) {
+	currentBServers = useTest ? BSB_TEST_SERVERS : BSB_SERVERS;
+}
 
 /** 空降助手分类表 */
 export const BSB_CATEGORIES: SBCategoryConfig[] = [
@@ -115,7 +129,7 @@ export async function bsbHashPrefix(videoID: string) {
  */
 export async function bsbRequest<T>(type: 'GET' | 'POST', endpoint: string, data?: Record<string, any>, headers?: Record<string, string>): Promise<BSBResponse<T>> {
 	let notFound = false;
-	for (const server of BSB_SERVERS) {
+	for (const server of currentBServers) {
 		try {
 			const url = type === 'GET' ? objUrl(server + endpoint, <any>data ?? {}) : server + endpoint;
 			const response = await fetch(url, {

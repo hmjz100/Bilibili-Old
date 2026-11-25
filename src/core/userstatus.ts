@@ -190,6 +190,10 @@ export const userStatus = {
 		enabled: false,
 		/** 跳过时显示提示 */
 		notice: true,
+		/** 在视频卡片上显示空降标识 */
+		cardBadge: true,
+		/** 使用测试环境 API（每天 5:00 从正式环境同步数据） */
+		testEnvironment: false,
 		/** 分类行为设定：分类名 -> 行为（-1 禁用 0 仅展示 1 手动跳过 2 自动跳过） */
 		category: <Record<string, number>>{},
 		/** 提交片段时使用的默认分类 */
