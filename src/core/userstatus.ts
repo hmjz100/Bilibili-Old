@@ -184,4 +184,15 @@ export const userStatus = {
 	heartbeatBlock: false,
 	/** 稍后再看重定向 */
 	watchlater2Av: false,
+	/** 空降助手（跳过赞助广告） */
+	bsb: {
+		/** 总开关 */
+		enabled: false,
+		/** 跳过时显示提示 */
+		notice: true,
+		/** 分类行为设定：分类名 -> 行为（-1 禁用 0 仅展示 1 手动跳过 2 自动跳过） */
+		category: <Record<string, number>>{},
+		/** 提交片段时使用的默认分类 */
+		defaultCategory: 'sponsor'
+	},
 }

@@ -5,6 +5,7 @@ import { objUrl, urlObj } from "../utils/format/url";
 import { htmlVnode } from "../utils/htmlvnode";
 import { danmaku } from "./danmaku";
 import { download } from "./download";
+import { sponsorBlock } from "./sponsorblock";
 import { toast } from "./toast";
 import { UI } from "./ui";
 import { videoInfo } from "./video-info";
@@ -60,6 +61,7 @@ export const BLOD = new (class {
 	urlObj = urlObj;
 	download = download;
 	danmaku = danmaku;
+	sponsorBlock = sponsorBlock;
 	toast = toast;
 	debug = debug;
 	videoInfo = videoInfo;

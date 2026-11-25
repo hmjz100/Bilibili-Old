@@ -2,14 +2,23 @@
  * @file av号工具
  */
 
+import JSBI from 'jsbi';
+
 export namespace AV {
-	const XOR_CODE = 23442827791579;
-	const MASK_CODE = 2251799813685247;
+	/**
+	 * 异或码，`2^51` 级别，远超 32 位。  
+	 * 使用 [jsbi](https://github.com/GoogleChromeLabs/jsbi) 做大整数运算：  
+	 * 构建目标为 es2015，原生 BigInt 字面量（`123n`）会令 esbuild 报错，故以 jsbi 替代。
+	 */
+	const XOR_CODE = JSBI.BigInt('23442827791579');
+	/** 掩码，`2^51 - 1` */
+	const MASK_CODE = JSBI.BigInt('2251799813685247');
+	/** aid 上限，`2^51` */
+	const MAX_AID = JSBI.leftShift(JSBI.BigInt(1), JSBI.BigInt(51));
+	const MIN_AID = JSBI.BigInt(1);
 
-	const MAX_AID = 1 << 51;
-	const MIN_AID = 1;
-
-	const BASE = 58;
+	const BASE = JSBI.BigInt(58);
+	const ZERO = JSBI.BigInt(0);
 	const BYTES = ['B', 'V', 1, '', '', '', '', '', '', '', '', ''];
 	const BV_LEN = BYTES.length;
 
@@ -25,61 +34,29 @@ export namespace AV {
 	const REG_EXP_STR = new RegExp(`[bB][vV]1[${ALPHABET.join('')}]{9}`, 'g');
 
 	/**
-	 * 大整数按位与（避免 JavaScript 32位位运算限制）
-	 */
-	function bitwiseAnd(a: number, b: number): number {
-		let result = 0;
-		let bit = 1;
-		while (a > 0 || b > 0) {
-			if ((a & 1) === 1 && (b & 1) === 1) {
-				result += bit;
-			}
-			a = Math.floor(a / 2);
-			b = Math.floor(b / 2);
-			bit *= 2;
-		}
-		return result;
-	}
-
-	/**
-	 * 大整数按位异或（避免 JavaScript 32位位运算限制）
-	 */
-	function bitwiseXor(a: number, b: number): number {
-		let result = 0;
-		let bit = 1;
-		while (a > 0 || b > 0) {
-			if ((a & 1) !== (b & 1)) {
-				result += bit;
-			}
-			a = Math.floor(a / 2);
-			b = Math.floor(b / 2);
-			bit *= 2;
-		}
-		return result;
-	}
-
-	/**
 	 * aid => BV
-	 * 
+	 *
 	 * @example
 	 * toBV(170001) // BV17x411w7KC
 	 */
 	export function toBV(avid: number) {
-		if (avid < MIN_AID) {
-			throw new RangeError(`Av ${avid} is smaller than ${MIN_AID}`);
+		const aid = JSBI.BigInt(String(Math.trunc(avid)));
+		if (JSBI.lessThan(aid, MIN_AID)) {
+			throw new RangeError(`Av ${avid} is smaller than 1`);
 		}
-		if (avid >= MAX_AID) {
-			throw new RangeError(`Av ${avid} is bigger than ${MAX_AID}`);
+		if (JSBI.greaterThanOrEqual(aid, MAX_AID)) {
+			throw new RangeError(`Av ${avid} is bigger than ${MAX_AID.toString()}`);
 		}
 
 		const bytes = Array.from(BYTES);
 
 		let bv_idx = BV_LEN - 1;
-		let tmp = (MAX_AID | avid) ^ XOR_CODE;
-		while (tmp !== 0) {
-			let table_idx = tmp % BASE;
-			bytes[DIGIT_MAP[bv_idx]] = ALPHABET[table_idx];
-			tmp = Math.floor(tmp / BASE);
+		// 全程 jsbi：`|` 与 `^` 在 32 位下会截断 XOR_CODE，负数取模亦会错位
+		let tmp = JSBI.bitwiseXor(JSBI.bitwiseOr(MAX_AID, aid), XOR_CODE);
+		while (JSBI.notEqual(tmp, ZERO)) {
+			// jsbi 实例的 valueOf() 会刻意抛错，必须用 Number(JSBI.toNumber(...)) 或先 toString
+			bytes[DIGIT_MAP[bv_idx]] = ALPHABET[Number(JSBI.remainder(tmp, BASE).toString())];
+			tmp = JSBI.divide(tmp, BASE);
 			bv_idx -= 1;
 		}
 
@@ -88,7 +65,7 @@ export namespace AV {
 
 	/**
 	 * BV => aid
-	 * 
+	 *
 	 * @example
 	 * fromBV('BV17x411w7KC') // 170001
 	 * fromBV('17x411w7KC') // 170001
@@ -98,12 +75,13 @@ export namespace AV {
 			bvid = 'BV' + bvid;
 		}
 
-		let r = 0;
+		// 全程 jsbi：结果可达 2^51，32 位位运算会截断 MASK_CODE 与 XOR_CODE
+		let r = ZERO;
 		for (let i = 3; i < BV_LEN; i++) {
-			r = r * BASE + ALPHABET.indexOf(bvid[DIGIT_MAP[i]]);
+			r = JSBI.add(JSBI.multiply(r, BASE), JSBI.BigInt(String(ALPHABET.indexOf(bvid[DIGIT_MAP[i]]))));
 		}
 
-		return `${bitwiseXor(bitwiseAnd(r, MASK_CODE), XOR_CODE)}`;
+		return JSBI.bitwiseXor(JSBI.bitwiseAnd(r, MASK_CODE), XOR_CODE).toString();
 	}
 
 	/**

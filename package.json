@@ -12,6 +12,7 @@
 		"@jsc/extension": "file:extension",
 		"@jsc/userjs": "file:userjs",
 		"fflate": "*",
+		"jsbi": "^4.3.2",
 		"md5": "*",
 		"protobufjs": "*",
 		"quill-delta-to-html-cb": "*"

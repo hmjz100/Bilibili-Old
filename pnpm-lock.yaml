@@ -17,6 +17,9 @@ importers:
       fflate:
         specifier: '*'
         version: 0.8.3
+      jsbi:
+        specifier: ^4.3.2
+        version: 4.3.2
       md5:
         specifier: '*'
         version: 2.3.0
@@ -419,6 +422,9 @@ packages:
   is-buffer@1.1.6:
     resolution: {integrity: sha512-NcdALwpXkTm5Zvvbk7owOUSvVvBKDgKP5/ewfXEznmQFfs4ZRmanOeKBTjRVjka3QFoN6XJ+9F3USqfHqTaU5w==}
 
+  jsbi@4.3.2:
+    resolution: {integrity: sha512-9fqMSQbhJykSeii05nxKl4m6Eqn2P6rOlYiS+C5Dr/HPIU/7yZxu5qzbs40tgaFORiw2Amd0mirjxatXYMkIew==}
+
   jsonfile@6.2.1:
     resolution: {integrity: sha512-zwOTdL3rFQ/lRdBnntKVOX6k5cKJwEc1HdilT71BWEu7J41gXIB2MRp+vxduPSwZJPWBxEzv4yH1wYLJGUHX4Q==}
 
@@ -731,6 +737,8 @@ snapshots:
       terser: 5.51.2
 
   is-buffer@1.1.6: {}
+
+  jsbi@4.3.2: {}
 
   jsonfile@6.2.1:
     dependencies:

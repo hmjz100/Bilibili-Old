@@ -19,6 +19,7 @@ import { danmaku } from "./danmaku";
 import { download } from "./download";
 import { Aria2 } from "./download/aria2";
 import { player } from "./player";
+import { sponsorBlock } from "./sponsorblock";
 import { toast } from "./toast";
 import { alert } from "./ui/alert";
 import { Desc } from "./ui/desc";
@@ -35,6 +36,9 @@ import { SwitchButton } from "./ui/utils/switch";
 import { user } from "./user";
 import { userStatus } from "./userstatus";
 import { UPOS } from "./videolimit";
+import { BSB_CATEGORIES, BSBVoteType } from "../io/api-bsb";
+import { SBCategoryOption, SBSourceType } from "../io/api-sponsorblock";
+import { addElement } from "../utils/element";
 
 /** 菜单项 */
 export const Menus = {
@@ -43,6 +47,7 @@ export const Menus = {
 	danmaku: ['弹幕', svgDmset],
 	restore: ['修复', svgStethoscope],
 	player: ['播放', svgPlay],
+	sponsor: ['空降', svgBlind],
 	style: ['样式', svgPalette],
 	download: ['下载', svgDownload]
 };
@@ -93,6 +98,7 @@ export class UI {
 		this.initSettingStyle();
 		this.initSettingRestore();
 		this.initSettingPlayer();
+		this.initSettingSponsor();
 		this.initSettingDanmaku();
 		this.initSettingDownload();
 	}
@@ -200,6 +206,104 @@ export class UI {
 			this.switch('album', '相簿', '恢复相簿页'),
 			this.switch('channel', '分区主页', '恢复各分区主页')
 		]);
+	}
+	/**
+	 * 显示空降助手片段列表，可点赞/点踩
+	 */
+	protected showBSBSegments() {
+		const segments = sponsorBlock.segmentList;
+		if (!segments.length) return alert('当前视频没有可用的空降片段数据。<br>你可以自己标记并提交片段。', '空降片段');
+		// PopupBox 使用 closed shadow root，无法从 document 查询，故自行挂载节点
+		const box = addElement('div', { class: 'bsb-dialog' }, document.body);
+		box.innerHTML = `<div class="bsb-dialog-title">空降片段（${segments.length}）</div>
+<div class="bsb-list">${segments.map((d, i) => {
+			const color = sponsorBlock.categoryColor(<any>d.category);
+			const option = sponsorBlock.categoryOptionLabel(<any>d.category);
+			const label = sponsorBlock.categoryLabel(<any>d.category);
+			return `<div class="bsb-list-row" data-i="${i}">
+				<span class="bsb-list-label" style="background:${color}">${label}</span>
+				<span class="bsb-list-time">${sponsorBlock.timeCode(d.segment[0])} ~ ${sponsorBlock.timeCode(d.segment[1])}</span>
+				<span class="bsb-list-option">${option}</span>
+				${d.source === SBSourceType.Local ? '<span class="bsb-list-draft">草稿</span>' : `<span class="bsb-list-vote">
+					<button type="button" data-vote="up" data-i="${i}">👍 ${d.votes ?? 0}</button>
+					<button type="button" data-vote="down" data-i="${i}">👎</button>
+				</span>`}
+			</div>`;
+		}).join('')}</div>`;
+		const close = addElement('div', { class: 'bsb-dialog-close' }, box, '关闭');
+		const hide = () => {
+			box.remove();
+			document.removeEventListener('click', outside);
+		};
+		const outside = (e: Event) => {
+			if (!box.contains(<Node>e.target)) hide();
+		};
+		close.addEventListener('click', (e: Event) => {
+			e.stopPropagation();
+			hide();
+		});
+		setTimeout(() => document.addEventListener('click', outside), 100);
+		box.querySelector<HTMLElement>('.bsb-list')?.addEventListener('click', (e: Event) => {
+			const btn = (<HTMLElement>e.target).closest('button');
+			if (!btn) return;
+			const i = Number(btn.dataset.i);
+			const segment = segments[i];
+			if (!segment) return;
+			e.stopPropagation();
+			if (btn.dataset.vote === 'up') {
+				sponsorBlock.voteSegment(segment, BSBVoteType.Up);
+			} else {
+				sponsorBlock.voteSegment(segment, BSBVoteType.Down);
+				btn.closest('.bsb-list-row')?.remove();
+			}
+		});
+	}
+	/** 空降助手设置 */
+	protected initSettingSponsor() {
+		this.menuitem.sponsor.addSetting([
+			this.switch(<'bsb'>'bsb.enabled', '空降助手', '跳过视频中的赞助广告', svgBlind, undefined, '移植自 <a href="https://github.com/hanydd/BilibiliSponsorBlock" target="_blank">BilibiliSponsorBlock</a>（小电视空降助手）。启用后将自动从服务器获取其他用户标注的广告片段并跳过。片段数据由网友共同标注，并非所有视频都有数据，你也可以提交自己标注的片段为空降指挥部添砖加瓦。<br>※ 需要能够访问 bsbsb.top，网络不畅时请酌情禁用。'),
+			this.switch(<'bsb'>'bsb.notice', '跳过提示', '跳过广告时弹出提示', undefined, undefined, '跳过片段后在播放器视频区域的右下角弹出提示，可以点击【撤销】回退到片段开头。'),
+			this.selectCustom(<'bsb'>'bsb.defaultCategory', '默认分类', {
+				value: user.userStatus!.bsb.defaultCategory,
+				candidate: BSB_CATEGORIES.map(d => d.name),
+				styles: BSB_CATEGORIES.reduce((s, d) => { s[d.name] = `color:${d.color};font-weight:bold`; return s }, <Record<string, string>>{})
+			}, v => {
+				user.userStatus!.bsb.defaultCategory = v;
+			}, '提交片段时使用', undefined, '提交新片段时默认使用的分类。可以在下方【分类设定】中调整每个分类的行为。'),
+			this.button(<'bsb'>'bsb.create', '标记片段', () => {
+				sponsorBlock.actions.createSegment();
+			}, '在当前时间打点', '标记', undefined, '在播放器当前时间标记一个片段的起点，再次点击标记终点。用于提交新的空降片段。<br>※ 标记完成后请点击下方【提交片段】上传到服务器。'),
+			this.button(<'bsb'>'bsb.cancel', '取消标记', () => {
+				sponsorBlock.actions.cancelCreating();
+			}, '撤销正在标记的片段', '取消'),
+			this.button(<'bsb'>'bsb.clear', '清除标记', () => {
+				sponsorBlock.actions.clearSubmitting();
+			}, '清除所有已标记片段', '清除'),
+			this.button(<'bsb'>'bsb.submit', '提交片段', () => {
+				sponsorBlock.actions.submitSegments();
+			}, '上传已标记的片段到服务器', '提交', svgDownload, '将已标记的片段上传到空降助手服务器。请尽量精确，恶意提交会被服务器拒绝。'),
+			this.button(<'bsb'>'bsb.refresh', '刷新片段', () => {
+				sponsorBlock.actions.refresh();
+			}, '重新从服务器获取片段数据', '刷新', svgNet, '强制忽略服务器缓存重新获取当前视频的片段数据。'),
+			this.button(<'bsb'>'bsb.list', '片段列表', () => {
+				this.showBSBSegments();
+			}, '查看并管理当前视频的片段', '查看', svgWarn, '列出当前视频已标注的空降片段，可以点赞/点踩你认为标注质量好或差的片段。点踩后该片段将不再为你显示。'),
+		]);
+		this.menuitem.sponsor.addCard('分类设定');
+		this.menuitem.sponsor.addSetting(BSB_CATEGORIES.map(d => this.selectCustom(<'bsb'>`bsb.category.${d.name}`, d.label, {
+			value: sponsorBlock.categoryOptionLabel(<any>d.name),
+			candidate: ['禁用', '仅展示', '手动跳过', '自动跳过'],
+			styles: {
+				'禁用': 'color:#999',
+				'仅展示': 'color:#008fd6',
+				'手动跳过': 'color:#ff9900',
+				'自动跳过': 'color:#00d400;font-weight:bold'
+			}
+		}, v => {
+			sponsorBlock.setCategoryOption(<any>d.name, <SBCategoryOption>['禁用', '仅展示', '手动跳过', '自动跳过'].indexOf(v) - 1);
+			// 立即按新设定重新过滤并重排调度
+			sponsorBlock.applyCategoryChange();
+		}, undefined, undefined, `${d.label}片段的行为设定。【禁用】不获取该分类的片段；【仅展示】只在进度条上标出；【手动跳过】弹出跳过按钮但不自动跳；【自动跳过】到达片段起点时自动跳过。<br>当前颜色：<span style="color:${d.color}">${d.color}</span>`)), 1);
 	}
 	/** 弹幕设置 */
 	protected initSettingDanmaku() {
@@ -589,6 +693,29 @@ export class UI {
 			callback(slider.value);
 		});
 		item.value(slider);
+		this.settingItem[id] = item;
+		desc && new Desc().value(label, desc, item);
+		return item;
+	}
+	/**
+	 * 创建自定义下拉菜单设置，值由回调自行维护，不写入用户数据
+	 * @param id 用来索引的字符串
+	 * @param label 标题
+	 * @param value 配置数据
+	 * @param callback 用户调整设置的回调，新值将作为第一个参数传入
+	 * @param sub 副标题
+	 * @param svg 图标
+	 * @param desc 浮动窗口
+	 */
+	protected selectCustom(id: keyof typeof userStatus, label: string, value: ISelectMenuValue, callback: (value: string) => void, sub?: string, svg?: string, desc?: string) {
+		const item = new SettingItem();
+		const select = new SelectMenu();
+		item.init('', label, sub, svg);
+		select.update(value);
+		select.addEventListener('change', () => {
+			callback(select.value);
+		});
+		item.value(select);
 		this.settingItem[id] = item;
 		desc && new Desc().value(label, desc, item);
 		return item;
