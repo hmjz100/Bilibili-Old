@@ -34,6 +34,7 @@ import { PageMovie } from './page/channel/movie';
 import { PageTv } from './page/channel/tv';
 import { PageDocumentary } from './page/channel/documentary';
 import { loginExit } from './page/logout';
+import { sponsorBlock } from './core/sponsorblock';
 
 /**
  * 幂等守卫
@@ -161,6 +162,8 @@ function bootstrap() {
 	BLOD.path[2] == "live.bilibili.com" && new PageLive();
 	BLOD.path[2] == "t.bilibili.com" && new PageDynamic();
 	location.href.includes('passport.bilibili.com/login?act=exit') && loginExit();
+	// 空降助手：视频卡片标识与播放器无关，首页/频道页/搜索页等都需要，故在所有页面启动
+	user.addCallback(() => sponsorBlock.startCardScanner());
 }
 
 //////////////////////////// 全局定义 ////////////////////////////

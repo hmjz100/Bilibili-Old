@@ -23,6 +23,8 @@ const endTimeSkipBuffer = 0.5;
 const noticeDelay = 2.5;
 /** 手动跳过提示提前量 /s：在片段开始前多久弹出提示 */
 const manualNoticeLead = 3;
+/** 单次扫描最多查询多少个视频卡片（避免首页一次性请求过多） */
+const maxCardQueryPerScan = 30;
 /** 分类行为展示名 */
 const optionLabels = ['禁用', '仅展示', '手动跳过', '自动跳过'];
 
@@ -999,8 +1001,27 @@ class BilibiliSponsorBlock {
 				this.renderPreviewBar();
 			}
 		}, 1000);
-		// 推荐视频/看过该视频的还喜欢 扫描器（每 5 秒运行一次）
-		this.startRecommendationScanner();
+		// 推荐视频/看过该视频的还喜欢 扫描器（每 5 秒运行一次，与播放器无关）
+		this.startCardScanner();
+	}
+	/** 视频卡片扫描器是否已启动 */
+	protected cardScannerStarted = false;
+	/**
+	 * 启动视频卡片扫描器。  
+	 * 该功能与播放器无关（首页、频道页、搜索页等也需要），故独立于 `load()` 启动。
+	 */
+	startCardScanner() {
+		if (this.cardScannerStarted) return;
+		this.cardScannerStarted = true;
+		this.injectStyle();
+		setInterval(() => {
+			// 旧版页面会重建 `<head>`，样式可能被冲掉，需重新挂载
+			this.injectStyle();
+			if (!user.userStatus?.bsb.enabled) return;
+			this.scanAndMarkRecommendations();
+		}, 3000);
+		// 页面渲染完成后再扫一次，避免首帧没有卡片
+		setTimeout(() => this.scanAndMarkRecommendations(), 1500);
 	}
 	/** 启动推荐视频扫描器 */
 	protected startRecommendationScanner() {
@@ -1022,7 +1043,9 @@ class BilibiliSponsorBlock {
 		const videoCards = this.collectVideoCards();
 		if (!videoCards.length) return;
 		// 只查询尚未查询过的稿件，避免重复请求
-		const pending = Array.from(new Set(videoCards.map(d => d.bvid))).filter(d => !this.videoHasSkip.has(d));
+		const pending = Array.from(new Set(videoCards.map(d => d.bvid)))
+			.filter(d => !this.videoHasSkip.has(d))
+			.slice(0, maxCardQueryPerScan);
 		if (pending.length) {
 			const results = await this.checkMultipleBvids(pending);
 			results.forEach((v, k) => this.videoHasSkip.set(k, v));
@@ -1038,11 +1061,13 @@ class BilibiliSponsorBlock {
 	protected videoHasSkip = new Map<string, SBTime[]>();
 	/**
 	 * 收集页面上的所有视频卡片（通用实现，不局限于某一类推荐位）  
-	 * 凡是带封面的视频链接都纳入范围：播放器推荐、"看过该视频的还喜欢"、相关推荐、UP 主投稿等。
+	 * 凡是带封面的视频链接都纳入范围：首页推荐、播放器推荐、"看过该视频的还喜欢"、相关推荐、UP 主投稿等。  
+	 * 只收集视口内的卡片，避免首页无限滚动时一次性请求过多。
 	 */
 	protected collectVideoCards(): { bvid: string; host: HTMLElement }[] {
 		const cards: { bvid: string; host: HTMLElement }[] = [];
 		const seen = new Set<Element>();
+		const vh = window.innerHeight || 800;
 		document.querySelectorAll<HTMLAnchorElement>('a[href*="/video/"]').forEach(link => {
 			const bvid = this.extractBvidFromCard(link);
 			// 跳过当前稿件与无封面的纯文字链接
@@ -1051,6 +1076,10 @@ class BilibiliSponsorBlock {
 			if (!img) return;
 			const host = this.findBadgeHost(link, img);
 			if (!host || seen.has(host)) return;
+			// 只处理视口内（含上下各一屏）的卡片
+			const rect = host.getBoundingClientRect();
+			if (!rect.width || !rect.height) return;
+			if (rect.top > vh * 2 || rect.bottom < -vh) return;
 			seen.add(host);
 			cards.push({ bvid, host });
 		});

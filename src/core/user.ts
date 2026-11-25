@@ -20,11 +20,13 @@ class User {
     userLoadedCallbacks: ((status: typeof userStatus) => void)[] = [];
     constructor() {
         GM.getValue('userStatus', userStatus).then(saved => {
+            // 默认值必须先留一份：`Object.assign(userStatus, saved)` 会覆盖掉 userStatus 里的嵌套对象
+            const defaults = <any>JSON.parse(JSON.stringify(userStatus));
             // 顶层浅合并
             const status = Object.assign(userStatus, saved);
             // 嵌套对象（如 bsb）逐字段合并：旧存档里没有的新增字段不能被整块覆盖掉
-            Object.keys(userStatus).forEach(k => {
-                const def = (<any>userStatus)[k];
+            Object.keys(defaults).forEach(k => {
+                const def = defaults[k];
                 const cur = (<any>saved)?.[k];
                 if (def && typeof def === 'object' && !Array.isArray(def) && cur && typeof cur === 'object') {
                     (<any>status)[k] = Object.assign({}, def, cur);
