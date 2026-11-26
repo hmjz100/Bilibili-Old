@@ -47,9 +47,15 @@ export class Desc extends HTMLElement implements CustomElementsInterface {
     private toggle(show?: boolean) {
         this.show = show === undefined ? !this.show : show;
         this.style.display = this.show ? '' : 'none';
-        if (this._parrent) {
+        if (this._parrent && this.show) {
             const rect = this._parrent.getBoundingClientRect();
-            this._container.style.top = (rect.top - rect.height * 2) + 'px';
+            // 与设置项顶部对齐（保持平行），并防止超出视口下边缘
+            const h = this._container.offsetHeight || 0;
+            let top = rect.top;
+            if (h && top + h > window.innerHeight - 8) {
+                top = Math.max(8, window.innerHeight - h - 8);
+            }
+            this._container.style.top = top + 'px';
         }
     }
 }

@@ -16,6 +16,7 @@ import { xhrHook } from "../utils/hook/xhr";
 import { poll } from "../utils/poll";
 import { BLOD } from "./bilibili-old";
 import { switchVideo } from "./observer";
+import { sponsorBlock } from "./sponsorblock";
 import { localStorage } from "./storage";
 import { toast } from "./toast";
 import { alert } from "./ui/alert";
@@ -144,6 +145,7 @@ class Player {
 		}
 		this.switchVideo();
 		this.simpleChinese();
+		sponsorBlock.load();
 	}
 	/** 通过hook新版播放器来引导旧版播放器 */
 	protected connectPlayer(loadPlayer: Function) {
