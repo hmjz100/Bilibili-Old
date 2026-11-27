@@ -15,7 +15,7 @@ jobs:
       # 读取本次更新属于 patch / minor / major
       - name: 获取更新类型
         id: meta
-        uses: dependabot/fetch-metadata@v2
+        uses: dependabot/fetch-metadata@v3
 
       # 重大更新留人工确认，只自动合并次要与补丁更新
       # 需要仓库 Settings -> General -> Pull Requests 中开启 Allow auto-merge
