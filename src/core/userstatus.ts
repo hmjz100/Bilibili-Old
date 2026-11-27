@@ -196,7 +196,9 @@ export const userStatus = {
 		testEnvironment: false,
 		/** 分类行为设定：分类名 -> 行为（-1 禁用 0 仅展示 1 手动跳过 2 自动跳过） */
 		category: <Record<string, number>>{},
-		/** 提交片段时使用的默认分类 */
-		defaultCategory: 'sponsor'
+		/** 用户私人 ID（用于 API 请求，留空则不传） */
+		privateId: '',
+		/** 用户公开 ID（私人 ID 经过 5000 次 SHA-256 计算，只读显示） */
+		publicId: ''
 	},
 }

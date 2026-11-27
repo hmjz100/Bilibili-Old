@@ -813,7 +813,7 @@ class BilibiliSponsorBlock {
 				segment: [time, time],
 				cid: this.cid,
 				UUID: generateUUID(),
-				category: <SBCategory>user.userStatus!.bsb.defaultCategory,
+				category: <SBCategory>'sponsor',
 				actionType: SBActionType.Skip,
 				source: SBSourceType.Local
 			};

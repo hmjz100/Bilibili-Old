@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>desc position test</title>
+<style>
+  html,body{margin:0;height:100%;}
+  /* ==== 复刻 ui-interface.html 的关键样式 ==== */
+  .box{
+    left:50%;top:50%;transform:translateX(-50%) translateY(-50%);
+    min-width:600px;min-height:400px;padding:0;border:0;position:fixed;z-index:11110;
+    box-sizing:border-box;background:#fff;border-radius:8px;
+    box-shadow:0 6px 12px 0 rgba(106,115,133,22%);
+    line-height:14px;font:12px Helvetica Neue,Helvetica,Arial,sans-serif;
+  }
+  .content{position:relative;overflow:hidden;background:#fff;}
+  .contain{padding-bottom:15px;display:flex;align-items:flex-start;flex:1;height:360px;}
+  .menu{flex:1 1 0;flex-basis:calc(480px * 0.2);height:100%;position:sticky;top:0;
+    display:flex;flex-direction:column;min-width:fit-content;overflow:auto;}
+  .item{flex:4 4 0;flex-basis:calc(480px * 0.8);height:100%;box-sizing:border-box;
+    display:flex;flex-direction:column;margin:0 auto;position:relative;overflow:auto;}
+  .item>div{margin-bottom:60px;}
+  .menuitem{color:#000;align-items:center;display:flex;font-weight:500;min-height:20px;
+    padding-bottom:10px;padding-inline-start:23px;padding-top:10px;cursor:pointer;}
+  .contain1{margin-bottom:3px;padding-inline-start:20px;padding-inline-end:20px;
+    display:flex;flex-direction:column;position:relative;}
+  .header .title{color:#000;font-size:108%;font-weight:400;margin-bottom:12px;padding-bottom:4px;}
+  .card{border-radius:4px;box-shadow:0px 0px 1px 1px rgb(60 64 67 / 30%);flex:1;color:#000;
+    line-height:154%;margin-inline:12px;margin-bottom:12px;}
+  .contain2{align-items:center;border-top:1px solid rgba(0,0,0,6%);display:flex;min-height:24px;
+    padding:0 20px;flex-wrap:wrap;justify-content:flex-end;background-color:transparent !important;}
+  .value{flex:1;flex-basis:1e-9px;display:flex;}
+  .value>*{flex:1;flex-basis:1e-9px;display:flex;flex-wrap:wrap;justify-content:flex-end;
+    align-items:center;align-content:center;}
+  .label{flex:1;flex-basis:1e-9px;padding-block-end:12px;padding-block-start:12px;padding-inline-start:12px;}
+  .switch>.label{flex:2;}
+  .sub{color:rgb(95,99,104);font-weight:400;}
+</style>
+</head>
+<body>
+<div class="box" id="box">
+  <div class="content">
+    <div class="contain">
+      <div class="menu">
+        <div class="menuitem selected">空降</div>
+        <div class="menuitem">通用</div>
+      </div>
+      <div class="item" id="item">
+        <div>
+          <div class="contain1"><div class="header"><h2 class="title">空降助手</h2></div></div>
+          <div class="card" id="card"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ==== 复刻 Desc 类行为（CSS 注入到 shadow root，匹配 addCss 逻辑，追加到 body）====
+class Desc {
+  constructor(){
+    this.show=true;this.timer=undefined;
+    const host=document.createElement('div');
+    const root=host.attachShadow({mode:'closed'});
+    root.innerHTML='<style>.container{position:fixed;background:hsla(0,0%,95.7%,.8);border-radius:2px;box-shadow:0 6px 12px 0 rgba(106,115,133,22%);color:#000;width:381px;z-index:11115}.title{text-align:center;margin-top:16px;margin-bottom:3px;font-size:12px}.content{font-size:12px;line-height:19px;padding:0 16px 16px;text-align:justify;white-space:pre-line}</style><div class="container"><div class="title"></div><div class="content"></div></div>';
+    this._host=host;
+    this._container=root.querySelector('.container');
+    this._title=root.querySelector('.title');
+    this._content=root.querySelector('.content');
+    this.toggle(false);
+  }
+  value(title,content,appendTo){
+    this._title.innerHTML=title;this._content.innerHTML=content;
+    this._parrent=appendTo;
+    // 关键修复：追加到 document.body，避免 transform 祖先截获 containing block
+    document.body.appendChild(this._host);
+    const enter = () => {
+        clearTimeout(this.timer);
+        this.toggle(true);
+    };
+    const leave = () => {
+        this.timer = setTimeout(() => {
+            this.toggle(false);
+        }, 300);
+    };
+    appendTo.addEventListener('mouseover', enter);
+    appendTo.addEventListener('mouseout', leave);
+    // 浮窗本身也保持可 hover，避免鼠标滑进去时被 300ms 定时器隐藏
+    this._container.addEventListener('mouseover', enter);
+    this._container.addEventListener('mouseout', leave);
+  }
+  toggle(show){
+    this.show=show===undefined?!this.show:show;
+    this._host.style.display=this.show?'':'none';
+    if(this._parrent&&this.show){
+      const rect=this._parrent.getBoundingClientRect();
+      const h=this._container.offsetHeight||0;
+      let top=rect.top;
+      if(h&&top+h>window.innerHeight-8){top=Math.max(8,window.innerHeight-h-8);}
+      // 设置浮窗位置：顶部对齐，左侧贴在设置项右侧
+      this._container.style.top=top+'px';
+      this._container.style.left=rect.right+8+'px'; // 右侧留 8px 间距
+    }
+  }
+}
+
+// ==== 构造若干设置项（复刻 item.ts 结构） ====
+window.__descInstances=[];
+function makeItem(id,title,sub,descText){
+  const item=document.createElement('div');      // SettingItem 外层 (item-<slug>)
+  item.className='contain2 '+id;
+  item.innerHTML='<div class="label">'+title+(sub?'<div class="sub">'+sub+'</div>':'')+'</div>'
+    +'<div class="value"><div class="sw"></div></div>';
+  document.getElementById('card').appendChild(item);
+  const d=new Desc();
+  d.value(title,descText,item);                   // appendTo = item (SettingItem)
+  window.__descInstances.push(d);
+  return item;
+}
+
+makeItem('a','空降助手','跳过视频中的赞助广告','这是一段说明文字，用来测试浮窗是否与设置项顶部平行。');
+makeItem('b','跳过提示','跳过广告时弹出提示','第二段说明文字。');
+makeItem('c','视频卡片','识别视频卡片','第三段说明文字。');
+makeItem('d','使用测试 API','切换至测试环境','第四段说明文字。');
+makeItem('e','默认分类','提交片段时使用','第五段说明文字。');
+
+// 暴露给 playwright 读取
+window.__descs=[...document.querySelectorAll('.desc-host')];
+</script>
+</body>
+</html>

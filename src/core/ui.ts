@@ -1,4 +1,5 @@
 import svgBlind from "../svg/blind.svg";
+import svgSponsorBlock from "../svg/sponsorblock.svg";
 import svgDmset from "../svg/dmset.svg";
 import svgDownload from "../svg/download.svg";
 import svgGear from "../svg/gear.svg";
@@ -41,6 +42,8 @@ import { UPOS } from "./videolimit";
 import { BSB_CATEGORIES, BSBVoteType } from "../io/api-bsb";
 import { SBCategoryOption, SBSourceType } from "../io/api-sponsorblock";
 import { addElement } from "../utils/element";
+import md5 from "md5";
+import { sha256Hex } from "../io/api-bsb";
 
 /** 菜单项 */
 export const Menus = {
@@ -49,7 +52,7 @@ export const Menus = {
 	danmaku: ['弹幕', svgDmset],
 	restore: ['修复', svgStethoscope],
 	player: ['播放', svgPlay],
-	sponsor: ['空降', svgBlind],
+	sponsor: ['空降', svgSponsorBlock],
 	style: ['样式', svgPalette],
 	download: ['下载', svgDownload]
 };
@@ -392,10 +395,33 @@ export class UI {
 		});
 		document.body.appendChild(box);
 	}
+	/** 更新公开 ID 显示（私人 ID 经过 5000 次 SHA-256 计算） */
+	protected async updatePublicIdDisplay() {
+		const privateId = user.userStatus!.bsb.privateId || '';
+		let publicId = '';
+		if (privateId.length > 0) {
+			let hash = await sha256Hex(privateId);
+			// 重复 5000 次 SHA-256（第一次已计算，再做 4999 次）
+			for (let i = 1; i < 5000; i++) {
+				hash = await sha256Hex(hash);
+			}
+			publicId = hash;
+		}
+		user.userStatus!.bsb.publicId = publicId;
+		// 更新设置界面显示
+		const publicIdItem = this.settingItem[<'bsb'>'bsb.publicId'];
+		if (publicIdItem) {
+			const container = (<any>publicIdItem)._value as HTMLDivElement;
+			const select = container?.querySelector('select-menu') as SelectMenu | null;
+			if (select && typeof select.update === 'function') {
+				select.update({ value: publicId || '(未设置)' });
+			}
+		}
+	}
 	/** 空降助手设置 */
 	protected initSettingSponsor() {
 		this.menuitem.sponsor.addSetting([
-			this.switch(<'bsb'>'bsb.enabled', '空降助手', '跳过视频中的赞助广告', svgBlind, undefined, '移植自 <a href="https://github.com/hanydd/BilibiliSponsorBlock" target="_blank">BilibiliSponsorBlock</a>（小电视空降助手）。启用后将自动从服务器获取其他用户标注的广告片段并跳过。片段数据由网友共同标注，并非所有视频都有数据，你也可以提交自己标注的片段为空降指挥部添砖加瓦。<br>※ 需要能够访问 bsbsb.top，网络不畅时请酌情禁用。'),
+			this.switch(<'bsb'>'bsb.enabled', '空降助手', '跳过视频中的赞助广告', svgSponsorBlock, undefined, '移植自 <a href="https://github.com/hanydd/BilibiliSponsorBlock" target="_blank">BilibiliSponsorBlock</a>（小电视空降助手）。启用后将自动从服务器获取其他用户标注的广告片段并跳过。片段数据由网友共同标注，并非所有视频都有数据，你也可以提交自己标注的片段为空降指挥部添砖加瓦。<br>※ 需要能够访问 bsbsb.top，网络不畅时请酌情禁用。'),
 			this.switch(<'bsb'>'bsb.notice', '跳过提示', '跳过广告时弹出提示', undefined, undefined, '跳过片段后在播放器视频区域的右下角弹出提示，可以点击【撤销】回退到片段开头。'),
 			this.switch(<'bsb'>'bsb.cardBadge', '视频卡片', '识别视频卡片中的视频是否有相关标记，并显示标识', undefined, undefined, '识别视频卡片中的视频是否有相关标记，并显示标识。<br>※ 页面中的推荐视频、"看过该视频的还喜欢"等相关视频卡片都会显示。<br>※ 关闭后不再请求服务器，可减少流量消耗。'),
 			this.switch(<'bsb'>'bsb.testEnvironment', '使用测试 API', '切换至测试环境开发用的服务器', undefined, () => {
@@ -403,25 +429,18 @@ export class UI {
 				setBSBUseTestEnvironment(enabled);
 				toast.success(enabled ? '已切换到测试环境 API' : '已切换回正式环境 API');
 			}, '切换至测试环境开发用的服务器。测试环境与正式环境功能基本相同，数据是分开的。开启后将使用 bsbsb.top/test/api/** 接口。<br>※ 测试环境数据每天 5:00 从正式环境同步，不会污染正式环境数据。'),
-			this.selectCustom(<'bsb'>'bsb.defaultCategory', '默认分类', {
-				value: user.userStatus!.bsb.defaultCategory,
-				candidate: BSB_CATEGORIES.map(d => d.name),
-				styles: BSB_CATEGORIES.reduce((s, d) => { s[d.name] = `color:${d.color};font-weight:bold`; return s }, <Record<string, string>>{})
+			this.inputCustom(<'bsb'>'bsb.privateId', '用户私人 ID', {
+				prop: { placeholder: '留空则不传私人 ID，输入后自动计算公开 ID' }
 			}, v => {
-				user.userStatus!.bsb.defaultCategory = v;
-			}, '提交片段时使用', undefined, '提交新片段时默认使用的分类。可以在下方【分类设定】中调整每个分类的行为。'),
-			this.button(<'bsb'>'bsb.create', '标记片段', () => {
-				sponsorBlock.actions.createSegment();
-			}, '在当前时间打点', '标记', undefined, '在播放器当前时间标记一个片段的起点，再次点击标记终点。用于提交新的空降片段。<br>※ 标记完成后请点击下方【提交片段】上传到服务器。'),
-			this.button(<'bsb'>'bsb.cancel', '取消标记', () => {
-				sponsorBlock.actions.cancelCreating();
-			}, '撤销正在标记的片段', '取消'),
-			this.button(<'bsb'>'bsb.clear', '清除标记', () => {
-				sponsorBlock.actions.clearSubmitting();
-			}, '清除所有已标记片段', '清除'),
-			this.button(<'bsb'>'bsb.submit', '提交片段', () => {
-				sponsorBlock.actions.submitSegments();
-			}, '上传已标记的片段到服务器', '提交', svgDownload, '将已标记的片段上传到空降助手服务器。请尽量精确，恶意提交会被服务器拒绝。'),
+				if (typeof v === 'string') {
+					user.userStatus!.bsb.privateId = v;
+					this.updatePublicIdDisplay();
+				}
+			}, '用于记录贡献的私人 ID', undefined, '设置用于 API 请求的私人 ID。<br>※ 留空则不传私人 ID。<br>※ 输入 < 30 字符：自动计算 MD5 得到 32 位后传给服务器。<br>※ 输入 >= 30 字符：直接传原值。<br>※ 参考：<a href="https://github.com/hanydd/BilibiliSponsorBlock/wiki/API#3-%E7%94%A8%E6%88%B7id%E5%85%AC%E5%BC%80id%E5%92%8C%E7%A7%81%E4%BA%BAid" target="_blank">SponsorBlock API 文档</a>'),
+			this.inputCustom(<'bsb'>'bsb.publicId', '公开 ID', {
+				value: user.userStatus!.bsb.publicId || ''
+			}, v => {},
+			'服务器对外展示的 ID', undefined, '公开 ID 是私人 ID 经过 5000 次循环 SHA-256 计算后的结果。'),
 			this.button(<'bsb'>'bsb.refresh', '刷新片段', () => {
 				sponsorBlock.actions.refresh();
 			}, '重新从服务器获取片段数据', '刷新', svgNet, '强制忽略服务器缓存重新获取当前视频的片段数据。'),

@@ -4,6 +4,7 @@ package-lock.json
 
 # 构建产物
 userjs/main.user.js
+userjs/comment/main.user.js
 dist
 *.crx
 *.pem

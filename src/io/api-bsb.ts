@@ -1,5 +1,6 @@
 import { objUrl } from "../utils/format/url";
 import { SBCategory, SBCategoryConfig, SBCategoryOption, SBSegmentBucket, SBActionType, SBTime } from "./api-sponsorblock";
+import { GM as _ } from '@jsc/extension';
 
 /** 空降助手（小电视空降助手）服务器 — 正式环境 */
 export const BSB_SERVERS = ['https://bsbsb.top', 'https://bsbsb.cc', 'http://103.236.70.57:9876'];
@@ -17,6 +18,11 @@ let currentBServers = BSB_SERVERS;
 export function setBSBUseTestEnvironment(useTest: boolean) {
 	currentBServers = useTest ? BSB_TEST_SERVERS : BSB_SERVERS;
 }
+
+/** 哈希前缀查询缓存：prefix -> { data, timestamp } */
+const prefixCache = new Map<string, { data: SBSegmentBucket[]; timestamp: number }>();
+/** 缓存有效期：10 分钟 */
+const CACHE_TTL = 10 * 60 * 1000;
 
 /** 空降助手分类表 */
 export const BSB_CATEGORIES: SBCategoryConfig[] = [
@@ -48,7 +54,7 @@ export interface BSBResponse<T> {
  * 因此不能用其它非标准摘要兜底（否则永远拿不到属于本稿件的桶）。
  * @param value 待摘要文本
  */
-async function sha256Hex(value: string): Promise<string> {
+export async function sha256Hex(value: string): Promise<string> {
 	const subtle = (<any>crypto)?.subtle;
 	// WebCrypto 仅在安全上下文可用；不可用时回退到纯 JS 实现（结果与 WebCrypto 一致）
 	if (subtle) {
@@ -122,28 +128,53 @@ export async function bsbHashPrefix(videoID: string) {
 
 /**
  * 向空降助手服务器发起请求，依次尝试主服务器及镜像。  
+ * 使用 GM.fetch(sw=true) 走后台脚本发请求，避免页面 fetch 被 hook 转 XHR。  
  * @param type 请求方法
  * @param endpoint 接口路径
  * @param data GET 时作为查询参数，其他方法作为 JSON 请求体
  * @param headers 附加请求头，用于忽略服务器缓存等场景
  */
 export async function bsbRequest<T>(type: 'GET' | 'POST', endpoint: string, data?: Record<string, any>, headers?: Record<string, string>): Promise<BSBResponse<T>> {
+	// 内部请求头：设置 Origin、Referer、扩展版本
+	const defaultHeaders: Record<string, string> = {
+		'Origin': 'https://github.com/hmjz100/Bilibili-Old',
+		'Referer': 'https://github.com/hmjz100/Bilibili-Old',
+		'x-ext-version': _Slug_ || 'unknown'
+	};
+	const requestHeaders = { ...defaultHeaders, ...headers, ...(data && type !== 'GET' ? { 'Content-Type': 'application/json' } : {}) };
+
+	const isSkipSegmentsGet = type === 'GET' && endpoint.startsWith('/api/skipSegments/');
+	const cacheKey = isSkipSegmentsGet ? endpoint : null;
+	if (cacheKey && prefixCache.has(cacheKey)) {
+		const cached = prefixCache.get(cacheKey)!;
+		if (Date.now() - cached.timestamp < CACHE_TTL) {
+			return { data: <T>cached.data, status: 200 };
+		}
+	}
+
 	let notFound = false;
 	for (const server of currentBServers) {
 		try {
-			const url = type === 'GET' ? objUrl(server + endpoint, <any>data ?? {}) : server + endpoint;
-			const response = await fetch(url, {
+			let url = server + endpoint;
+			if (type === 'GET') {
+				url = objUrl(url, <any>data ?? {});
+			}
+			// 使用 GM.fetch(sw=true) 走后台脚本，避免页面 fetch 被 hook
+			const response = await _.fetch(url, {
 				method: type,
-				headers: { ...headers, ...(data && type !== 'GET' ? { 'Content-Type': 'application/json' } : {}) },
+				headers: requestHeaders,
 				body: data && type !== 'GET' ? JSON.stringify(data) : undefined
-			});
-			// 404：该服务器没有这个桶的数据，仍尝试其它服务器
+			}, true); // sw=true 走后台脚本发请求
 			if (response.status === 404) {
 				notFound = true;
 				continue;
 			}
 			if (!response.ok) continue;
-			return { data: <T>await response.json(), status: response.status };
+			const resultData = await response.json();
+			if (cacheKey) {
+				prefixCache.set(cacheKey, { data: resultData, timestamp: Date.now() });
+			}
+			return { data: <T>resultData, status: response.status };
 		} catch {
 			// 尝试下一个服务器
 		}
@@ -183,8 +214,13 @@ export enum BSBVoteType {
  */
 export async function bsbVote(UUID: string, type: BSBVoteType, category?: SBCategory) {
 	const userID = await bsbUserID();
-	const typeSection = category ? `&category=${encodeURIComponent(category)}` : `&type=${type}`;
-	const { status } = await bsbRequest('POST', `/api/voteOnSponsorTime?UUID=${encodeURIComponent(UUID)}&userID=${encodeURIComponent(userID)}${typeSection}`);
+	const privateUserID = await bsbPrivateUserID();
+	const userIDToSend = privateUserID || userID;
+	const { status } = await bsbRequest('POST', '/api/voteOnSponsorTime', {
+		UUID,
+		userID: userIDToSend,
+		...(category ? { category } : { type })
+	});
 	return status;
 }
 
@@ -197,10 +233,11 @@ export async function bsbVote(UUID: string, type: BSBVoteType, category?: SBCate
  * @returns 服务器返回的片段（带正式 UUID）
  */
 export async function bsbSubmitSegments(bvid: string, cid: string, segments: SBTime[], videoDuration: number) {
+	const privateUserID = await bsbPrivateUserID();
 	const { data, status } = await bsbRequest<SBTime[]>('POST', '/api/skipSegments', {
 		videoID: bvid,
 		cid,
-		userID: await bsbUserID(),
+		userID: privateUserID || await bsbUserID(),
 		// 只提交服务器需要的字段，避免本地草稿的 UUID/来源等字段干扰服务器
 		segments: segments.map(d => ({
 			segment: [d.segment[0], d.segment[1]],
@@ -215,7 +252,25 @@ export async function bsbSubmitSegments(bvid: string, cid: string, segments: SBT
 
 /** 记录一次完整跳过，用于服务器统计 */
 export async function bsbViewedVideoSponsorTime(UUID: string) {
-	await bsbRequest('POST', `/api/viewedVideoSponsorTime?UUID=${encodeURIComponent(UUID)}`);
+	await bsbRequest('POST', '/api/viewedVideoSponsorTime', { UUID });
+}
+
+/**
+ * 获取用户私人 ID 并计算要发送给 API 的 userID
+ * - 留空：不传 userID
+ * - < 30 字符：计算 MD5 得到 32 位后传给服务器
+ * - >= 30 字符：直接传原值
+ */
+async function bsbPrivateUserID() {
+	const { user } = await import('../core/user');
+	const privateId = user.userStatus?.bsb?.privateId || '';
+	if (!privateId) return '';
+	if (privateId.length < 30) {
+		// 计算 MD5
+		const md5 = await import('md5');
+		return md5.default(privateId);
+	}
+	return privateId;
 }
 
 /**
